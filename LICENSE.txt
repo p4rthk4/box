@@ -1,6 +1,7 @@
 MIT License
 
 Copyright (c) 2024 Parthka <hello@parthka.dev>
+Copyright (c) 2024 Rellite <contact@rellitel.ink>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,4 +26,4 @@ SOFTWARE.
 **Commercial License Information:**
 
 If you are using this software for enterprise or commercial purposes,
-please contact hello@parthka.dev for licensing options.
+please contact hello@parthka.dev or contact@rellitel.ink for licensing options.

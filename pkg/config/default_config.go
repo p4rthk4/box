@@ -10,8 +10,11 @@ func defaultConfig() ConfigsOptions {
 		Name:     "S2SMTP",
 		HostName: "localhost",
 		Server: ServerOptions{
-			Host: "",
-			Port: 25,
+			Host:        "",
+			Port:        25,
+			HostIPv6:    "",
+			PortIPv6:    25,
+			IPv6Disable: false,
 		},
 	}
 }

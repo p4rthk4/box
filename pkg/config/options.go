@@ -12,6 +12,9 @@ type ConfigsOptions struct {
 }
 
 type ServerOptions struct {
-	Host string `yaml:"host"`
-	Port int    `yaml:"port"`
+	Host        string `yaml:"host"`
+	Port        int    `yaml:"port"`
+	HostIPv6    string `yaml:"host_ipv6"`
+	PortIPv6    int    `yaml:"port_ipv6"`
+	IPv6Disable bool   `yaml:"IPv6_disable"`
 }

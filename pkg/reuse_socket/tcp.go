@@ -8,7 +8,6 @@ package reusesocket
 
 import (
 	"bufio"
-	"fmt"
 	"net"
 	"os"
 	"strconv"
@@ -53,7 +52,6 @@ func tpcListner(address string) (l net.Listener, err error) {
 	}
 
 	socketFileName := getSocketFileName("tcp", address)
-	fmt.Println(socketFileName)
 	file = os.NewFile(uintptr(sockFd), socketFileName)
 	if l, err = net.FileListener(file); err != nil {
 		file.Close()

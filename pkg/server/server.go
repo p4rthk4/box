@@ -27,7 +27,7 @@ type SMTPServer struct {
 	logger          *logx.Log
 }
 
-func (s *SMTPServer) SetLogfile() {
+func (s *SMTPServer) SetLogger() {
 
 	file := os.Stdout
 	s.logFile = file

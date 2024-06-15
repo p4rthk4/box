@@ -38,8 +38,7 @@ func (s *SMTPServer) AcceptConnections() {
 			continue
 		}
 
-		go HandleNewConnection(conn)
-
+		go HandleNewConnection(conn, s.logger)
 	}
 
 }

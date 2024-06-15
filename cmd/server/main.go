@@ -30,9 +30,9 @@ func main() {
 			ServerWaitGroup: wg,
 		}
 
-		fmt.Println(smtpServer)
+		// fmt.Println(smtpServer)
 
-		smtpServer.SetLogfile()
+		smtpServer.SetLogger()
 		smtpServer.Listen()
 		smtpServer.AcceptConnections()
 
@@ -51,9 +51,9 @@ func main() {
 				IsIPv6:          true,
 			}
 
-			fmt.Println(smtpServer)
+			// fmt.Println(smtpServer)
 
-			smtpServer.SetLogfile()
+			smtpServer.SetLogger()
 			smtpServer.Listen()
 			smtpServer.AcceptConnections()
 

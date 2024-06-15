@@ -2,11 +2,11 @@ name: Ultra Scalable SMTP Server
 hostname: test.rellitel.ink
 
 server: 
-  host: 127.0.0.1
+  host: 0.0.0.0
   port: 8080
-  host_ipv6: "::1"
+  host_ipv6: "::"
   port_ipv6: 8080
   # IPv6_disable: true
 
 log_dir: "./temp/logs"
-# dev: true
+dev: true

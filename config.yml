@@ -7,3 +7,6 @@ server:
   host_ipv6: "::1"
   port_ipv6: 8080
   # IPv6_disable: true
+
+log_dir: "./temp/logs"
+# dev: true

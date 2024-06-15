@@ -16,5 +16,9 @@ func defaultConfig() ConfigsOptions {
 			PortIPv6:    25,
 			IPv6Disable: false,
 		},
+
+		LogDirPath:  "./logs",
+		LogFilePath: "email.log",
+		Dev:         false,
 	}
 }

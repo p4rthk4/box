@@ -9,6 +9,10 @@ type ConfigsOptions struct {
 	Name     string        `yaml:"name"`
 	HostName string        `yaml:"hostname"`
 	Server   ServerOptions `yaml:"server"`
+
+	LogDirPath  string `yaml:"log_dir"`
+	LogFilePath string `yaml:"log_file"`
+	Dev         bool   `yaml:"dev"`
 }
 
 type ServerOptions struct {

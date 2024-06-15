@@ -12,7 +12,7 @@ import (
 	"os"
 	"syscall"
 
-	"github.com/p4rthk4/u2smtp/pkg/log"
+	"github.com/p4rthk4/u2smtp/pkg/logx"
 )
 
 func getSocketAddress(network string, address string) (syscall.Sockaddr, int) {
@@ -21,7 +21,7 @@ func getSocketAddress(network string, address string) (syscall.Sockaddr, int) {
 	case "tcp":
 		addr, err := net.ResolveTCPAddr(network, address)
 		if err != nil {
-			log.LogError("tcp ip resolve faild", err)
+			logx.LogError("tcp ip resolve faild", err)
 			os.Exit(1)
 		}
 
@@ -34,7 +34,7 @@ func getSocketAddress(network string, address string) (syscall.Sockaddr, int) {
 			if addr.Zone != "" {
 				iface, err := net.InterfaceByName(addr.Zone)
 				if err != nil {
-					log.LogError("ip resolve faild", err)
+					logx.LogError("ip resolve faild", err)
 					os.Exit(1)
 				}
 
@@ -55,14 +55,14 @@ func getSocketAddress(network string, address string) (syscall.Sockaddr, int) {
 
 			return &sockAddr, syscall.AF_INET
 		} else {
-			log.LogError("ip resolve faild", fmt.Errorf("%s ip resolve faild", network))
+			logx.LogError("ip resolve faild", fmt.Errorf("%s ip resolve faild", network))
 			os.Exit(1)
 		}
 
 	case "udp":
 		addr, err := net.ResolveUDPAddr(network, address)
 		if err != nil {
-			log.LogError("udp ip resolve faild", err)
+			logx.LogError("udp ip resolve faild", err)
 			os.Exit(1)
 		}
 
@@ -75,7 +75,7 @@ func getSocketAddress(network string, address string) (syscall.Sockaddr, int) {
 			if addr.Zone != "" {
 				iface, err := net.InterfaceByName(addr.Zone)
 				if err != nil {
-					log.LogError("ip resolve faild", err)
+					logx.LogError("ip resolve faild", err)
 					os.Exit(1)
 				}
 				sockAddr.ZoneId = uint32(iface.Index)
@@ -93,7 +93,7 @@ func getSocketAddress(network string, address string) (syscall.Sockaddr, int) {
 
 			return &sockAddr, syscall.AF_INET
 		} else {
-			log.LogError("ip resolve faild", fmt.Errorf("%s ip resolve faild", network))
+			logx.LogError("ip resolve faild", fmt.Errorf("%s ip resolve faild", network))
 			os.Exit(1)
 		}
 

@@ -9,7 +9,7 @@ import (
 	// "fmt"
 	"os"
 
-	"github.com/p4rthk4/u2smtp/pkg/log"
+	"github.com/p4rthk4/u2smtp/pkg/logx"
 	reusesocket "github.com/p4rthk4/u2smtp/pkg/reuse_socket"
 )
 
@@ -19,11 +19,13 @@ func (s *SMTPServer) Listen() {
 
 	listener, err := reusesocket.Listen("tcp", address)
 	if err != nil {
-		log.LogError("server listen faild", err)
+		logx.LogError("server listen faild", err)
 		os.Exit(1)
 	}
 
 	s.listener = listener
+
+	s.logger.Info("server start/listen on %s", address)
 
 }
 
@@ -32,7 +34,7 @@ func (s *SMTPServer) AcceptConnections() {
 	for {
 		conn, err := s.listener.Accept()
 		if err != nil {
-			log.LogError("fail to connect with client...", err)
+			logx.LogError("fail to connect with client...", err)
 			continue
 		}
 

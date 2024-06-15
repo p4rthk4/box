@@ -8,7 +8,7 @@ package config
 import (
 	"os"
 
-	"github.com/p4rthk4/u2smtp/pkg/log"
+	"github.com/p4rthk4/u2smtp/pkg/logx"
 	"gopkg.in/yaml.v3"
 )
 
@@ -18,6 +18,8 @@ func LoadConfig() {
 	if ConfOpts == nil {
 		ConfOpts = GetConfig()
 	}
+
+	postConfigAction()
 }
 
 func GetConfig() *ConfigsOptions {
@@ -27,7 +29,7 @@ func GetConfig() *ConfigsOptions {
 	if !notAnyConfigFile {
 		err := yaml.Unmarshal(configData, &config)
 		if err != nil {
-			log.LogError("failed to parse config file", err)
+			logx.LogError("failed to parse config file", err)
 			os.Exit(1)
 		}
 	}

@@ -32,6 +32,7 @@ func main() {
 
 		fmt.Println(smtpServer)
 
+		smtpServer.SetLogfile()
 		smtpServer.Listen()
 		smtpServer.AcceptConnections()
 
@@ -52,6 +53,7 @@ func main() {
 
 			fmt.Println(smtpServer)
 
+			smtpServer.SetLogfile()
 			smtpServer.Listen()
 			smtpServer.AcceptConnections()
 

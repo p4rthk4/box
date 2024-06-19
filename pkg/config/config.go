@@ -12,6 +12,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// loaded config
 var ConfOpts *ConfigsOptions = nil
 
 func LoadConfig() {

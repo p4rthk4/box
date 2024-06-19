@@ -10,3 +10,9 @@ server:
 
 log_dir: "./temp/logs"
 dev: true
+
+max_recipients: 4
+
+max_clients: 3
+
+forward: amqp

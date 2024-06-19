@@ -16,6 +16,7 @@ import (
 func main() {
 	conf.LoadConfig()
 	fmt.Println(conf.ConfOpts)
+	server.SetMailFwdMethod()
 
 	serverWait := sync.WaitGroup{}
 

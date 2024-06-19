@@ -16,9 +16,17 @@ func defaultConfig() ConfigsOptions {
 			PortIPv6:    25,
 			IPv6Disable: false,
 		},
+		MaxClients: 0,
 
 		LogDirPath:  "./logs",
 		LogFilePath: "email.log",
 		Dev:         false,
+
+		ClientGreet: "`Hello, Client!`",
+		ClientByyy:  "Ok, Byyy!",
+
+		MaxRecipients: 1024,
+
+		Forward: "none",
 	}
 }

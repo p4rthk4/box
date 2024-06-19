@@ -27,6 +27,8 @@ type SMTPServer struct {
 	logger          *logx.Log
 }
 
+var clientCount int = 0 // parallels client connection count
+
 func (s *SMTPServer) SetLogger() {
 
 	file := os.Stdout

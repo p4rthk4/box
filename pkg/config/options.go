@@ -6,13 +6,21 @@
 package config
 
 type ConfigsOptions struct {
-	Name     string        `yaml:"name"`
-	HostName string        `yaml:"hostname"`
-	Server   ServerOptions `yaml:"server"`
+	Name       string        `yaml:"name"`
+	HostName   string        `yaml:"hostname"`
+	Server     ServerOptions `yaml:"server"`
+	MaxClients int           `yaml:"max_clients"`
 
 	LogDirPath  string `yaml:"log_dir"`
 	LogFilePath string `yaml:"log_file"`
 	Dev         bool   `yaml:"dev"`
+
+	ClientGreet string `yaml:"client_greet"`
+	ClientByyy  string `yaml:"client_byyy"`
+
+	MaxRecipients int `yaml:"max_recipients"`
+
+	Forward string `yaml:"forward"` // 'http' or 'amqp'
 }
 
 type ServerOptions struct {

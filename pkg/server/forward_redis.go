@@ -81,4 +81,12 @@ func (mailFwd *MailFwdRedis) ForwardMail(email Email) {
 	}
 
 	fmt.Println("email add successful")
+
+	emailS, ok := email.ParseMail()
+	if !(ok) {
+		return
+	}
+
+	fmt.Println("email: ")
+	fmt.Println(emailS)
 }

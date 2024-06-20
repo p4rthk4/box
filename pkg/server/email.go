@@ -10,6 +10,7 @@ import (
 	"log"
 
 	"github.com/mnako/letters"
+	"github.com/p4rthk4/u2smtp/pkg/config"
 	"gopkg.in/yaml.v3"
 )
 
@@ -34,14 +35,12 @@ func (e *Email) ToDocument() ([]byte, error) {
 func (e *Email) ParseMail() (letters.Email, bool) {
 	emailReader := bytes.NewReader([]byte(e.Data))
 	email, err := letters.ParseEmail(emailReader)
-	log.Println("lol")
-	log.Println(err)
-	log.Println("lol")
-	log.Println(email)
-	log.Println("lol")
 	if err != nil {
-		return  letters.Email{}, true
+		if config.ConfOpts.Dev {
+			log.Println(err)
+		}
+		return  letters.Email{}, false
 	}
 
-	return email, false
+	return email, true
 }

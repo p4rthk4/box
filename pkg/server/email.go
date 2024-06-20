@@ -10,7 +10,6 @@ import (
 	"log"
 
 	"github.com/mnako/letters"
-	"github.com/p4rthk4/u2smtp/pkg/config"
 	"gopkg.in/yaml.v3"
 )
 

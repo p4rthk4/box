@@ -18,11 +18,24 @@ type MailForward interface {
 
 func SetMailFwdMethod() {
 	switch config.ConfOpts.Forward {
-	case "http":
-		mailFwd = &MailFwdHttp{}
+	case "webhook", "http":
+		mailFwd = &MailFwdWebhook{}
 		mailFwd.Init()
 	case "amqp":
 		mailFwd = &MailFwdAmqp{}
 		mailFwd.Init()
+	case "redis":
+		mailFwd = &MailFwdRedis{}
+		mailFwd.Init()
+	default:
+		mailFwd = &MailFwdNone{}
+		mailFwd.Init()
 	}
 }
+
+type MailFwdNone struct {
+	MailForward
+}
+
+func (mailFwd *MailFwdNone) Init()                   {}
+func (mailFwd *MailFwdNone) ForwardMail(email Email) {}

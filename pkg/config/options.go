@@ -20,7 +20,8 @@ type ConfigsOptions struct {
 
 	MaxRecipients int `yaml:"max_recipients"`
 
-	Forward string `yaml:"forward"` // 'http' or 'amqp'
+	Forward     string      `yaml:"forward"` // 'redis', 'http' or 'amqp'
+	RedisConfig RedisConfig `yaml:"redis_conf"`
 }
 
 type ServerOptions struct {
@@ -29,4 +30,12 @@ type ServerOptions struct {
 	HostIPv6    string `yaml:"host_ipv6"`
 	PortIPv6    int    `yaml:"port_ipv6"`
 	IPv6Disable bool   `yaml:"IPv6_disable"`
+}
+
+type RedisConfig struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	DB       int    `yaml:"db"`
 }

@@ -5,10 +5,24 @@
 
 package server
 
+import (
+	"gopkg.in/yaml.v3"
+)
+
 type Email struct {
-	Domain     string
-	From       string
-	Recipients []string
-	Data       []byte
-	Uid        string
+	Uid string `yaml:"uid"`
+
+	Domain     string   `yaml:"domain"`
+	From       string   `yaml:"from"`
+	Recipients []string `yaml:"recipients"`
+	Data       string   `yaml:"data"`
+}
+
+func (e *Email) ToDocument() ([]byte, error) {
+	data, err := yaml.Marshal(&e)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }

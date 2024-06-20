@@ -15,4 +15,8 @@ max_recipients: 4
 
 max_clients: 3
 
-forward: amqp
+forward: redis
+redis_conf:
+  host: rellit.email
+  port: 6379
+  password: Rellite@Parth

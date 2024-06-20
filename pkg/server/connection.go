@@ -166,20 +166,26 @@ func (conn *Connection) reset() {
 	conn.client.forwardStatus = MailForwardIdle
 }
 
-func (conn *Connection) forward() {
-	if conn.client.mailFrom == "" {
-		return
-	}
-
-	go func(count int, client Client) {
-		fmt.Println(count, client)
-	}(conn.mailCount, conn.client)
-}
-
-// close client connection
 func (conn *Connection) close() {
 	conn.forward()
 
 	clientCount -= 1
 	conn.conn.Close()
+}
+
+func (conn *Connection) forward() {
+	if conn.client.mailFrom == "" {
+		return
+	}
+
+	go func(uid string, count int, client Client) {
+		email := Email{
+			Uid: fmt.Sprintf("%s_%d", uid, count),
+			Domain: client.domain,
+			From: client.mailFrom,
+			Recipients: client.recipients,
+			Data: string(client.data),
+		}
+		mailFwd.ForwardMail(email)
+	}(conn.uid, conn.mailCount, conn.client)
 }

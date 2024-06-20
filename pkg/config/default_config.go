@@ -28,5 +28,11 @@ func defaultConfig() ConfigsOptions {
 		MaxRecipients: 1024,
 
 		Forward: "none",
+		RedisConfig: RedisConfig{
+			Host:     "localhost",
+			Port:     6379,
+			Password: "",
+			DB:       0,
+		},
 	}
 }

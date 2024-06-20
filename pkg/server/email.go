@@ -35,10 +35,12 @@ func (e *Email) ToDocument() ([]byte, error) {
 func (e *Email) ParseMail() (letters.Email, bool) {
 	emailReader := bytes.NewReader([]byte(e.Data))
 	email, err := letters.ParseEmail(emailReader)
+	log.Println("lol")
+	log.Println(err)
+	log.Println("lol")
+	log.Println(email)
+	log.Println("lol")
 	if err != nil {
-		if config.ConfOpts.Dev {
-			log.Println(err)
-		}
 		return  letters.Email{}, true
 	}
 

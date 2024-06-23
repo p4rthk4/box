@@ -20,7 +20,6 @@ type ConfigsOptions struct {
 
 	MaxRecipients int `yaml:"max_recipients"`
 
-	Forward     string      `yaml:"forward"` // 'redis', 'http' or 'amqp'
 	RedisConfig RedisConfig `yaml:"redis_conf"`
 }
 

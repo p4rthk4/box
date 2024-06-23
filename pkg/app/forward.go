@@ -3,7 +3,7 @@
 // Licensed under the MIT License for individual use or a commercial
 // license for enterprise use. See LICENSE.txt and COMMERCIAL_LICENSE.txt.
 
-package server
+package app
 
 import (
 	"context"
@@ -12,11 +12,12 @@ import (
 	"os"
 
 	"github.com/p4rthk4/u2smtp/pkg/config"
+	"github.com/p4rthk4/u2smtp/pkg/server"
 	"github.com/redis/go-redis/v9"
 )
 
-type MailFwdRedis struct {
-	MailForward
+type MailFwdBackendRedis struct {
+	server.ForwardBackend
 
 	host     string
 	port     int
@@ -28,7 +29,7 @@ type MailFwdRedis struct {
 	client *redis.Client
 }
 
-func (mailFwd *MailFwdRedis) Init() {
+func (mailFwd *MailFwdBackendRedis) Init() {
 	// load config
 	mailFwd.host = config.ConfOpts.RedisConfig.Host
 	mailFwd.port = config.ConfOpts.RedisConfig.Port
@@ -56,7 +57,7 @@ func (mailFwd *MailFwdRedis) Init() {
 	log.Println("Init Redis Forward method")
 }
 
-func (mailFwd *MailFwdRedis) ForwardMail(email Email) {
+func (mailFwd *MailFwdBackendRedis) ForwardMail(email server.Email) {
 	fmt.Println("Mail Recive in Redis")
 
 	fmt.Println("Redis Host:", mailFwd.host)

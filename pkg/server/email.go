@@ -14,6 +14,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// recive mail structure
 type Email struct {
 	Uid string `yaml:"uid"`
 

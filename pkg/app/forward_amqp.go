@@ -38,7 +38,7 @@ func (mailFwd *MailFwdBackendAmqp) Init() {
 		}
 		os.Exit(1)
 	}
-	
+
 	channel, err := client.Channel()
 	if err != nil {
 		log.Println("Failed to open a AMQP channel...")
@@ -75,6 +75,40 @@ func (mailFwd *MailFwdBackendAmqp) Init() {
 }
 
 func (mailFwd *MailFwdBackendAmqp) ForwardMail(email server.Email) {
-	fmt.Println("Mail Recive...")
-	fmt.Println(email)
+	data, err := email.ToDocument()
+	if err != nil {
+		log.Println("error to gen document")
+	}
+
+	fmt.Println(string(data))
+
+	err = mailFwd.channel.Publish(
+		"",                 // exchange
+		mailFwd.queue.Name, // routing key
+		false,              // mandatory
+		false,              // immediate
+		amqp.Publishing{
+			ContentType: "text/plain",
+			Body:        data,
+		},
+	)
+
+	if err != nil {
+		log.Println("Failed to publish a message")
+		if config.ConfOpts.Dev {
+			fmt.Println(err)
+		}
+		return
+	}
+
+	fmt.Println("email add successful")
+
+	emailS, ok := email.ParseMail()
+	if !ok {
+		fmt.Println("Error In mail Parse")
+		return
+	}
+
+	fmt.Println("email: ")
+	fmt.Println(emailS)
 }

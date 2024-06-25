@@ -20,3 +20,8 @@ redis_conf:
   host: rellit.email
   port: 6379
   password: Rellite@Parth
+
+amqp_conf:
+  host: 65.21.1.79
+  username: rellite
+  password: Rellite@Parth

@@ -21,6 +21,7 @@ type ConfigsOptions struct {
 	MaxRecipients int `yaml:"max_recipients"`
 
 	RedisConfig RedisConfig `yaml:"redis_conf"`
+	Amqp        AmqpConfig  `yaml:"amqp_conf"`
 }
 
 type ServerOptions struct {
@@ -37,4 +38,12 @@ type RedisConfig struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	DB       int    `yaml:"db"`
+}
+
+type AmqpConfig struct {
+	Host     string `yaml:"host"`
+	Port     int    `yaml:"port"`
+	Username string `yaml:"username"`
+	Password string `yaml:"password"`
+	Queue    string    `yaml:"queue"`
 }

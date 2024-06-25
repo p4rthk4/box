@@ -14,7 +14,7 @@ import (
 
 func StartApp() {
 
-	server.SetMailFwdMethod(&MailFwdBackendRedis{})
+	server.SetMailFwdMethod(&MailFwdBackendAmqp{})
 
 	serverWait := sync.WaitGroup{}
 

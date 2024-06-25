@@ -33,5 +33,13 @@ func defaultConfig() ConfigsOptions {
 			Password: "",
 			DB:       0,
 		},
+
+		Amqp: AmqpConfig{
+			Host:     "localhost",
+			Port:     5672,
+			Username: "",
+			Password: "",
+			Queue:    "",
+		},
 	}
 }

@@ -92,3 +92,7 @@ func (mailFwd *MailFwdBackendRedis) ForwardMail(email server.Email) {
 	fmt.Println("email: ")
 	fmt.Println(emailS)
 }
+
+func (mailFwd *MailFwdBackendRedis) ExistMailBox(rcpt string) bool {
+	return checkMaiboxFromRcpt(rcpt)
+}

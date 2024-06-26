@@ -18,7 +18,8 @@ type ConfigsOptions struct {
 	ClientGreet string `yaml:"client_greet"`
 	ClientByyy  string `yaml:"client_byyy"`
 
-	MaxRecipients int `yaml:"max_recipients"`
+	MaxRecipients     int  `yaml:"max_recipients"`
+	CheckMailBoxExist bool `yaml:"check_mailbox"`
 
 	RedisConfig RedisConfig `yaml:"redis_conf"`
 	Amqp        AmqpConfig  `yaml:"amqp_conf"`
@@ -45,5 +46,5 @@ type AmqpConfig struct {
 	Port     int    `yaml:"port"`
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
-	Queue    string    `yaml:"queue"`
+	Queue    string `yaml:"queue"`
 }

@@ -108,6 +108,13 @@ func (conn *Connection) handleRcpt(args string) {
 		return
 	}
 
+	if config.ConfOpts.CheckMailBoxExist {
+		if !mailFwd.ExistMailBox(rcpt) {
+			conn.text.reply(550, "mailbox unavailable")
+			return
+		}
+	}
+
 	conn.client.recipients = append(conn.client.recipients, rcpt)
 
 	conn.text.reply(250, "Ok")

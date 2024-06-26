@@ -112,3 +112,7 @@ func (mailFwd *MailFwdBackendAmqp) ForwardMail(email server.Email) {
 	fmt.Println("email: ")
 	fmt.Println(emailS)
 }
+
+func (mailFwd *MailFwdBackendAmqp) ExistMailBox(rcpt string) bool {
+	return checkMaiboxFromRcpt(rcpt)
+}

@@ -12,6 +12,7 @@ log_dir: "./temp/logs"
 dev: true
 
 max_recipients: 4
+check_mailbox: false
 
 max_clients: 3
 

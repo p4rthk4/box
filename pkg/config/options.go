@@ -13,7 +13,6 @@ type ConfigsOptions struct {
 
 	LogDirPath  string `yaml:"log_dir"`
 	LogFilePath string `yaml:"log_file"`
-	Dev         bool   `yaml:"dev"`
 
 	ClientGreet string `yaml:"client_greet"`
 	ClientByyy  string `yaml:"client_byyy"`
@@ -23,6 +22,10 @@ type ConfigsOptions struct {
 
 	RedisConfig RedisConfig `yaml:"redis_conf"`
 	Amqp        AmqpConfig  `yaml:"amqp_conf"`
+
+	Client ClientConfig `yaml:"client"`
+
+	Dev bool `yaml:"dev"`
 }
 
 type ServerOptions struct {
@@ -47,4 +50,13 @@ type AmqpConfig struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	Queue    string `yaml:"queue"`
+}
+
+type ClientConfig struct {
+	HostName string `yaml:"hostname"`
+
+	LogDirPath  string `yaml:"log_dir"`
+	LogFilePath string `yaml:"log_file"`
+
+	Amqp AmqpConfig `yaml:"amqp_conf"`
 }

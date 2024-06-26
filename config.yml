@@ -26,3 +26,7 @@ amqp_conf:
   host: rellit.email
   username: rellite
   password: Rellite@Parth
+
+# client: 
+#   amqp_conf:
+#     queue: lolking

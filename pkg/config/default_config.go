@@ -26,6 +26,7 @@ func defaultConfig() ConfigsOptions {
 		ClientByyy:  "Ok, Byyy!",
 
 		MaxRecipients: 1024,
+		CheckMailBoxExist: false,
 
 		RedisConfig: RedisConfig{
 			Host:     "localhost",
@@ -41,5 +42,22 @@ func defaultConfig() ConfigsOptions {
 			Password: "",
 			Queue:    "",
 		},
+
+		Client: ClientConfig{
+			HostName: "",
+			
+			LogDirPath: "",
+			LogFilePath: "",
+
+			Amqp: AmqpConfig{
+				Host: "",
+				Port: 0,
+				Username: "",
+				Password: "",
+				Queue: "",
+			},
+		},
+
+
 	}
 }

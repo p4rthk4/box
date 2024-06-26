@@ -30,4 +30,42 @@ func postConfigAction() {
 		}
 	}
 
+	// if queue name is empty
+	if ConfOpts.Amqp.Queue == "" {
+		ConfOpts.Amqp.Queue = ConfOpts.HostName
+	}
+
+	// set default config for clinet
+	if ConfOpts.Client.HostName == "" {
+		ConfOpts.Client.HostName = ConfOpts.HostName
+	}
+
+	if ConfOpts.Client.LogDirPath == "" {
+		ConfOpts.Client.LogDirPath = ConfOpts.LogDirPath
+	}
+
+	if ConfOpts.Client.LogFilePath == "" {
+		ConfOpts.Client.LogFilePath = ConfOpts.LogFilePath
+	}
+
+	if ConfOpts.Client.Amqp.Host == "" {
+		ConfOpts.Client.Amqp.Host = ConfOpts.Amqp.Host
+	}
+
+	if ConfOpts.Client.Amqp.Port == 0 {
+		ConfOpts.Client.Amqp.Port = ConfOpts.Amqp.Port
+	}
+
+	if ConfOpts.Client.Amqp.Username == "" {
+		ConfOpts.Client.Amqp.Username = ConfOpts.Amqp.Username
+	}
+
+	if ConfOpts.Client.Amqp.Password == "" {
+		ConfOpts.Client.Amqp.Password = ConfOpts.Amqp.Password
+	}
+
+	if ConfOpts.Client.Amqp.Queue == "" {
+		ConfOpts.Client.Amqp.Queue = ConfOpts.Amqp.Queue
+	}
+
 }

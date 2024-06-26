@@ -22,6 +22,6 @@ redis_conf:
   password: Rellite@Parth
 
 amqp_conf:
-  host: 65.21.1.79
+  host: rellit.email
   username: rellite
   password: Rellite@Parth

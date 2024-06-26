@@ -30,8 +30,13 @@ type ReadWriteClose struct {
 // get new reader and write form net.Conn or io.ReadWriter
 func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
 
+	textReader := LimitReader{
+		r:         conn,
+		lineLimit: 2000, // Doubled maximum line length per RFC 5321 (Section 4.5.3.1.6)
+	}
+
 	rwc := ReadWriteClose{
-		Reader: conn,
+		Reader: &textReader,
 		Writer: conn,
 		Closer: conn,
 	}
@@ -45,47 +50,42 @@ func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
 	}
 }
 
-// send reply
 func (rw *TextReaderWriter) reply(code int, format string, a ...any) {
 	rw.t.PrintfLine("%d %s", code, fmt.Sprintf(format, a...))
 }
 
-// send greet to cliet (220)
 func (rw *TextReaderWriter) greet() {
 	rw.t.PrintfLine("%d %s %s", 220, config.ConfOpts.HostName, config.ConfOpts.ClientGreet)
 }
 
-// send byyy (221)
 func (rw *TextReaderWriter) byyy() {
 	rw.t.PrintfLine("%d %s", 221, config.ConfOpts.ClientByyy)
 }
 
-// send busy (421)
 func (rw *TextReaderWriter) busy() {
 	rw.t.PrintfLine("%d %s Service not available, max clients exceeded", 421, config.ConfOpts.HostName)
 }
 
-// send timeout (421)
 func (rw *TextReaderWriter) timeout() {
 	rw.t.PrintfLine("%d %s Error: timeout exceeded", 421, config.ConfOpts.HostName)
 }
 
-// syntax error
+func (rw *TextReaderWriter) longLine() {
+	rw.t.PrintfLine("%d %s Error: too long line", 500, config.ConfOpts.HostName)
+}
+
 func (rw *TextReaderWriter) syntaxError(format string, a ...any) {
 	rw.t.PrintfLine("%d %s", 501, fmt.Sprintf(format, a...))
 }
 
-// command not recognized (502)
 func (rw *TextReaderWriter) cmdNotRecognized() {
 	rw.t.PrintfLine("500 Error: command not recognized")
 }
 
-// command not implemented (502)
 func (rw *TextReaderWriter) cmdNotImplemented() {
 	rw.t.PrintfLine("502 Error: command not implemented")
 }
 
-// read line end with \n
 func (rw *TextReaderWriter) readLine() (string, error) {
 	rw.setTimeout(2 * time.Minute)
 	defer rw.clearTimeout()
@@ -93,7 +93,6 @@ func (rw *TextReaderWriter) readLine() (string, error) {
 	return rw.t.ReadLine()
 }
 
-// read data end with \r\n.\r\n
 func (rw *TextReaderWriter) readData() ([]byte, error) {
 	rw.setTimeout(15 * time.Minute)
 	defer rw.clearTimeout()

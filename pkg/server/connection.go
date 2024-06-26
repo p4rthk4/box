@@ -122,7 +122,11 @@ func (conn *Connection) handle() {
 		// if error not nil
 		if netErr, ok := err.(net.Error); ok && netErr.Timeout() { // if time out
 			conn.text.timeout()
-			conn.closeForTimeout()
+			conn.closeWithFailAnd("timeout exceeded")
+			break
+		} else if err == errTooLongLine {
+			conn.text.longLine()
+			conn.closeWithFailAnd("too long line")
 			break
 		} else if err == io.ErrUnexpectedEOF { // eof or connection close
 			conn.closeWithFail()
@@ -151,10 +155,10 @@ func (conn *Connection) closeForMaxClientsExceeded() {
 	conn.logger.Warn("disconnected client by server for max clients exceeded %s[%s]:%d", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 }
 
-func (conn *Connection) closeForTimeout() {
+func (conn *Connection) closeWithFailAnd(resone string) {
 	conn.client.forwardStatus = MailForwardFaild
 	conn.close()
-	conn.logger.Warn("disconnected client by server for timeout exceeded %s[%s]:%d", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
+	conn.logger.Warn("disconnected client by server for %s %s[%s]:%d", resone, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 }
 
 func (conn *Connection) reset() {
@@ -180,11 +184,11 @@ func (conn *Connection) forward() {
 
 	go func(uid string, count int, client Client) {
 		email := Email{
-			Uid: fmt.Sprintf("%s_%d", uid, count),
-			Domain: client.domain,
-			From: client.mailFrom,
+			Uid:        fmt.Sprintf("%s_%d", uid, count),
+			Domain:     client.domain,
+			From:       client.mailFrom,
 			Recipients: client.recipients,
-			Data: string(client.data),
+			Data:       string(client.data),
 		}
 		mailFwd.ForwardMail(email)
 	}(conn.uid, conn.mailCount, conn.client)

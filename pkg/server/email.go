@@ -16,8 +16,8 @@ import (
 
 // recive mail structure
 type Email struct {
-	Uid string `yaml:"uid"`
-
+	Uid        string   `yaml:"uid"`
+	Success    bool     `yaml:"success"`
 	Domain     string   `yaml:"domain"`
 	From       string   `yaml:"from"`
 	Recipients []string `yaml:"recipients"`
@@ -40,7 +40,7 @@ func (e *Email) ParseMail() (letters.Email, bool) {
 		if config.ConfOpts.Dev {
 			log.Println(err)
 		}
-		return  letters.Email{}, false
+		return letters.Email{}, false
 	}
 
 	return email, true

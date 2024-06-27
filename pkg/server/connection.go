@@ -183,6 +183,7 @@ func (conn *Connection) forward() {
 	}
 
 	go func(uid string, count int, client Client) {
+		
 		email := Email{
 			Uid:        fmt.Sprintf("%s_%d", uid, count),
 			Domain:     client.domain,
@@ -190,6 +191,13 @@ func (conn *Connection) forward() {
 			Recipients: client.recipients,
 			Data:       string(client.data),
 		}
+
+		if client.forwardStatus == MailForwardSuccess {
+			email.Success = true
+		} else {
+			email.Success = false
+		}
+
 		mailFwd.ForwardMail(email)
 	}(conn.uid, conn.mailCount, conn.client)
 }

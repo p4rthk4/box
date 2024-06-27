@@ -22,15 +22,21 @@ type Email struct {
 	From       string   `yaml:"from"`
 	Recipients []string `yaml:"recipients"`
 	Data       string   `yaml:"data"`
+	dataByte   []byte
 }
 
 func (e *Email) ToDocument() ([]byte, error) {
+	e.Data = string(e.dataByte)
 	data, err := yaml.Marshal(&e)
 	if err != nil {
 		return nil, err
 	}
 
 	return data, nil
+}
+
+func (e *Email) GetBytes() []byte {
+	return e.dataByte
 }
 
 func (e *Email) ParseMail() (letters.Email, bool) {

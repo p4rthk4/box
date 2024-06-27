@@ -183,13 +183,14 @@ func (conn *Connection) forward() {
 	}
 
 	go func(uid string, count int, client Client) {
-		
+
 		email := Email{
 			Uid:        fmt.Sprintf("%s_%d", uid, count),
 			Domain:     client.domain,
 			From:       client.mailFrom,
 			Recipients: client.recipients,
-			Data:       string(client.data),
+			dataByte:   client.data,
+			// Data:       string(client.data),
 		}
 
 		if client.forwardStatus == MailForwardSuccess {

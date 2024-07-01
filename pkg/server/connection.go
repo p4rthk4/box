@@ -33,7 +33,8 @@ type Client struct {
 
 type Connection struct {
 	conn          net.Conn
-	remoteAddress RemoteAddress
+	remoteAddress RoLAddress
+	localAddress  RoLAddress
 	text          *TextReaderWriter // text protocal for mail
 
 	uid       string
@@ -76,8 +77,13 @@ func (conn *Connection) init() bool {
 	conn.mailCount = 1
 	conn.uid = uid
 	conn.logger = conn.serverLogger.GetNewWithPrefix(conn.uid)
-	if ok := conn.remoteAddress.SetAddress(conn.conn); !ok {
+	
+	if ok := conn.remoteAddress.SetAddress(conn.conn.RemoteAddr().Network(), conn.conn.RemoteAddr().String()); !ok {
 		conn.logger.Warn("no PTR record or faild to find PTR records of %s", conn.remoteAddress.String())
+	}
+
+	if ok := conn.localAddress.SetAddress(conn.conn.LocalAddr().Network(), conn.conn.LocalAddr().String()); !ok {
+		conn.logger.Warn("no PTR record or faild to find PTR records of local address %s", conn.remoteAddress.String())
 	}
 
 	conn.client.domain = ""
@@ -95,11 +101,11 @@ func (conn *Connection) init() bool {
 func (conn *Connection) handle() {
 
 	if config.ConfOpts.MaxClients > 0 && clientCount > config.ConfOpts.MaxClients { // if max clients
-		conn.text.busy()
+		conn.text.busy(conn.localAddress.GetPTR())
 		conn.closeForMaxClientsExceeded()
 		return
 	} else {
-		conn.text.greet() // send 220 for conncetion establishment
+		conn.text.greet(conn.localAddress.GetPTR()) // send 220 for conncetion establishment
 	}
 
 	for {
@@ -121,11 +127,11 @@ func (conn *Connection) handle() {
 
 		// if error not nil
 		if netErr, ok := err.(net.Error); ok && netErr.Timeout() { // if time out
-			conn.text.timeout()
+			conn.text.timeout(conn.localAddress.GetPTR())
 			conn.closeWithFailAnd("timeout exceeded")
 			break
 		} else if err == errTooLongLine {
-			conn.text.longLine()
+			conn.text.longLine(conn.localAddress.GetPTR())
 			conn.closeWithFailAnd("too long line")
 			break
 		} else if err == io.ErrUnexpectedEOF { // eof or connection close

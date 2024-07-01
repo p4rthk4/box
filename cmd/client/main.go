@@ -5,8 +5,13 @@
 
 package main
 
-import "github.com/p4rthk4/u2smtp/pkg/client"
+import smtpclient "github.com/p4rthk4/u2smtp/pkg/client"
 
 func main() {
-	client.ClientTmp()
+	clinet := smtpclient.NewClinet()
+	clinet.SetHost("lolkongd.com")
+
+	mailContent := []byte{}
+
+	clinet.SendMail(mailContent)
 }

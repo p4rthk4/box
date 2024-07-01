@@ -54,24 +54,24 @@ func (rw *TextReaderWriter) reply(code int, format string, a ...any) {
 	rw.t.PrintfLine("%d %s", code, fmt.Sprintf(format, a...))
 }
 
-func (rw *TextReaderWriter) greet() {
-	rw.t.PrintfLine("%d %s %s", 220, config.ConfOpts.HostName, config.ConfOpts.ClientGreet)
+func (rw *TextReaderWriter) greet(hostname string) {
+	rw.t.PrintfLine("%d %s %s", 220, hostname, config.ConfOpts.ClientGreet)
 }
 
 func (rw *TextReaderWriter) byyy() {
 	rw.t.PrintfLine("%d %s", 221, config.ConfOpts.ClientByyy)
 }
 
-func (rw *TextReaderWriter) busy() {
-	rw.t.PrintfLine("%d %s Service not available, max clients exceeded", 421, config.ConfOpts.HostName)
+func (rw *TextReaderWriter) busy(hostname string) {
+	rw.t.PrintfLine("%d %s Service not available, max clients exceeded", 421, hostname)
 }
 
-func (rw *TextReaderWriter) timeout() {
-	rw.t.PrintfLine("%d %s Error: timeout exceeded", 421, config.ConfOpts.HostName)
+func (rw *TextReaderWriter) timeout(hostname string) {
+	rw.t.PrintfLine("%d %s Error: timeout exceeded", 421, hostname)
 }
 
-func (rw *TextReaderWriter) longLine() {
-	rw.t.PrintfLine("%d %s Error: too long line", 500, config.ConfOpts.HostName)
+func (rw *TextReaderWriter) longLine(hostname string) {
+	rw.t.PrintfLine("%d %s Error: too long line", 500, hostname)
 }
 
 func (rw *TextReaderWriter) syntaxError(format string, a ...any) {

@@ -5,17 +5,20 @@
 
 package server
 
-import "net"
+import (
+	"net"
+)
 
-type RemoteAddress struct {
+// remote or local address
+type RoLAddress struct {
 	ip         net.IP
 	port       int
 	isIPv6     bool
 	ptrRecords []string
 }
 
-func (ra *RemoteAddress) SetAddress(conn net.Conn) bool {
-	ipAddr, err := net.ResolveTCPAddr(conn.RemoteAddr().Network(), conn.RemoteAddr().String()) // resolve / parse ip address
+func (ra *RoLAddress) SetAddress(network string, address string) bool {
+	ipAddr, err := net.ResolveTCPAddr(network, address) // resolve / parse ip address
 	if err != nil {
 		ra.ptrRecords = nil
 		return false
@@ -45,7 +48,7 @@ func (ra *RemoteAddress) SetAddress(conn net.Conn) bool {
 }
 
 // return first PTR records
-func (ra *RemoteAddress) GetPTR() string {
+func (ra *RoLAddress) GetPTR() string {
 	if len(ra.ptrRecords) > 0 {
 		ptr := ra.ptrRecords[0]
 
@@ -61,6 +64,6 @@ func (ra *RemoteAddress) GetPTR() string {
 	}
 }
 
-func (ra *RemoteAddress) String() string {
+func (ra *RoLAddress) String() string {
 	return ra.ip.String()
 }

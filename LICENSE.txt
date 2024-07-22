@@ -1,29 +1,33 @@
-MIT License
+Software License Agreement for Enterprise or Commercial Use
 
-Copyright (c) 2024 Parthka <hello@parthka.dev>
-Copyright (c) 2024 Rellite <contact@rellitel.ink>
+This Software License Agreement ("Agreement") is made effective as of [Date], by and between Rellite ("Licensor") and the enterprise or commercial entity using the software ("Licensee").
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. **License Grant:** Licensor hereby grants Licensee a non-exclusive, non-transferable license to use the software (the "Software") solely for Licensee's internal business purposes. 
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+2. **Restrictions:** Licensee shall not:
+   - (i) modify, adapt, translate, or create derivative works based on the Software;
+   - (ii) reverse engineer, decompile, disassemble, or attempt to derive source code from the Software;
+   - (iii) distribute, sublicense, or otherwise transfer the Software to third parties;
+   - (iv) use the Software to provide services to third parties or as part of any commercial product or service;
+   - (v) remove any proprietary notices or labels on the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+3. **Ownership:** The Software and all intellectual property rights therein are and shall remain the property of Licensor.
 
----
+4. **Payment:** Licensee agrees to pay the license fee as specified in the invoice or purchase order.
 
-**Commercial License Information:**
+5. **Term and Termination:** This Agreement is effective as of the date of payment and will continue until terminated. Licensee’s rights under this Agreement will terminate automatically without notice if Licensee fails to comply with any term of this Agreement. Upon termination, Licensee must destroy all copies of the Software.
 
-If you are using this software for enterprise or commercial purposes,
-please contact hello@parthka.dev or contact@rellitel.ink for licensing options.
+6. **Support:** Licensor shall provide support services as specified in a separate support agreement.
+
+7. **Disclaimer of Warranties:** The Software is provided "as is" without warranty of any kind, express or implied, including but not limited to the implied warranties of merchantability, fitness for a particular purpose, and non-infringement. Licensor does not warrant that the Software will meet Licensee's requirements or that operation of the Software will be uninterrupted or error-free.
+
+8. **Limitation of Liability:** In no event shall Licensor be liable for any damages (including, without limitation, lost profits, business interruption, or lost information) arising out of the use or inability to use the Software, even if Licensor has been advised of the possibility of such damages.
+
+9. **Governing Law:** This Agreement shall be governed by and construed in accordance with the laws of [Your Jurisdiction].
+
+10. **Entire Agreement:** This Agreement constitutes the entire agreement between the parties and supersedes all prior or contemporaneous agreements, representations, and understandings.
+
+11. **Contact Information:** For any questions regarding this license, please contact:
+   - Rellite
+   - contact@rellitel.ink
+

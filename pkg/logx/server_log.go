@@ -1,8 +1,3 @@
-// U2SMTP - log
-//
-// Licensed under the MIT License for individual use or a commercial
-// license for enterprise use. See LICENSE.txt and COMMERCIAL_LICENSE.txt.
-
 package logx
 
 import (

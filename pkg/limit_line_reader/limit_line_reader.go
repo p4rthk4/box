@@ -1,8 +1,3 @@
-// U2SMTP - limit line reader
-//
-// Licensed under the MIT License for individual use or a commercial
-// license for enterprise use. See LICENSE.txt and COMMERCIAL_LICENSE.txt.
-
 package limitlinereader
 
 import (

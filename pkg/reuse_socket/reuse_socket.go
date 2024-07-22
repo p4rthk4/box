@@ -1,8 +1,5 @@
-// U2SMTP - reuse socket (set socket option, it help to reuse address)
-// user this socket or listner for server.
-//
-// Licensed under the MIT License for individual use or a commercial
-// license for enterprise use. See LICENSE.txt and COMMERCIAL_LICENSE.txt.
+// reusable socket (set socket option, it help to reuse address)
+// only for linux
 
 package reusesocket
 
@@ -11,6 +8,7 @@ import (
 	"net"
 )
 
+// reusable listen
 func Listen(network string, address string) (l net.Listener, err error) {
 	switch network {
 	case "tcp", "tcp4", "tcp6":
@@ -20,6 +18,7 @@ func Listen(network string, address string) (l net.Listener, err error) {
 	}
 }
 
+// reusable packet listen
 func ListenPacket(network string, address string) (l net.PacketConn, err error) {
 	switch network {
 	case "udp", "udp4", "udp6":

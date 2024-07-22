@@ -1,8 +1,3 @@
-// U2SMTP - Unique Id For E-Mail Id
-//
-// Licensed under the MIT License for individual use or a commercial
-// license for enterprise use. See LICENSE.txt and COMMERCIAL_LICENSE.txt.
-
 package uid
 
 import (

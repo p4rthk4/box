@@ -11,6 +11,7 @@ import (
 	"net"
 
 	"github.com/p4rthk4/u2smtp/pkg/config"
+	limitlinereader "github.com/p4rthk4/u2smtp/pkg/limit_line_reader"
 	"github.com/p4rthk4/u2smtp/pkg/logx"
 	"github.com/p4rthk4/u2smtp/pkg/uid"
 )
@@ -77,7 +78,7 @@ func (conn *Connection) init() bool {
 	conn.mailCount = 1
 	conn.uid = uid
 	conn.logger = conn.serverLogger.GetNewWithPrefix(conn.uid)
-	
+
 	if ok := conn.remoteAddress.SetAddress(conn.conn.RemoteAddr().Network(), conn.conn.RemoteAddr().String()); !ok {
 		conn.logger.Warn("no PTR record or faild to find PTR records of %s", conn.remoteAddress.String())
 	}
@@ -130,7 +131,7 @@ func (conn *Connection) handle() {
 			conn.text.timeout(conn.localAddress.GetPTR())
 			conn.closeWithFailAnd("timeout exceeded")
 			break
-		} else if err == errTooLongLine {
+		} else if err == limitlinereader.ErrTooLongLine {
 			conn.text.longLine(conn.localAddress.GetPTR())
 			conn.closeWithFailAnd("too long line")
 			break

@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/p4rthk4/u2smtp/pkg/config"
+	limitlinereader "github.com/p4rthk4/u2smtp/pkg/limit_line_reader"
 )
 
 type TextReaderWriter struct {
@@ -30,9 +31,9 @@ type ReadWriteClose struct {
 // get new reader and write form net.Conn or io.ReadWriter
 func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
 
-	textReader := LimitReader{
-		r:         conn,
-		lineLimit: 2000, // Doubled maximum line length per RFC 5321 (Section 4.5.3.1.6)
+	textReader := limitlinereader.LimitLineReader{
+		Reader:      conn,
+		MaxLineSize: 2000, // Doubled maximum line length per RFC 5321 (Section 4.5.3.1.6)
 	}
 
 	rwc := ReadWriteClose{

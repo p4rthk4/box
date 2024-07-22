@@ -1,4 +1,4 @@
-package app
+package serverapp
 
 import (
 	"context"

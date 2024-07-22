@@ -1,4 +1,4 @@
-package app
+package serverapp
 
 import (
 	"sync"
@@ -7,7 +7,7 @@ import (
 	"github.com/p4rthk4/u2smtp/pkg/server"
 )
 
-func StartApp() {
+func StartServer() {
 
 	server.SetMailFwdMethod(&MailFwdBackendAmqp{})
 

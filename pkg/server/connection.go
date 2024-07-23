@@ -28,7 +28,8 @@ type Client struct {
 }
 
 type Connection struct {
-	conn          net.Conn
+	conn net.Conn
+
 	remoteAddress RoLAddress
 	localAddress  RoLAddress
 	text          *TextReaderWriter // text protocal for mail

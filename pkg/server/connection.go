@@ -177,7 +177,10 @@ func (conn *Connection) close() {
 	conn.forward()
 
 	clientCount -= 1
-	conn.conn.Close()
+	err := conn.conn.Close()
+	if err != nil {
+		conn.logger.Error("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
+	}
 }
 
 func (conn *Connection) forward() {

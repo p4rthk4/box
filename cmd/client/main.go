@@ -1,12 +1,22 @@
 package main
 
-import smtpclient "github.com/p4rthk4/u2smtp/pkg/client"
+import (
+	"fmt"
+	"time"
+
+	smtpclient "github.com/p4rthk4/u2smtp/pkg/client"
+)
 
 func main() {
-	clinet := smtpclient.NewClinet()
-	clinet.SetHost("lolkongd.com")
-
 	mailContent := []byte{}
 
-	clinet.SendMail(mailContent)
+	clinet := smtpclient.NewClinet()
+	// try cockatielone.biz
+	// clinet.SetHost("alt3.gmail-smtp-in.l.google.com")
+	clinet.SetTimeout(5 * time.Second)
+	clinet.SetRcpt("parthka.2005@cockatielone.biz")
+	clinet.SetRcpt("hello@parthka.dev")
+	clinet.SetData(mailContent)
+	err := clinet.SendMail()
+	fmt.Println(err)
 }

@@ -8,54 +8,56 @@ package client
 import (
 	"fmt"
 	"net"
+	"regexp"
+	"strings"
 )
 
-type IPAddress struct {
-	ip     net.IP
-	isIPv6 bool
-}
-
-type ServerAddress struct {
-	name string
-	ips  []IPAddress
-}
-
-func getServerAddress(addr string) (ServerAddress, error) {
+// get ip address from string or
+func getIPFromString(addr string) ([]net.IP, error) {
 	ip := net.ParseIP(addr)
 	if ip != nil {
-		ipAddr := getIPAddressFromIP(ip)
-		return ServerAddress{
-			ips:  []IPAddress{ipAddr},
-			name: "",
-		}, nil
+		return []net.IP{ip}, nil
 	}
 
 	ips, err := net.LookupIP(addr)
 	if err != nil {
-		return ServerAddress{}, fmt.Errorf("host IP loopup faild")
+
+		switch e := err.(type) {
+		case *net.DNSError:
+			if e.IsNotFound {
+				return []net.IP{}, fmt.Errorf("no any ip records (A/AAAA) found of this %s domain, may be domain dose not exist", addr)
+			}
+
+		default:
+			return nil, fmt.Errorf("internal server error when looking A or AAAA records for %s domain", addr)
+		}
+
+		return []net.IP{}, err
 	}
 
-	serverAddr := ServerAddress{
-		name: addr,
-		ips:  []IPAddress{},
-	}
-	for _, ip := range ips {
-		serverAddr.ips = append(serverAddr.ips, getIPAddressFromIP(ip))
-	}
-
-	return serverAddr, nil
+	return ips, nil
 }
 
-func getIPAddressFromIP(ip net.IP) IPAddress {
+func isIPv6(ip net.IP) bool {
 	if ip != nil && ip.To4() == nil && ip.To16() != nil {
-		return IPAddress{
-			ip:     ip,
-			isIPv6: true,
-		}
-	} else {
-		return IPAddress{
-			ip:     ip,
-			isIPv6: false,
-		}
+		return true
 	}
+	return false
+}
+
+func isValidEmail(email string) bool {
+	email = strings.TrimSpace(email)
+	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
+	return emailRegex.MatchString(email)
+}
+
+func getDomainFromEmail(email string) (string, error) {
+	email = strings.TrimSpace(email)
+
+	if !isValidEmail(email) {
+		return "", fmt.Errorf("invalid email address")
+	}
+
+	parts := strings.Split(email, "@")
+	return parts[1], nil
 }

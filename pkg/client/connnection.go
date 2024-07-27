@@ -3,7 +3,7 @@ package client
 import (
 	"errors"
 	"fmt"
-	"net"	
+	"net"
 	"strings"
 )
 
@@ -52,6 +52,11 @@ func (conn *ClientConn) handleConn() error {
 	fmt.Println(conn.extension)
 
 	err = conn.mail()
+	if err != nil {
+		return serverErrToClientErr(err)
+	}
+
+	err = conn.rcpt()
 	if err != nil {
 		return serverErrToClientErr(err)
 	}
@@ -146,14 +151,46 @@ func (conn *ClientConn) mail() error {
 			return errors.New("smtp: server does not support SMTPUTF8")
 		}
 	}
-	
+
 	if _, ok := conn.extension["DSN"]; ok {
-		// TODO: DSN
+		switch conn.smtpClient.DSNReturn {
+		case DSNReturnFull, DSNReturnHeaders:
+			fmt.Fprintf(&sb, " RET=%s", string(conn.smtpClient.DSNReturn))
+		case "":
+			// This space is intentionally left blank
+		default:
+			return errors.New("smtp: Unknown RET parameter value")
+		}
+		// TODO: idk
+		// if opts.EnvelopeID != "" {
+		// 	if !isPrintableASCII(opts.EnvelopeID) {
+		// 		return errors.New("smtp: Malformed ENVID parameter value")
+		// 	}
+		// 	fmt.Fprintf(&sb, " ENVID=%s", encodeXtext(opts.EnvelopeID))
+		// }
+	}
+
+	fmt.Println(sb.String())
+
+	_, _, err := conn.rw.cmd(250, "%s", sb.String())
+	return err
+}
+
+func (conn *ClientConn) rcpt() error {
+	var sb strings.Builder
+	sb.Grow(2048)
+
+	fmt.Fprintf(&sb, "RCPT TO:<%s>", conn.smtpClient.Rcpt)
+	if _, ok := conn.extension["DSN"]; ok {
+		// TODO: dsn ...
 		_ = ok
 	}
 
-	_, _, err := conn.rw.cmd(250, "%s", sb.String())
-	return err 
+	if _, _, err := conn.rw.cmd(25, "%s", sb.String()); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func serverErrToClientErr(err error) error {

@@ -18,8 +18,11 @@ func main() {
 	clinet.SetRcpt("parthka.2005@gmail.com")
 	clinet.SetRcpt("parthka.2005@cockatielone.biz")
 	clinet.SetRcpt("hello@parthka.dev")
+	clinet.SetHostname("home.parthka.dev")
 	clinet.Size = 1024
+	clinet.DSNReturn = smtpclient.DSNReturnFull
 	clinet.SetData(mailContent)
 	err := clinet.SendMail()
 	fmt.Println(err)
 }
+	

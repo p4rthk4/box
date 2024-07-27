@@ -7,6 +7,13 @@ import (
 	"time"
 )
 
+type DSNReturnType string
+
+const (
+	DSNReturnFull    DSNReturnType = "FULL"
+	DSNReturnHeaders DSNReturnType = "HDRS"
+)
+
 type SMTPClinet struct {
 	StartTLS bool
 	hostname string
@@ -24,6 +31,7 @@ type SMTPClinet struct {
 	Size       int
 	UTF8       bool
 	RequireTLS bool
+	DSNReturn DSNReturnType
 }
 
 func NewClinet() SMTPClinet {

@@ -31,7 +31,7 @@ type SMTPServerError struct {
 	Message      string
 }
 
-func (err *SMTPServerError) Error() string {
+func (err SMTPServerError) Error() string {
 	s := fmt.Sprintf("SMTP error %03d", err.Code)
 	if err.Message != "" {
 		s += ": " + err.Message
@@ -72,8 +72,23 @@ func (rw *TextReaderWriter) readResponse(expectCode int) (int, string, error) {
 	return code, msg, err
 }
 
-func toSMTPServerErr(protoErr *textproto.Error) *SMTPServerError {
-	smtpErr := &SMTPServerError{
+func (rw *TextReaderWriter) cmd(expectCode int, format string, args ...interface{}) (int, string, error) {
+	id, err := rw.t.Cmd(format, args...)
+	if err != nil {
+		if protoErr, ok := err.(*textproto.Error); ok {
+			err = toSMTPServerErr(protoErr)
+		}
+		return 0, "", err
+	}
+
+	rw.t.StartResponse(id)
+	defer rw.t.EndResponse(id)
+
+	return rw.readResponse(expectCode)
+}
+
+func toSMTPServerErr(protoErr *textproto.Error) SMTPServerError {
+	smtpErr := SMTPServerError{
 		Code:    protoErr.Code,
 		Message: protoErr.Msg,
 	}

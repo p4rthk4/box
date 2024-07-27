@@ -1,9 +1,10 @@
 package client
 
 import (
+	"errors"
 	"fmt"
 	"net"
-	"os"
+	"strings"
 )
 
 type ClientConn struct {
@@ -11,59 +12,43 @@ type ClientConn struct {
 	rw   *TextReaderWriter
 
 	helloDone bool
+	extension map[string]string
 
 	smtpClient *SMTPClinet
 }
 
-func (client *SMTPClinet) createNewConn(ip net.IP, port int) (ClientConn, error) {
+type ClientError struct {
+	tryNext bool
+	faild   bool
+	wait    bool
 
-	address := ""
-	if isIPv6(ip) {
-		address = fmt.Sprintf("[%s]:%d", ip.String(), port)
-	} else {
-		address = fmt.Sprintf("%s:%d", ip.String(), port)
+	err  string
+	code int
+}
+
+func (clientErr ClientError) Error() string {
+	err := ""
+	if clientErr.tryNext {
+		err = "try next connection"
+	}
+	if clientErr.faild {
+		err = "fail to send mail"
+	}
+	if clientErr.wait {
+		err = "wait 1 * (n) minute and try again"
 	}
 
-	conn, err := net.DialTimeout("tcp", address, client.timeout)
-	if err != nil {
-		switch e := err.(type) {
-		case *net.OpError:
-			switch e.Op {
-			case "dial":
-				switch e := e.Err.(type) {
-				case *os.SyscallError:
-					if e.Syscall == "connect" {
-						return ClientConn{}, fmt.Errorf("connection refused when server connect with %s", address)
-					}
-				case net.Error:
-					if e.Timeout() {
-						return ClientConn{}, fmt.Errorf("connection timeout with %s by server", address)
-					}
-				}
-			}
-		case net.Error:
-			if e.Timeout() {
-				return ClientConn{}, fmt.Errorf("connection timeout with %s by server", address)
-			}
-		}
-
-		return ClientConn{}, fmt.Errorf("internal server error for connect with %s	%v", address, err)
-	}
-
-	return ClientConn{
-		conn: conn,
-		rw:   newTextReaderWriter(conn),
-
-		smtpClient: client,
-	}, nil
+	return fmt.Sprintf("%s\nserver reply with %03d\n%s", err, clientErr.code, clientErr.err)
 }
 
 func (conn *ClientConn) handleConn() error {
+	defer conn.close()
 
 	err := conn.hello()
 	if err != nil {
-		return err
+		return serverErrToClientErr(err)
 	}
+	fmt.Println(conn.extension)
 
 	return nil
 }
@@ -77,34 +62,77 @@ func (conn *ClientConn) hello() error {
 		return err
 	}
 
-	conn.helloDone = true
-	// if err := conn.ehlo(); err != nil {
-	// 	var smtpServerError *SMTPServerError
-	// 	if errors.As(err, &smtpServerError) && (smtpServerError.Code == 500 || smtpServerError.Code == 502) {
-	// 		// The server doesn't support EHLO, fallback to HELO
-	// 		conn.helloDone = conn.helo()
-	// 	} else {
-	// 		conn.helloDone = err
-	// 	}
-	// }
-	return nil
+	err := conn.ehlo()
+	if err != nil {
+		var smtpServerError SMTPServerError
+		if errors.As(err, &smtpServerError) && (smtpServerError.Code == 500 || smtpServerError.Code == 502) {
+			err = conn.helo()
+		}
+	}
+	return err
 }
 
 func (conn *ClientConn) greet() error {
 	if conn.helloDone {
 		return nil
 	}
+	_, _, err := conn.rw.readResponse(220)
+	return err
+}
 
-	conn.helloDone = true
-	code, message, err := conn.rw.readResponse(220)
+func (conn *ClientConn) ehlo() error {
+	_, msg, err := conn.rw.cmd(250, "EHLO %s", conn.smtpClient.hostname)
 	if err != nil {
 		return err
 	}
-	fmt.Println("response:", code, message)
+	conn.helloDone = true
 
-	return nil
+	ext := make(map[string]string)
+	extList := strings.Split(msg, "\n")
+	if len(extList) > 1 {
+		extList = extList[1:]
+		for _, line := range extList {
+			args := strings.SplitN(line, " ", 2)
+			if len(args) > 1 {
+				ext[args[0]] = args[1]
+			} else {
+				ext[args[0]] = ""
+			}
+		}
+	}
+	conn.extension = ext
+	return err
+}
+
+func (conn *ClientConn) helo() error {
+	_, _, err := conn.rw.cmd(250, "HELO %s", conn.smtpClient.hostname)
+	if err == nil {
+		conn.helloDone = true
+	}
+	return err
+}
+
+func serverErrToClientErr(err error) error {
+	if err != nil {
+		switch e := err.(type) {
+		case SMTPServerError:
+			// TODO: error handling
+			fmt.Println("Got it, this is error...")
+			return ClientError{
+				tryNext: true,
+				err:     e.Message,
+				code:    e.Code,
+			}
+		}
+		return err
+	}
+	return err
 }
 
 func (conn *ClientConn) close() {
-	conn.conn.Close()
+	err := conn.conn.Close()
+	if err != nil {
+		// TODO: logs
+		fmt.Println("connecrion close error...")
+	}
 }

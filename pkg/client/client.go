@@ -20,6 +20,10 @@ type SMTPClinet struct {
 	data []byte
 
 	timeout time.Duration
+
+	Size       int
+	UTF8       bool
+	RequireTLS bool
 }
 
 func NewClinet() SMTPClinet {

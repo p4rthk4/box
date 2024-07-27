@@ -3,7 +3,7 @@ package client
 import (
 	"errors"
 	"fmt"
-	"net"
+	"net"	
 	"strings"
 )
 
@@ -55,7 +55,6 @@ func (conn *ClientConn) handleConn() error {
 	if err != nil {
 		return serverErrToClientErr(err)
 	}
-
 
 	return nil
 }
@@ -122,15 +121,39 @@ func (conn *ClientConn) helo() error {
 func (conn *ClientConn) mail() error {
 	var sb strings.Builder
 	sb.Grow(2048)
-	
+
 	fmt.Fprintf(&sb, "MAIL FROM:<%s>", conn.smtpClient.From)
 	if _, ok := conn.extension["8BITMIME"]; ok {
 		sb.WriteString(" BODY=8BITMIME")
 	}
+	if _, ok := conn.extension["SIZE"]; ok && conn.smtpClient.Size != 0 {
+		fmt.Fprintf(&sb, " SIZE=%v", conn.smtpClient.Size)
+	}
 
-	fmt.Println(sb.String())
+	if conn.smtpClient.RequireTLS {
+		if _, ok := conn.extension["REQUIRETLS"]; ok {
+			sb.WriteString(" REQUIRETLS")
+		} else {
+			return errors.New("smtp: server does not support REQUIRETLS")
+		}
+	}
 
-	return nil
+	// if domain and email address is i18n so enable this
+	if conn.smtpClient.UTF8 {
+		if _, ok := conn.extension["SMTPUTF8"]; ok {
+			sb.WriteString(" SMTPUTF8")
+		} else {
+			return errors.New("smtp: server does not support SMTPUTF8")
+		}
+	}
+	
+	if _, ok := conn.extension["DSN"]; ok {
+		// TODO: DSN
+		_ = ok
+	}
+
+	_, _, err := conn.rw.cmd(250, "%s", sb.String())
+	return err 
 }
 
 func serverErrToClientErr(err error) error {

@@ -48,7 +48,14 @@ func (conn *ClientConn) handleConn() error {
 	if err != nil {
 		return serverErrToClientErr(err)
 	}
+
 	fmt.Println(conn.extension)
+
+	err = conn.mail()
+	if err != nil {
+		return serverErrToClientErr(err)
+	}
+
 
 	return nil
 }
@@ -110,6 +117,20 @@ func (conn *ClientConn) helo() error {
 		conn.helloDone = true
 	}
 	return err
+}
+
+func (conn *ClientConn) mail() error {
+	var sb strings.Builder
+	sb.Grow(2048)
+	
+	fmt.Fprintf(&sb, "MAIL FROM:<%s>", conn.smtpClient.From)
+	if _, ok := conn.extension["8BITMIME"]; ok {
+		sb.WriteString(" BODY=8BITMIME")
+	}
+
+	fmt.Println(sb.String())
+
+	return nil
 }
 
 func serverErrToClientErr(err error) error {

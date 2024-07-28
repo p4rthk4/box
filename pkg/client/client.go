@@ -172,10 +172,11 @@ func (client *SMTPClinet) SendMail() error {
 						errorString: err.Error(),
 					})
 					continue
-
 				}
 
 			}
+			
+			break // TODO: tmp break for nothing...!
 		}
 		fmt.Println(ips)
 	}

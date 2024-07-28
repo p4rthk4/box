@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"net"
@@ -85,6 +86,26 @@ func (rw *TextReaderWriter) cmd(expectCode int, format string, args ...interface
 	defer rw.t.EndResponse(id)
 
 	return rw.readResponse(expectCode)
+}
+
+func (rw *TextReaderWriter) data(data []byte) (int, string, error) {
+	dataReader := bytes.NewReader(data)
+	dataWriter := rw.t.DotWriter()
+
+	_, err := io.Copy(dataWriter, dataReader)
+	if err != nil {
+		return 0, "", err
+	}
+	
+	err = dataWriter.Close()
+	if err != nil {
+		if protoErr, ok := err.(*textproto.Error); ok {
+			err = toSMTPServerErr(protoErr)
+		}
+		return 0, "", err
+	}
+
+	return rw.readResponse(250)
 }
 
 func toSMTPServerErr(protoErr *textproto.Error) SMTPServerError {

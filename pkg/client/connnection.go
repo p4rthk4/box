@@ -61,6 +61,16 @@ func (conn *ClientConn) handleConn() error {
 		return serverErrToClientErr(err)
 	}
 
+	err = conn.data()
+	if err != nil {
+		return err
+	}
+
+	err = conn.quit()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -191,6 +201,21 @@ func (conn *ClientConn) rcpt() error {
 	}
 
 	return nil
+}
+
+func (conn *ClientConn) data() error {
+	_, _, err := conn.rw.cmd(354, "DATA")
+	if err != nil {
+		return err
+	}
+
+	_, _, err = conn.rw.data(conn.smtpClient.data)
+	return err
+}
+
+func (conn *ClientConn) quit() error {
+	_, _, err := conn.rw.cmd(221, "QUIT")
+	return err
 }
 
 func serverErrToClientErr(err error) error {

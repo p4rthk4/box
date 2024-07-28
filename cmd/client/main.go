@@ -17,7 +17,7 @@ func main() {
 	clinet.SetRcpt("parthka.2005@gmail.com")
 	clinet.SetRcpt("sahello@parthka.dev")
 	clinet.SetRcpt("parthka.2005@cockatielone.biz")
-	clinet.SetRcpt("parthka.2005@gmail.com")
+	clinet.SetRcpt("parthka.2005@proton.me")
 	clinet.SetHostname("home.lope.dev")
 
 	clinet.Size = 1024
@@ -32,7 +32,7 @@ func main() {
 var mail string = `Content-Type: multipart/mixed;
  boundary="----sinikael-?=_1-17221480878150.018640130471523797"
 From: degama@cockatielone.biz
-To: parthka.2005@gmail.com
+To: parthka.2005@proton.me
 Subject: Hello Lope =?UTF-8?B?8J+Siw==?=
 Date: Sun, 28 Jul 2024 06:28:07 +0000
 Message-Id: <1722148087817-999db44e-b6240e4d-3497e6f5@cockatielone.biz>

@@ -32,7 +32,7 @@ type Connection struct {
 
 	remoteAddress RoLAddress
 	localAddress  RoLAddress
-	text          *TextReaderWriter // text protocal for mail
+	rw          *TextReaderWriter // text protocal for mail
 
 	uid       string
 	mailCount int // it is count of how many mail tranfare in this connection
@@ -63,7 +63,7 @@ func HandleNewConnection(conn net.Conn, serverLogger *logx.Log) {
 // return true if error
 func (conn *Connection) init() bool {
 
-	conn.text = newTextReaderWriter(conn.conn)
+	conn.rw = newTextReaderWriter(conn.conn)
 
 	uid, err := uid.GetNewId()
 	if err != nil {
@@ -98,17 +98,15 @@ func (conn *Connection) init() bool {
 func (conn *Connection) handle() {
 
 	if config.ConfOpts.MaxClients > 0 && clientCount > config.ConfOpts.MaxClients { // if max clients
-		conn.text.busy(conn.localAddress.GetPTR())
+		conn.rw.busy(conn.localAddress.GetPTR())
 		conn.closeForMaxClientsExceeded()
 		return
 	} else {
-		conn.text.greet(conn.localAddress.GetPTR()) // send 220 for conncetion establishment
+		conn.rw.greet(conn.localAddress.GetPTR()) // send 220 for conncetion establishment
 	}
 
 	for {
-
-		line, err := conn.text.readLine()
-
+		line, err := conn.rw.readLine()
 		if err == nil {
 			cmd, args, err := parseCommand(line)
 			if err == CmdParseOk {
@@ -117,18 +115,18 @@ func (conn *Connection) handle() {
 					break
 				}
 			} else {
-				conn.text.cmdNotRecognized()
+				conn.rw.cmdNotRecognized()
 			}
 			continue
 		}
 
 		// if error not nil
 		if netErr, ok := err.(net.Error); ok && netErr.Timeout() { // if time out
-			conn.text.timeout(conn.localAddress.GetPTR())
+			conn.rw.timeout(conn.localAddress.GetPTR())
 			conn.closeWithFailAnd("timeout exceeded")
 			break
 		} else if err == limitlinereader.ErrTooLongLine {
-			conn.text.longLine(conn.localAddress.GetPTR())
+			conn.rw.longLine(conn.localAddress.GetPTR())
 			conn.closeWithFailAnd("too long line")
 			break
 		} else if err == io.ErrUnexpectedEOF { // eof or connection close
@@ -138,7 +136,6 @@ func (conn *Connection) handle() {
 			conn.closeWithFail()
 			break
 		}
-
 	}
 }
 

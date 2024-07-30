@@ -8,10 +8,14 @@ server:
   port_ipv6: 8080
   # IPv6_disable: true
 
+esmtp:
+  enable: true
+  require_tls: true
+
 log_dir: "./temp/logs"
 dev: true
 
-max_recipients: 4
+max_recipients: 1
 check_mailbox: false
 
 max_clients: 3

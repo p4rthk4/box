@@ -6,6 +6,8 @@ type ConfigsOptions struct {
 	Server     ServerOptions `yaml:"server"`
 	MaxClients int           `yaml:"max_clients"`
 
+	ESMTP ESMTPOptions `yaml:"esmtp"`
+
 	LogDirPath  string `yaml:"log_dir"`
 	LogFilePath string `yaml:"log_file"`
 
@@ -29,6 +31,15 @@ type ServerOptions struct {
 	HostIPv6    string `yaml:"host_ipv6"`
 	PortIPv6    int    `yaml:"port_ipv6"`
 	IPv6Disable bool   `yaml:"IPv6_disable"`
+}
+
+type ESMTPOptions struct {
+	Enable      bool `yaml:"enable"`
+	Tls         bool `yaml:"tls"`
+	RequireTLS  bool `yaml:"require_tls"`
+	Utf8        bool `yaml:"utf8"`
+	BinaryMime  bool `yaml:"binarymime"`
+	MessageSize int  `yaml:"message_size"`
 }
 
 type RedisConfig struct {

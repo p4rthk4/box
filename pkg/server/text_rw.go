@@ -47,7 +47,16 @@ func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
 }
 
 func (rw *TextReaderWriter) reply(code int, format string, a ...any) {
+	// TODO: EnhancedCode
 	rw.t.PrintfLine("%d %s", code, fmt.Sprintf(format, a...))
+}
+
+func (rw *TextReaderWriter) replyLines(code int, lines []string) {
+	// TODO: EnhancedCode
+	for i := 0; i < len(lines)-1; i++ {
+		rw.t.PrintfLine("%d-%v", code, lines[i])
+	}
+	rw.t.PrintfLine("%d %v", code, lines[len(lines)-1])
 }
 
 func (rw *TextReaderWriter) greet(hostname string) {
@@ -80,6 +89,10 @@ func (rw *TextReaderWriter) cmdNotRecognized() {
 
 func (rw *TextReaderWriter) cmdNotImplemented() {
 	rw.t.PrintfLine("502 Error: command not implemented")
+}
+
+func (rw *TextReaderWriter) esmtpDisable() {
+	rw.t.PrintfLine("502 Error: ESMTP Disable")
 }
 
 func (rw *TextReaderWriter) readLine() (string, error) {

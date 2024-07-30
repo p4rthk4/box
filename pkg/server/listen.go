@@ -26,6 +26,9 @@ func (s *SMTPServer) Listen() {
 
 func (s *SMTPServer) AcceptConnections() {
 
+	// pre process
+	smtpServerPreProcess()
+
 	for {
 		conn, err := s.listener.Accept()
 		if err != nil {

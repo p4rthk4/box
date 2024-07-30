@@ -13,6 +13,15 @@ func defaultConfig() ConfigsOptions {
 		},
 		MaxClients: 0,
 
+		ESMTP: ESMTPOptions{
+			Enable:      false,
+			Tls:         false,
+			RequireTLS:  false,
+			Utf8:        true,
+			BinaryMime:  true,
+			MessageSize: -1,
+		},
+
 		LogDirPath:  "./logs",
 		LogFilePath: "email.log",
 		Dev:         false,
@@ -20,7 +29,7 @@ func defaultConfig() ConfigsOptions {
 		ClientGreet: "`Hello, Client!`",
 		ClientByyy:  "Ok, Byyy!",
 
-		MaxRecipients: 1024,
+		MaxRecipients:     -1,
 		CheckMailBoxExist: false,
 
 		RedisConfig: RedisConfig{
@@ -40,19 +49,17 @@ func defaultConfig() ConfigsOptions {
 
 		Client: ClientConfig{
 			HostName: "",
-			
-			LogDirPath: "",
+
+			LogDirPath:  "",
 			LogFilePath: "",
 
 			Amqp: AmqpConfig{
-				Host: "",
-				Port: 0,
+				Host:     "",
+				Port:     0,
 				Username: "",
 				Password: "",
-				Queue: "",
+				Queue:    "",
 			},
 		},
-
-
 	}
 }

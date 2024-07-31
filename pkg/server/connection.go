@@ -32,11 +32,13 @@ type Connection struct {
 
 	remoteAddress RoLAddress
 	localAddress  RoLAddress
-	rw          *TextReaderWriter // text protocal for mail
+	rw            *TextReaderWriter // text protocal for mail
 
 	uid       string
 	mailCount int // it is count of how many mail tranfare in this connection
 	client    Client
+
+	useEsmtp bool // client use enhanced smtp
 
 	logger       *logx.Log
 	serverLogger *logx.Log // print server level log
@@ -62,7 +64,6 @@ func HandleNewConnection(conn net.Conn, serverLogger *logx.Log) {
 // init client connection
 // return true if error
 func (conn *Connection) init() bool {
-
 	conn.rw = newTextReaderWriter(conn.conn)
 
 	uid, err := uid.GetNewId()
@@ -186,7 +187,6 @@ func (conn *Connection) forward() {
 	}
 
 	go func(uid string, count int, client Client) {
-
 		email := Email{
 			Uid:        fmt.Sprintf("%s_%d", uid, count),
 			Domain:     client.domain,

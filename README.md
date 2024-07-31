@@ -15,7 +15,7 @@ U2SMTP mainly work in SMTP Server Wrapper, It make one server or more than one s
 - 🔮 RFC 2554 (AUTH command)
 - 🔮 RFC 2821 (SMTP protocol)
 - 🔮 RFC 2920 (SMTP pipelining)
-- 🔮 RFC 3030 (CHUNKING without BINARYMIME)
+- 🔮 RFC 3030 (CHUNKING with or without BINARYMIME)
 - 🔮 RFC 3207 (STARTTLS command)
 - 🔮 RFC 3461 (SMTP DSN extension)
 - 🔮 RFC 3463 (Enhanced status codes)

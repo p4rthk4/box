@@ -3,6 +3,8 @@ package server
 import (
 	"fmt"
 	"io"
+	"strconv"
+	"strings"
 
 	"github.com/p4rthk4/u2smtp/pkg/config"
 )
@@ -12,6 +14,14 @@ type HandleCommandStatus int
 const (
 	HandleCommandOk HandleCommandStatus = iota
 	HandleCommandClose
+)
+
+type BodyType string
+
+const (
+	Body7Bit       BodyType = "7BIT"
+	Body8BitMIME   BodyType = "8BITMIME"
+	BodyBinaryMIME BodyType = "BINARYMIME"
 )
 
 func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStatus {
@@ -55,6 +65,7 @@ func (conn *Connection) handleEHello(args string) {
 	}
 
 	conn.client.domain = domain
+	conn.useEsmtp = true
 	replyMsg := []string{"Hello " + domain}
 	replyMsg = append(replyMsg, greetReplyMessage...)
 	conn.rw.replyLines(250, replyMsg)
@@ -68,6 +79,7 @@ func (conn *Connection) handleHello(args string) {
 	}
 
 	conn.client.domain = domain
+	conn.useEsmtp = false		
 	conn.rw.reply(250, "%s ready for you", config.ConfOpts.HostName)
 }
 
@@ -89,8 +101,104 @@ func (conn *Connection) handleMail(args string) {
 		conn.rw.syntaxError("invalid address")
 		return
 	}
-
 	conn.client.mailFrom = from
+
+	if !conn.useEsmtp {
+		conn.rw.reply(250, "Ok")
+		return
+	}
+
+	mailArgs, err := parseArgs(p.s)
+	if err != nil {
+		conn.rw.reply(501, "Unable to parse MAIL ESMTP parameters")
+		return
+	}
+
+	for key, value := range mailArgs {
+		switch key {
+		case "SIZE":
+			size, err := strconv.ParseUint(value, 10, 32)
+			if err != nil {
+				conn.rw.reply(501, "Unable to parse SIZE as an integer")
+				return
+			}
+
+			if config.ConfOpts.ESMTP.MessageSize > 0 && int(size) > config.ConfOpts.ESMTP.MessageSize {
+				conn.rw.reply(552, "Max message size exceeded")
+				return
+			}
+		case "SMTPUTF8":
+			if !config.ConfOpts.ESMTP.Utf8 {
+				conn.rw.reply(504, "SMTPUTF8 is not implemented")
+				return
+			}
+		case "REQUIRETLS":
+			if !config.ConfOpts.ESMTP.RequireTLS {
+				conn.rw.reply(504, "REQUIRETLS is not implemented")
+				return
+			}
+		case "BODY":
+			value = strings.ToUpper(value)
+			switch BodyType(value) {
+			case BodyBinaryMIME:
+				if !config.ConfOpts.ESMTP.BinaryMime {
+					conn.rw.reply(504, "BINARYMIME is not implemented")
+					return
+				}
+			case Body7Bit, Body8BitMIME:
+				// This space is intentionally left blank
+			default:
+				conn.rw.reply(501, "Unknown BODY value")
+				return
+			}
+		case "RET":
+			// TODO: // DSN
+			// if !c.server.EnableDSN {
+			// 	c.writeResponse(504, EnhancedCode{5, 5, 4}, "RET is not implemented")
+			// 	return
+			// }
+			// value = strings.ToUpper(value)
+			// switch DSNReturn(value) {
+			// case DSNReturnFull, DSNReturnHeaders:
+			// 	// This space is intentionally left blank
+			// default:
+			// 	c.writeResponse(501, EnhancedCode{5, 5, 4}, "Unknown RET value")
+			// 	return
+			// }
+			// opts.Return = DSNReturn(value)
+		case "ENVID":
+			// TODO: // ENVID
+			// if !c.server.EnableDSN {
+			// 	c.writeResponse(504, EnhancedCode{5, 5, 4}, "ENVID is not implemented")
+			// 	return
+			// }
+			// value, err := decodeXtext(value)
+			// if err != nil || value == "" || !isPrintableASCII(value) {
+			// 	c.writeResponse(501, EnhancedCode{5, 5, 4}, "Malformed ENVID parameter value")
+			// 	return
+			// }
+		case "AUTH":
+			// value, err := decodeXtext(value)
+			// if err != nil || value == "" {
+			// 	c.writeResponse(500, EnhancedCode{5, 5, 4}, "Malformed AUTH parameter value")
+			// 	return
+			// }
+			// if value == "<>" {
+			// 	value = ""
+			// } else {
+			// 	p := parser{s: value}
+			// 	value, err = p.parseMailbox()
+			// 	if err != nil || p.s != "" {
+			// 		c.writeResponse(500, EnhancedCode{5, 5, 4}, "Malformed AUTH parameter mailbox")
+			// 		return
+			// 	}
+			// }
+		default:
+			conn.rw.reply(500, "Unknown MAIL FROM argument")
+			return
+		}
+	}
+
 	conn.rw.reply(250, "Ok")
 }
 

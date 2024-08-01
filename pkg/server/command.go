@@ -79,7 +79,7 @@ func (conn *Connection) handleHello(args string) {
 	}
 
 	conn.client.domain = domain
-	conn.useEsmtp = false		
+	conn.useEsmtp = false
 	conn.rw.reply(250, "%s ready for you", config.ConfOpts.HostName)
 }
 
@@ -108,6 +108,8 @@ func (conn *Connection) handleMail(args string) {
 		return
 	}
 
+	fmt.Println("args", args)
+
 	mailArgs, err := parseArgs(p.s)
 	if err != nil {
 		conn.rw.reply(501, "Unable to parse MAIL ESMTP parameters")
@@ -122,21 +124,24 @@ func (conn *Connection) handleMail(args string) {
 				conn.rw.reply(501, "Unable to parse SIZE as an integer")
 				return
 			}
-
 			if config.ConfOpts.ESMTP.MessageSize > 0 && int(size) > config.ConfOpts.ESMTP.MessageSize {
 				conn.rw.reply(552, "Max message size exceeded")
 				return
 			}
+
+			conn.size = int(size)
 		case "SMTPUTF8":
 			if !config.ConfOpts.ESMTP.Utf8 {
 				conn.rw.reply(504, "SMTPUTF8 is not implemented")
 				return
 			}
+			conn.put8 = true
 		case "REQUIRETLS":
-			if !config.ConfOpts.ESMTP.RequireTLS {
-				conn.rw.reply(504, "REQUIRETLS is not implemented")
+			if !config.ConfOpts.ESMTP.Tls {
+				conn.rw.reply(504, "STARTTLS and REQUIRETLS is not implemented")
 				return
 			}
+			conn.requireTls = true
 		case "BODY":
 			value = strings.ToUpper(value)
 			switch BodyType(value) {
@@ -151,6 +156,7 @@ func (conn *Connection) handleMail(args string) {
 				conn.rw.reply(501, "Unknown BODY value")
 				return
 			}
+			conn.body = BodyType(value)
 		case "RET":
 			// TODO: // DSN
 			// if !c.server.EnableDSN {

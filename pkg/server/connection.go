@@ -38,7 +38,11 @@ type Connection struct {
 	mailCount int // it is count of how many mail tranfare in this connection
 	client    Client
 
-	useEsmtp bool // client use enhanced smtp
+	useEsmtp   bool // client use enhanced smtp
+	size       int
+	put8       bool
+	requireTls bool
+	body       BodyType
 
 	logger       *logx.Log
 	serverLogger *logx.Log // print server level log

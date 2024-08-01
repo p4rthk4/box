@@ -10,8 +10,7 @@ server:
 
 esmtp:
   enable: true
-  tls: true
-  require_tls: true
+  tls: false
   utf8: false
 
 log_dir: "./temp/logs"

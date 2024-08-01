@@ -44,7 +44,7 @@ func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStat
 		conn.handleQuit()
 		return HandleCommandClose
 	case "SEND", "SOML", "SAML", "EXPN", "HELP", "TURN", "LHLO", "STARTTLS", "AUTH", "BDAT", "VRFY":
-		conn.rw.cmdNotImplemented()
+		conn.rw.cmdNotImplemented(cmd)
 	default:
 		conn.rw.cmdNotRecognized()
 	}

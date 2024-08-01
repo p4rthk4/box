@@ -87,8 +87,8 @@ func (rw *TextReaderWriter) cmdNotRecognized() {
 	rw.t.PrintfLine("500 Error: command not recognized")
 }
 
-func (rw *TextReaderWriter) cmdNotImplemented() {
-	rw.t.PrintfLine("502 Error: command not implemented")
+func (rw *TextReaderWriter) cmdNotImplemented(cmd string) {
+	rw.t.PrintfLine("502 Error: %s command not implemented", cmd				)
 }
 
 func (rw *TextReaderWriter) esmtpDisable() {

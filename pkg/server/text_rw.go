@@ -12,9 +12,10 @@ import (
 )
 
 type TextReaderWriter struct {
+	netConn net.Conn
 	rwc     *ReadWriteClose
 	t       *textproto.Conn
-	netConn net.Conn
+	*limitlinereader.LimitLineReader
 }
 
 type ReadWriteClose struct {
@@ -25,24 +26,23 @@ type ReadWriteClose struct {
 
 // get new reader and write form net.Conn or io.ReadWriter
 func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
-
-	textReader := limitlinereader.LimitLineReader{
+	textReader := &limitlinereader.LimitLineReader{
 		Reader:      conn,
 		MaxLineSize: 2000, // Doubled maximum line length per RFC 5321 (Section 4.5.3.1.6)
 	}
 
 	rwc := ReadWriteClose{
-		Reader: &textReader,
+		Reader: textReader,
 		Writer: conn,
 		Closer: conn,
 	}
 
 	text := textproto.NewConn(rwc)
-
 	return &TextReaderWriter{
-		rwc:     &rwc,
-		t:       text,
-		netConn: conn,
+		netConn:         conn,
+		rwc:             &rwc,
+		t:               text,
+		LimitLineReader: textReader,
 	}
 }
 
@@ -88,7 +88,7 @@ func (rw *TextReaderWriter) cmdNotRecognized() {
 }
 
 func (rw *TextReaderWriter) cmdNotImplemented(cmd string) {
-	rw.t.PrintfLine("502 Error: %s command not implemented", cmd				)
+	rw.t.PrintfLine("502 Error: %s command not implemented", cmd)
 }
 
 func (rw *TextReaderWriter) esmtpDisable() {

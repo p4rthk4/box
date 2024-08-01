@@ -239,6 +239,8 @@ func (conn *Connection) handleRcpt(args string) {
 		}
 	}
 
+	// TODO: parse args
+
 	conn.client.recipients = append(conn.client.recipients, rcpt)
 	conn.rw.reply(250, "Ok")
 }

@@ -95,6 +95,13 @@ func (rw *TextReaderWriter) esmtpDisable() {
 	rw.t.PrintfLine("502 Error: ESMTP Disable")
 }
 
+// set max lines size and return return old size
+func (rw *TextReaderWriter) setMaxLineSize(size int) int {
+	oldSize := rw.MaxLineSize
+	rw.MaxLineSize = size
+	return oldSize
+}
+
 func (rw *TextReaderWriter) readLine() (string, error) {
 	rw.setTimeout(2 * time.Minute)
 	defer rw.clearTimeout()

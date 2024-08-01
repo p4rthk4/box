@@ -41,7 +41,6 @@ func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStat
 	case "NOOP":
 		conn.handleNoop()
 	case "QUIT":
-		fmt.Println("quit")
 		conn.handleQuit()
 		return HandleCommandClose
 	case "SEND", "SOML", "SAML", "EXPN", "HELP", "TURN", "LHLO", "STARTTLS", "AUTH", "BDAT", "VRFY":
@@ -241,7 +240,6 @@ func (conn *Connection) handleRcpt(args string) {
 	}
 
 	conn.client.recipients = append(conn.client.recipients, rcpt)
-	fmt.Println(args)
 	conn.rw.reply(250, "Ok")
 }
 

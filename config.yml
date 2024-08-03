@@ -36,6 +36,9 @@ amqp_conf:
   username: rellite
   password: Rellite@Parth
 
+client:
+  try_tls: true
+
 # client: 
 #   amqp_conf:
 #     queue: lolking

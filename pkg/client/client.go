@@ -31,7 +31,7 @@ type SMTPClinet struct {
 	Size       int
 	UTF8       bool
 	RequireTLS bool
-	DSNReturn DSNReturnType
+	DSNReturn  DSNReturnType
 }
 
 func NewClinet() SMTPClinet {
@@ -86,7 +86,6 @@ type ClientServerError struct {
 }
 
 func (client *SMTPClinet) SendMail() error {
-
 	mxRecords := []*net.MX{}
 
 	if client.RcptHost != "" {
@@ -123,15 +122,15 @@ func (client *SMTPClinet) SendMail() error {
 			continue
 		}
 
-		for _, v := range ips {
-
+		for _, rcptIP := range ips {
 			address := ""
-			if isIPv6(v) {
-				address = fmt.Sprintf("[%s]:%d", v, client.RcptPort)
+			if isIPv6(rcptIP) {
+				address = fmt.Sprintf("[%s]:%d", rcptIP, client.RcptPort)
 			} else {
-				address = fmt.Sprintf("%s:%d", v, client.RcptPort)
+				address = fmt.Sprintf("%s:%d", rcptIP, client.RcptPort)
 			}
 
+			client.RcptHost = m.Host
 			conn, err := client.createNewConn(address)
 			if err != nil {
 				allErrors = append(allErrors, ClientServerError{
@@ -175,7 +174,7 @@ func (client *SMTPClinet) SendMail() error {
 				}
 
 			}
-			
+
 			break // TODO: tmp break for nothing...!
 		}
 		fmt.Println(ips)

@@ -14,8 +14,9 @@ import (
 )
 
 type TextReaderWriter struct {
-	rwc     *ReadWriteClose
-	t       *textproto.Conn
+	rwc *ReadWriteClose
+	t   *textproto.Conn
+	*limitlinereader.LimitLineReader
 	netConn net.Conn
 }
 
@@ -41,24 +42,23 @@ func (err SMTPServerError) Error() string {
 }
 
 func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
-
-	textReader := limitlinereader.LimitLineReader{
+	textReader := &limitlinereader.LimitLineReader{
 		Reader:      conn,
 		MaxLineSize: 2000, // Doubled maximum line length per RFC 5321 (Section 4.5.3.1.6)
 	}
 
 	rwc := ReadWriteClose{
-		Reader: &textReader,
+		Reader: textReader,
 		Writer: conn,
 		Closer: conn,
 	}
 
 	text := textproto.NewConn(rwc)
-
 	return &TextReaderWriter{
-		rwc:     &rwc,
-		t:       text,
-		netConn: conn,
+		netConn:         conn,
+		rwc:             &rwc,
+		t:               text,
+		LimitLineReader: textReader,
 	}
 }
 
@@ -96,7 +96,7 @@ func (rw *TextReaderWriter) data(data []byte) (int, string, error) {
 	if err != nil {
 		return 0, "", err
 	}
-	
+
 	err = dataWriter.Close()
 	if err != nil {
 		if protoErr, ok := err.(*textproto.Error); ok {

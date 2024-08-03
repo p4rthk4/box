@@ -1,10 +1,13 @@
 package client
 
 import (
+	"crypto/tls"
 	"errors"
 	"fmt"
 	"net"
 	"strings"
+
+	"github.com/p4rthk4/u2smtp/pkg/config"
 )
 
 type ClientConn struct {
@@ -44,12 +47,25 @@ func (clientErr ClientError) Error() string {
 func (conn *ClientConn) handleConn() error {
 	defer conn.close()
 
+	if err := conn.greet(); err != nil {
+		return err
+	}
+
 	err := conn.hello()
 	if err != nil {
 		return serverErrToClientErr(err)
 	}
 
 	fmt.Println(conn.extension)
+
+	if config.ConfOpts.Client.TryTls {
+		if ok, _ := conn.Extension("STARTTLS"); ok {
+			err = conn.starttls()
+			if err != nil {
+				return serverErrToClientErr(err)
+			}
+		}
+	}
 
 	err = conn.mail()
 	if err != nil {
@@ -79,15 +95,13 @@ func (conn *ClientConn) hello() error {
 		return nil
 	}
 
-	if err := conn.greet(); err != nil {
-		return err
-	}
-
 	err := conn.ehlo()
 	if err != nil {
 		var smtpServerError SMTPServerError
 		if errors.As(err, &smtpServerError) && (smtpServerError.Code == 500 || smtpServerError.Code == 502) {
 			err = conn.helo()
+		} else {
+			// TODO: error handling
 		}
 	}
 	return err
@@ -213,6 +227,29 @@ func (conn *ClientConn) data() error {
 	return err
 }
 
+func (conn *ClientConn) starttls() error {
+	_, _, err := conn.rw.cmd(220, "STARTTLS")
+	if err != nil {
+		return err
+	}
+
+	config, err := getTlsConfig()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(conn.smtpClient.RcptHost)
+	config.ServerName = conn.smtpClient.RcptHost
+
+	tlsConn := tls.Client(conn.conn, config)
+	conn.conn = tlsConn
+	conn.rw = newTextReaderWriter(conn.conn)
+
+	conn.helloDone = false
+	err = conn.hello()
+	return err
+}
+
 func (conn *ClientConn) quit() error {
 	_, _, err := conn.rw.cmd(221, "QUIT")
 	return err
@@ -233,6 +270,23 @@ func serverErrToClientErr(err error) error {
 		return err
 	}
 	return err
+}
+
+func getTlsConfig() (*tls.Config, error) {
+	cert, err := tls.LoadX509KeyPair(config.ConfOpts.Tls.Cert, config.ConfOpts.Tls.Key)
+	if err != nil {
+		return nil, fmt.Errorf("server: loadkeys: %s", err)
+	}
+
+	config := &tls.Config{Certificates: []tls.Certificate{cert}}
+
+	return config, nil
+}
+
+func (conn *ClientConn) Extension(ext string) (bool, string) {
+	ext = strings.ToUpper(ext)
+	param, ok := conn.extension[ext]
+	return ok, param
 }
 
 func (conn *ClientConn) close() {

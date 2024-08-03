@@ -75,12 +75,6 @@ func (conn *Connection) handleEHello(args string) {
 	replyMsg := []string{"Hello " + domain}
 	replyMsg = append(replyMsg, greetReplyMessage...)
 	conn.rw.replyLines(250, replyMsg)
-
-	if tlsConn, ok := conn.conn.(*tls.Conn); ok {
-		if err := tlsConn.VerifyHostname(conn.domain); err == nil {
-			conn.tlsVerify = true
-		}
-	}
 }
 
 func (conn *Connection) handleStartTls() {
@@ -98,10 +92,10 @@ func (conn *Connection) handleStartTls() {
 		return
 	}
 
-	if conn.domain != "" {
-		if err := tlsConn.VerifyHostname(conn.domain); err == nil {
-			conn.tlsVerify = true
-		}
+	if err := tlsConn.VerifyHostname("parthka"); err == nil {
+		conn.tlsVerify = true
+	} else {
+		fmt.Println("tls not verify", err)
 	}
 
 	conn.conn = tlsConn
@@ -119,12 +113,6 @@ func (conn *Connection) handleHello(args string) {
 	conn.domain = domain
 	conn.useEsmtp = false
 	conn.rw.reply(250, "%s ready for you", config.ConfOpts.HostName)
-
-	if tlsConn, ok := conn.conn.(*tls.Conn); ok {
-		if err := tlsConn.VerifyHostname(conn.domain); err == nil {
-			conn.tlsVerify = true
-		}
-	}
 }
 
 func (conn *Connection) handleMail(args string) {

@@ -60,31 +60,35 @@ func (rw *TextReaderWriter) replyLines(code int, lines []string) {
 }
 
 func (rw *TextReaderWriter) greet(hostname string) {
-	rw.t.PrintfLine("%d %s %s", 220, hostname, config.ConfOpts.ClientGreet)
+	rw.t.PrintfLine("220 %s %s", hostname, config.ConfOpts.ClientGreet)
 }
 
 func (rw *TextReaderWriter) byyy() {
-	rw.t.PrintfLine("%d %s", 221, config.ConfOpts.ClientByyy)
+	rw.t.PrintfLine("221 %s", config.ConfOpts.ClientByyy)
 }
 
 func (rw *TextReaderWriter) busy(hostname string) {
-	rw.t.PrintfLine("%d %s Service not available, max clients exceeded", 421, hostname)
+	rw.t.PrintfLine("421 %s Service not available, max clients exceeded", hostname)
 }
 
 func (rw *TextReaderWriter) timeout(hostname string) {
-	rw.t.PrintfLine("%d %s Error: timeout exceeded", 421, hostname)
+	rw.t.PrintfLine("421 %s Error: timeout exceeded", hostname)
 }
 
 func (rw *TextReaderWriter) longLine(hostname string) {
-	rw.t.PrintfLine("%d %s Error: too long line", 500, hostname)
+	rw.t.PrintfLine("500 %s Error: too long line", hostname)
 }
 
 func (rw *TextReaderWriter) syntaxError(format string, a ...any) {
-	rw.t.PrintfLine("%d %s", 501, fmt.Sprintf(format, a...))
+	rw.t.PrintfLine("501 %s", fmt.Sprintf(format, a...))
 }
 
-func (rw *TextReaderWriter) cmdNotRecognized() {
-	rw.t.PrintfLine("500 Error: command not recognized")
+func (rw *TextReaderWriter) cmdNotRecognized(cmd string) {
+	if cmd == "" {
+		rw.t.PrintfLine("500 Error: command not recognized")
+	} else {
+		rw.t.PrintfLine("500 Error: %s command not recognized", cmd)
+	}
 }
 
 func (rw *TextReaderWriter) cmdNotImplemented(cmd string) {
@@ -103,6 +107,7 @@ func (rw *TextReaderWriter) setMaxLineSize(size int) int {
 }
 
 func (rw *TextReaderWriter) readLine() (string, error) {
+	// TODO: timeout all
 	rw.setTimeout(2 * time.Minute)
 	defer rw.clearTimeout()
 

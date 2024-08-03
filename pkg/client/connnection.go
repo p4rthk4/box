@@ -159,14 +159,6 @@ func (conn *ClientConn) mail() error {
 		fmt.Fprintf(&sb, " SIZE=%v", conn.smtpClient.Size)
 	}
 
-	if conn.smtpClient.RequireTLS {
-		if _, ok := conn.extension["REQUIRETLS"]; ok {
-			sb.WriteString(" REQUIRETLS")
-		} else {
-			return errors.New("smtp: server does not support REQUIRETLS")
-		}
-	}
-
 	// if domain and email address is i18n so enable this
 	if conn.smtpClient.UTF8 {
 		if _, ok := conn.extension["SMTPUTF8"]; ok {
@@ -176,23 +168,23 @@ func (conn *ClientConn) mail() error {
 		}
 	}
 
-	if _, ok := conn.extension["DSN"]; ok {
-		switch conn.smtpClient.DSNReturn {
-		case DSNReturnFull, DSNReturnHeaders:
-			fmt.Fprintf(&sb, " RET=%s", string(conn.smtpClient.DSNReturn))
-		case "":
-			// This space is intentionally left blank
-		default:
-			return errors.New("smtp: Unknown RET parameter value")
-		}
-		// TODO: idk
-		// if opts.EnvelopeID != "" {
-		// 	if !isPrintableASCII(opts.EnvelopeID) {
-		// 		return errors.New("smtp: Malformed ENVID parameter value")
-		// 	}
-		// 	fmt.Fprintf(&sb, " ENVID=%s", encodeXtext(opts.EnvelopeID))
-		// }
-	}
+	// if _, ok := conn.extension["DSN"]; ok {
+	// 	switch conn.smtpClient.DSNReturn {
+	// 	case DSNReturnFull, DSNReturnHeaders:
+	// 		fmt.Fprintf(&sb, " RET=%s", string(conn.smtpClient.DSNReturn))
+	// 	case "":
+	// 		// This space is intentionally left blank
+	// 	default:
+	// 		return errors.New("smtp: Unknown RET parameter value")
+	// 	}
+	// 	// TODO: idk
+	// 	// if opts.EnvelopeID != "" {
+	// 	// 	if !isPrintableASCII(opts.EnvelopeID) {
+	// 	// 		return errors.New("smtp: Malformed ENVID parameter value")
+	// 	// 	}
+	// 	// 	fmt.Fprintf(&sb, " ENVID=%s", encodeXtext(opts.EnvelopeID))
+	// 	// }
+	// }
 
 	fmt.Println(sb.String())
 

@@ -30,8 +30,8 @@ type SMTPClinet struct {
 
 	Size       int
 	UTF8       bool
-	RequireTLS bool
-	DSNReturn  DSNReturnType
+	// RequireTLS bool
+	// DSNReturn  DSNReturnType
 }
 
 func NewClinet() SMTPClinet {

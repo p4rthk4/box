@@ -336,7 +336,7 @@ func (conn *Connection) handleBdat(arg string) {
 		conn.dataBuffer = new(bytes.Buffer)
 	}
 
-	if config.ConfOpts.ESMTP.MessageSize > 0 && conn.dataBuffer.Len() > config.ConfOpts.ESMTP.MessageSize {
+	if config.ConfOpts.ESMTP.MessageSize > 0 && conn.dataBuffer.Len() + int(size) > config.ConfOpts.ESMTP.MessageSize {
 		conn.rw.reply(552, "Max message size exceeded")
 		return
 	}

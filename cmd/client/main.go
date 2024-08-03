@@ -24,7 +24,7 @@ func main() {
 	clinet.SetHostname("home.lope.dev")
 
 	clinet.Size = 1024
-	clinet.DSNReturn = smtpclient.DSNReturnFull
+	// clinet.DSNReturn = smtpclient.DSNReturnFull
 	// clinet.UTF8 = true
 
 	clinet.SetData([]byte(mail))

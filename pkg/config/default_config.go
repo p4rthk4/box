@@ -21,6 +21,11 @@ func defaultConfig() ConfigsOptions {
 			MessageSize: -1,
 		},
 
+		Tls: TlsKeyCert{
+			Key:  "",
+			Cert: "",
+		},
+
 		LogDirPath:  "./logs",
 		LogFilePath: "email.log",
 		Dev:         false,

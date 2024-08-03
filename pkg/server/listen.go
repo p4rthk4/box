@@ -27,7 +27,7 @@ func (s *SMTPServer) Listen() {
 func (s *SMTPServer) AcceptConnections() {
 
 	// pre process
-	smtpServerPreProcess()
+	smtpServerPreProcess(s.logger)
 
 	for {
 		conn, err := s.listener.Accept()

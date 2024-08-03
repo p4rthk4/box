@@ -2,6 +2,7 @@ package server
 
 import (
 	"bytes"
+	"crypto/tls"
 	"fmt"
 	"io"
 	"strconv"
@@ -46,7 +47,9 @@ func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStat
 	case "QUIT":
 		conn.handleQuit()
 		return HandleCommandClose
-	case "SEND", "SOML", "SAML", "EXPN", "HELP", "TURN", "LHLO", "STARTTLS", "AUTH", "VRFY":
+	case "STARTTLS":
+		conn.handleStartTls()
+	case "SEND", "SOML", "SAML", "EXPN", "HELP", "TURN", "LHLO", "AUTH", "VRFY":
 		conn.rw.cmdNotImplemented(cmd)
 	default:
 		conn.rw.cmdNotRecognized(cmd)
@@ -72,6 +75,26 @@ func (conn *Connection) handleEHello(args string) {
 	replyMsg := []string{"Hello " + domain}
 	replyMsg = append(replyMsg, greetReplyMessage...)
 	conn.rw.replyLines(250, replyMsg)
+}
+
+func (conn *Connection) handleStartTls() {
+	fmt.Println("Start tls")
+	if !config.ConfOpts.ESMTP.Enable || !config.ConfOpts.ESMTP.Tls {
+		conn.rw.esmtpDisable()
+		return
+	}
+	
+	conn.rw.reply(220, "Ready to start TLS")
+	
+	tlsConn := tls.Server(conn.conn, tlsConfig)
+	if err := tlsConn.Handshake(); err != nil {
+		fmt.Println("TLS Handshake faild", err)
+		conn.rw.reply(550, "TLS Handshake error")
+		return
+	}
+
+	conn.conn = tlsConn
+	conn.rw = newTextReaderWriter(conn.conn)
 }
 
 func (conn *Connection) handleHello(args string) {

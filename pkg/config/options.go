@@ -7,6 +7,7 @@ type ConfigsOptions struct {
 	MaxClients int           `yaml:"max_clients"`
 
 	ESMTP ESMTPOptions `yaml:"esmtp"`
+	Tls   TlsKeyCert   `yaml:"tls"`
 
 	LogDirPath  string `yaml:"log_dir"`
 	LogFilePath string `yaml:"log_file"`
@@ -39,6 +40,11 @@ type ESMTPOptions struct {
 	Utf8        bool `yaml:"utf8"`
 	BinaryMime  bool `yaml:"binarymime"`
 	MessageSize int  `yaml:"message_size"`
+}
+
+type TlsKeyCert struct {
+	Key  string `yaml:"key"`
+	Cert string `yaml:"cert"`
 }
 
 type RedisConfig struct {

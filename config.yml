@@ -10,8 +10,12 @@ server:
 
 esmtp:
   enable: true
-  tls: false
+  tls: true
   utf8: false
+
+tls: 
+  key: /home/parthka/u2smtp/temp/server.key
+  cert: /home/parthka/u2smtp/temp/server.crt
 
 log_dir: "./temp/logs"
 dev: true

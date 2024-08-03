@@ -137,12 +137,6 @@ func (conn *Connection) handleMail(args string) {
 				return
 			}
 			conn.put8 = true
-		case "REQUIRETLS":
-			if !config.ConfOpts.ESMTP.Tls {
-				conn.rw.reply(504, "STARTTLS and REQUIRETLS is not implemented")
-				return
-			}
-			conn.requireTls = true
 		case "BODY":
 			value = strings.ToUpper(value)
 			switch BodyType(value) {

@@ -16,7 +16,6 @@ func defaultConfig() ConfigsOptions {
 		ESMTP: ESMTPOptions{
 			Enable:      false,
 			Tls:         false,
-			RequireTLS:  false,
 			Utf8:        true,
 			BinaryMime:  true,
 			MessageSize: -1,

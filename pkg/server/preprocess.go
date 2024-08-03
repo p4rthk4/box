@@ -22,9 +22,6 @@ func smtpServerPreProcess() {
 		if config.ConfOpts.ESMTP.Tls {
 			reply = append(reply, "STARTTLS")
 		}
-		if config.ConfOpts.ESMTP.Tls && config.ConfOpts.ESMTP.RequireTLS {
-			reply = append(reply, "REQUIRETLS")
-		}
 		if config.ConfOpts.ESMTP.Utf8 {
 			reply = append(reply, "SMTPUTF8")
 		}

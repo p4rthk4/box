@@ -40,7 +40,6 @@ type Connection struct {
 	useEsmtp   bool // client use enhanced smtp
 	size       int
 	put8       bool
-	requireTls bool
 	body       BodyType
 
 	logger       *logx.Log

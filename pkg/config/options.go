@@ -36,7 +36,6 @@ type ServerOptions struct {
 type ESMTPOptions struct {
 	Enable      bool `yaml:"enable"`
 	Tls         bool `yaml:"tls"`
-	RequireTLS  bool `yaml:"require_tls"`
 	Utf8        bool `yaml:"utf8"`
 	BinaryMime  bool `yaml:"binarymime"`
 	MessageSize int  `yaml:"message_size"`

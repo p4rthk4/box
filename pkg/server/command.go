@@ -92,6 +92,12 @@ func (conn *Connection) handleStartTls() {
 		return
 	}
 
+	if err := tlsConn.VerifyHostname("parthka"); err == nil {
+		conn.tlsVerify = true
+	} else {
+		fmt.Println("tls not verify", err)
+	}
+
 	conn.conn = tlsConn
 	conn.useTls = true
 	conn.rw = newTextReaderWriter(conn.conn)

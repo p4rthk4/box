@@ -37,7 +37,8 @@ type Connection struct {
 	data          []byte
 	dataBuffer    *bytes.Buffer // for bdat
 
-	useTls bool
+	useTls    bool
+	tlsVerify bool // hostname
 
 	useEsmtp bool // client use enhanced smtp
 	size     int
@@ -194,8 +195,9 @@ func (conn *Connection) forward() {
 	go func(uid string, count int, conn Connection) {
 
 		email := Email{
-			Uid: fmt.Sprintf("%s_%d", uid, count),
-			Tls: conn.useTls,
+			Uid:       fmt.Sprintf("%s_%d", uid, count),
+			Tls:       conn.useTls,
+			TlsVerify: conn.tlsVerify,
 
 			Success: false,
 

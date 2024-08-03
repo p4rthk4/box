@@ -22,6 +22,7 @@ type Email struct {
 
 	From       string   `yaml:"from"`
 	Recipients []string `yaml:"recipients"`
+	UseBdat    bool     `yaml:"use_bdat"`
 	Data       string   `yaml:"data"`
 	dataByte   []byte
 }

@@ -211,12 +211,17 @@ func (conn *Connection) forward() {
 
 			From:       conn.mailFrom,
 			Recipients: conn.recipients,
+			UseBdat: false,
 			dataByte:   conn.data,
 			// Data:       string(conn.data),
 		}
 
 		if conn.remoteAddress.HasPtr(conn.domain) {
 			email.PtrMatch = true
+		}
+
+		if (conn.data != nil) {
+			email.UseBdat = true
 		}
 
 		if conn.forwardStatus == MailForwardSuccess {

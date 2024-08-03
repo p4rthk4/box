@@ -354,7 +354,7 @@ func (conn *Connection) handleBdat(arg string) {
 
 	if last {
 		conn.data = conn.dataBuffer.Bytes()
-		conn.rw.reply(250, "Ok, last %d bytes received, total %d", size, conn.dataBuffer.Len())
+		conn.rw.reply(250, "Ok, last %d octets received, total %d", size, conn.dataBuffer.Len())
 
 		conn.forwardStatus = MailForwardSuccess
 		conn.reset()
@@ -362,6 +362,6 @@ func (conn *Connection) handleBdat(arg string) {
 		conn.logger.Success("%d email received successfully from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 		conn.mailCount += 1
 	} else {
-		conn.rw.reply(250, "%d bytes received, total %d", size, conn.dataBuffer.Len())
+		conn.rw.reply(250, "%d octets received, total %d", size, conn.dataBuffer.Len())
 	}
 }

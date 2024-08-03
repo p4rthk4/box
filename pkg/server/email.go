@@ -11,13 +11,26 @@ import (
 
 // recive mail structure
 type Email struct {
-	Uid        string   `yaml:"uid"`
-	Success    bool     `yaml:"success"`
-	Domain     string   `yaml:"domain"`
+	Uid     string `yaml:"uid"`
+	Success bool   `yaml:"success"`
+
+	Tls   bool             `yaml:"tls"`
+	PtrIP ServerClientInfo `yaml:"ptr_ip"`
+
+	Domain   string `yaml:"domain"`
+	PtrMatch bool   `yaml:"ptr_match"`
+
 	From       string   `yaml:"from"`
 	Recipients []string `yaml:"recipients"`
 	Data       string   `yaml:"data"`
 	dataByte   []byte
+}
+
+type ServerClientInfo struct {
+	ServerPtr string `yaml:"server_ptr"`
+	ServerIP  string `yaml:"server_ip"`
+	ClinetPtr string `yaml:"client_ptr"`
+	ClientIP  string `yaml:"client_ip"`
 }
 
 func (e *Email) ToDocument() ([]byte, error) {

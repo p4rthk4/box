@@ -78,22 +78,22 @@ func (conn *Connection) handleEHello(args string) {
 }
 
 func (conn *Connection) handleStartTls() {
-	fmt.Println("Start tls")
 	if !config.ConfOpts.ESMTP.Enable || !config.ConfOpts.ESMTP.Tls {
 		conn.rw.esmtpDisable()
 		return
 	}
-	
+
 	conn.rw.reply(220, "Ready to start TLS")
-	
+
 	tlsConn := tls.Server(conn.conn, tlsConfig)
 	if err := tlsConn.Handshake(); err != nil {
-		fmt.Println("TLS Handshake faild", err)
+		fmt.Println("TLS Handshake faild", err) // TODO: Remove...
 		conn.rw.reply(550, "TLS Handshake error")
 		return
 	}
 
 	conn.conn = tlsConn
+	conn.useTls = true
 	conn.rw = newTextReaderWriter(conn.conn)
 }
 

@@ -59,6 +59,26 @@ func (ra *RoLAddress) GetPTR() string {
 	}
 }
 
+func (ra *RoLAddress) HasPtr(addr string) bool {
+	lastChar := addr[len(addr)-1:]
+	if lastChar == "." {
+		addr = addr[:len(addr)-1]
+	}
+
+	for _, p := range ra.ptrRecords {
+		lastChar = p[len(p)-1:]
+		if lastChar == "." {
+			p = p[:len(p)-1]
+		}
+
+		if p == addr {
+			return true
+		}
+	}
+
+	return false
+}
+
 func (ra *RoLAddress) String() string {
 	return ra.ip.String()
 }

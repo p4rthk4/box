@@ -37,10 +37,12 @@ type Connection struct {
 	data          []byte
 	dataBuffer    *bytes.Buffer // for bdat
 
-	useEsmtp   bool // client use enhanced smtp
-	size       int
-	put8       bool
-	body       BodyType
+	useTls bool
+
+	useEsmtp bool // client use enhanced smtp
+	size     int
+	put8     bool
+	body     BodyType
 
 	logger       *logx.Log
 	serverLogger *logx.Log // print server level log
@@ -189,20 +191,36 @@ func (conn *Connection) forward() {
 		return
 	}
 
-	go func(uid string, count int, client Connection) {
+	go func(uid string, count int, conn Connection) {
+
 		email := Email{
-			Uid:        fmt.Sprintf("%s_%d", uid, count),
-			Domain:     client.domain,
-			From:       client.mailFrom,
-			Recipients: client.recipients,
-			dataByte:   client.data,
-			// Data:       string(client.data),
+			Uid: fmt.Sprintf("%s_%d", uid, count),
+			Tls: conn.useTls,
+
+			Success: false,
+
+			PtrIP: ServerClientInfo{
+				ServerPtr: conn.localAddress.GetPTR(),
+				ServerIP:  conn.localAddress.String(),
+				ClinetPtr: conn.remoteAddress.GetPTR(),
+				ClientIP:  conn.remoteAddress.String(),
+			},
+
+			Domain:   conn.domain,
+			PtrMatch: false,
+
+			From:       conn.mailFrom,
+			Recipients: conn.recipients,
+			dataByte:   conn.data,
+			// Data:       string(conn.data),
 		}
 
-		if client.forwardStatus == MailForwardSuccess {
+		if conn.remoteAddress.HasPtr(conn.domain) {
+			email.PtrMatch = true
+		}
+
+		if conn.forwardStatus == MailForwardSuccess {
 			email.Success = true
-		} else {
-			email.Success = false
 		}
 
 		mailFwd.ForwardMail(email)

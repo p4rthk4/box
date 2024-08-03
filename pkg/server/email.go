@@ -14,9 +14,8 @@ type Email struct {
 	Uid     string `yaml:"uid"`
 	Success bool   `yaml:"success"`
 
-	Tls       bool             `yaml:"tls"`
-	TlsVerify bool             `yaml:"tls_verify"`
-	PtrIP     ServerClientInfo `yaml:"ptr_ip"`
+	Tls   bool             `yaml:"tls"`
+	PtrIP ServerClientInfo `yaml:"ptr_ip"`
 
 	Domain   string `yaml:"domain"`
 	PtrMatch bool   `yaml:"ptr_match"`

@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"net"
@@ -19,14 +20,6 @@ const (
 	MailForwardIdle                           // if connection close without send data
 )
 
-type Client struct {
-	domain        string
-	mailFrom      string
-	recipients    []string
-	data          []byte
-	forwardStatus MailForwardCode
-}
-
 type Connection struct {
 	conn net.Conn
 
@@ -36,7 +29,13 @@ type Connection struct {
 
 	uid       string
 	mailCount int // it is count of how many mail tranfare in this connection
-	client    Client
+
+	domain        string
+	mailFrom      string
+	recipients    []string
+	forwardStatus MailForwardCode
+	data          []byte
+	dataBuffer    *bytes.Buffer // for bdat
 
 	useEsmtp   bool // client use enhanced smtp
 	size       int
@@ -88,11 +87,11 @@ func (conn *Connection) init() bool {
 		conn.logger.Warn("no PTR record or faild to find PTR records of local address %s", conn.remoteAddress.String())
 	}
 
-	conn.client.domain = ""
-	conn.client.mailFrom = ""
-	conn.client.recipients = []string{}
-	conn.client.data = nil
-	conn.client.forwardStatus = MailForwardIdle
+	conn.domain = ""
+	conn.mailFrom = ""
+	conn.recipients = []string{}
+	conn.data = nil
+	conn.forwardStatus = MailForwardIdle
 
 	conn.logger.Info("client %s[%s]:%d connected", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 
@@ -120,7 +119,7 @@ func (conn *Connection) handle() {
 					break
 				}
 			} else {
-				conn.rw.cmdNotRecognized()
+				conn.rw.cmdNotRecognized(cmd)
 			}
 			continue
 		}
@@ -145,7 +144,7 @@ func (conn *Connection) handle() {
 }
 
 func (conn *Connection) closeWithFail() {
-	conn.client.forwardStatus = MailForwardFaild
+	conn.forwardStatus = MailForwardFaild
 	conn.close()
 	conn.logger.Error("disconnected unfortunately client %s[%s]:%d", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 }
@@ -161,7 +160,7 @@ func (conn *Connection) closeForMaxClientsExceeded() {
 }
 
 func (conn *Connection) closeWithFailAnd(resone string) {
-	conn.client.forwardStatus = MailForwardFaild
+	conn.forwardStatus = MailForwardFaild
 	conn.close()
 	conn.logger.Warn("disconnected client by server for %s %s[%s]:%d", resone, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 }
@@ -169,10 +168,11 @@ func (conn *Connection) closeWithFailAnd(resone string) {
 func (conn *Connection) reset() {
 	conn.forward()
 
-	conn.client.mailFrom = ""
-	conn.client.recipients = []string{}
-	conn.client.data = nil
-	conn.client.forwardStatus = MailForwardIdle
+	conn.mailFrom = ""
+	conn.recipients = []string{}
+	conn.data = nil
+	conn.forwardStatus = MailForwardIdle
+	conn.dataBuffer = nil
 }
 
 func (conn *Connection) close() {
@@ -186,11 +186,11 @@ func (conn *Connection) close() {
 }
 
 func (conn *Connection) forward() {
-	if conn.client.mailFrom == "" {
+	if conn.mailFrom == "" {
 		return
 	}
 
-	go func(uid string, count int, client Client) {
+	go func(uid string, count int, client Connection) {
 		email := Email{
 			Uid:        fmt.Sprintf("%s_%d", uid, count),
 			Domain:     client.domain,
@@ -207,5 +207,5 @@ func (conn *Connection) forward() {
 		}
 
 		mailFwd.ForwardMail(email)
-	}(conn.uid, conn.mailCount, conn.client)
+	}(conn.uid, conn.mailCount, *conn)
 }

@@ -211,7 +211,7 @@ func (conn *Connection) forward() {
 
 			From:       conn.mailFrom,
 			Recipients: conn.recipients,
-			UseBdat: false,
+			UseBdat:    false,
 			dataByte:   conn.data,
 			// Data:       string(conn.data),
 		}
@@ -220,7 +220,7 @@ func (conn *Connection) forward() {
 			email.PtrMatch = true
 		}
 
-		if (conn.data != nil) {
+		if conn.dataBuffer != nil {
 			email.UseBdat = true
 		}
 

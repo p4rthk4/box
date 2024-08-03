@@ -1,6 +1,7 @@
 package server
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"strconv"
@@ -36,6 +37,8 @@ func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStat
 		conn.handleRcpt(args)
 	case "DATA":
 		conn.handleData()
+	case "BDAT":
+		conn.handleBdat(args)
 	case "RSET":
 		conn.handleReset()
 	case "NOOP":
@@ -43,10 +46,10 @@ func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStat
 	case "QUIT":
 		conn.handleQuit()
 		return HandleCommandClose
-	case "SEND", "SOML", "SAML", "EXPN", "HELP", "TURN", "LHLO", "STARTTLS", "AUTH", "BDAT", "VRFY":
+	case "SEND", "SOML", "SAML", "EXPN", "HELP", "TURN", "LHLO", "STARTTLS", "AUTH", "VRFY":
 		conn.rw.cmdNotImplemented(cmd)
 	default:
-		conn.rw.cmdNotRecognized()
+		conn.rw.cmdNotRecognized(cmd)
 	}
 
 	return HandleCommandOk
@@ -64,7 +67,7 @@ func (conn *Connection) handleEHello(args string) {
 		return
 	}
 
-	conn.client.domain = domain
+	conn.domain = domain
 	conn.useEsmtp = true
 	replyMsg := []string{"Hello " + domain}
 	replyMsg = append(replyMsg, greetReplyMessage...)
@@ -78,13 +81,13 @@ func (conn *Connection) handleHello(args string) {
 		return
 	}
 
-	conn.client.domain = domain
+	conn.domain = domain
 	conn.useEsmtp = false
 	conn.rw.reply(250, "%s ready for you", config.ConfOpts.HostName)
 }
 
 func (conn *Connection) handleMail(args string) {
-	if conn.client.domain == "" {
+	if conn.domain == "" {
 		conn.rw.reply(503, "Error: send HELO/EHLO first")
 		return
 	}
@@ -101,14 +104,12 @@ func (conn *Connection) handleMail(args string) {
 		conn.rw.syntaxError("invalid address")
 		return
 	}
-	conn.client.mailFrom = from
+	conn.mailFrom = from
 
 	if !conn.useEsmtp {
 		conn.rw.reply(250, "Ok")
 		return
 	}
-
-	fmt.Println("args", args)
 
 	mailArgs, err := parseArgs(p.s)
 	if err != nil {
@@ -209,12 +210,12 @@ func (conn *Connection) handleMail(args string) {
 }
 
 func (conn *Connection) handleRcpt(args string) {
-	if conn.client.mailFrom == "" {
+	if conn.mailFrom == "" {
 		conn.rw.reply(503, "Error: send MAIL first")
 		return
 	}
 
-	if len(conn.client.recipients) == config.ConfOpts.MaxRecipients {
+	if len(conn.recipients) == config.ConfOpts.MaxRecipients {
 		conn.rw.reply(452, "Maximum limit of %v recipients reached", config.ConfOpts.MaxRecipients)
 		return
 	}
@@ -241,7 +242,7 @@ func (conn *Connection) handleRcpt(args string) {
 
 	// TODO: parse args
 
-	conn.client.recipients = append(conn.client.recipients, rcpt)
+	conn.recipients = append(conn.recipients, rcpt)
 	conn.rw.reply(250, "Ok")
 }
 
@@ -260,10 +261,12 @@ func (conn *Connection) handleReset() {
 }
 
 func (conn *Connection) handleData() {
-	if len(conn.client.recipients) == 0 {
+	if len(conn.recipients) == 0 {
 		conn.rw.reply(503, "Error: send RCPT first")
 		return
 	}
+
+	// TODO: through error when body type is binerymime
 
 	conn.rw.reply(354, "Start mail input end with <CRLF>.<CRLF>")
 
@@ -272,12 +275,78 @@ func (conn *Connection) handleData() {
 		fmt.Println("Lol Error...")
 		return
 	}
-	conn.client.data = data
+	conn.data = data
 
 	conn.rw.reply(250, "Ok")
-	conn.client.forwardStatus = MailForwardSuccess
+	conn.forwardStatus = MailForwardSuccess
 	conn.reset()
 
 	conn.logger.Success("%d email received successfully from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 	conn.mailCount += 1
+}
+
+func (conn *Connection) handleBdat(arg string) {
+	if len(conn.recipients) == 0 {
+		conn.rw.reply(503, "Error: send RCPT first")
+		return
+	}
+	args := strings.Fields(arg)
+	if len(args) == 0 {
+		conn.rw.reply(501, "Missing chunk size argument")
+		return
+	}
+	if len(args) > 2 {
+		conn.rw.reply(501, "Too many arguments")
+		return
+	}
+
+	last := false
+	if len(args) == 2 {
+		if !strings.EqualFold(args[1], "LAST") {
+			conn.rw.reply(501, "Unknown BDAT argument")
+			return
+		}
+		last = true
+	}
+
+	size, err := strconv.ParseUint(args[0], 10, 32)
+	if err != nil {
+		conn.rw.reply(501, "Malformed size argument")
+		return
+	}
+
+	if conn.dataBuffer == nil {
+		conn.dataBuffer = new(bytes.Buffer)
+	}
+
+	if config.ConfOpts.ESMTP.MessageSize > 0 && conn.dataBuffer.Len() > config.ConfOpts.ESMTP.MessageSize {
+		conn.rw.reply(552, "Max message size exceeded")
+		return
+	}
+
+	oldSize := conn.rw.setMaxLineSize(0)
+	defer conn.rw.setMaxLineSize(oldSize)
+
+	lr := io.LimitReader(conn.rw.t.R, int64(size))
+	n, err := io.Copy(conn.dataBuffer, lr)
+	if err != nil || n != int64(size) {
+		conn.rw.reply(554, "Error: Transaction failed, data reading error.")
+		conn.reset()
+		return
+	}
+
+	if last {
+		conn.data = conn.dataBuffer.Bytes()
+
+		conn.rw.reply(250, "Ok, last %d bytes received, total %d", size, conn.dataBuffer.Len())
+
+		conn.forwardStatus = MailForwardSuccess
+		conn.reset()
+
+		conn.logger.Success("%d email received successfully from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
+		conn.mailCount += 1
+
+	} else {
+		conn.rw.reply(250, "%d bytes received, total %d", size, conn.dataBuffer.Len())
+	}
 }

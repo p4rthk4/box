@@ -170,13 +170,12 @@ func (client *SMTPClinet) SendMail() error {
 					continue
 				case net.Error:
 					if e.Timeout() {
-						fmt.Println("time...")
 						allErrors = append(allErrors, ClientServerError{
 							domainName:  m.Host,
 							errorString: fmt.Sprintf("connection timeout with %s by server", address),
 						})
 						continue
-					}
+					}	
 				case SMTPServerError:
 					fmt.Println("Error trnfer in thire area")
 					err = serverErrToClientErr(err)

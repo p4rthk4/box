@@ -28,8 +28,8 @@ type SMTPClinet struct {
 
 	timeout time.Duration
 
-	Size       int
-	UTF8       bool
+	Size int
+	UTF8 bool
 	// RequireTLS bool
 	// DSNReturn  DSNReturnType
 }
@@ -86,8 +86,10 @@ type ClientServerError struct {
 }
 
 func (client *SMTPClinet) SendMail() error {
-	mxRecords := []*net.MX{}
 
+	client.Size = len(client.data) + 5 // add 5 for <crlf>.<crlf>
+
+	mxRecords := []*net.MX{}
 	if client.RcptHost != "" {
 		mxRecords = append(mxRecords, &net.MX{
 			Host: client.RcptHost,
@@ -106,6 +108,13 @@ func (client *SMTPClinet) SendMail() error {
 		mxRecords = mxs
 	} else {
 		return fmt.Errorf("no any host and rcpt found")
+	}
+
+	if IsSMTPUTF8(client.From) {
+		client.UTF8 = true
+	}
+	if IsSMTPUTF8(client.Rcpt) {
+		client.UTF8 = true
 	}
 
 	// errors

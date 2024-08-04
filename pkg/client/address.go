@@ -10,6 +10,7 @@ import (
 	"net"
 	"regexp"
 	"strings"
+	"unicode"
 )
 
 // get ip address from string or
@@ -47,17 +48,24 @@ func isIPv6(ip net.IP) bool {
 
 func isValidEmail(email string) bool {
 	email = strings.TrimSpace(email)
-	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
+	emailRegex := regexp.MustCompile(`^[\p{L}\p{N}\p{M}\p{S}\p{P}._%+\-]+@[\p{L}\p{N}.\-]+\.[\p{L}]{2,}$`)	
 	return emailRegex.MatchString(email)
 }
 
 func getDomainFromEmail(email string) (string, error) {
 	email = strings.TrimSpace(email)
-
 	if !isValidEmail(email) {
 		return "", fmt.Errorf("invalid email address")
 	}
-
 	parts := strings.Split(email, "@")
 	return parts[1], nil
+}
+
+func IsSMTPUTF8(email string) bool {
+	for _, r := range email {
+		if r > unicode.MaxASCII {
+			return true // Contains Unicode characters
+		}
+	}
+	return false // Contains only ASCII characters
 }

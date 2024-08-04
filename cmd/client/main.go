@@ -8,9 +8,9 @@ import (
 	"github.com/p4rthk4/u2smtp/pkg/config"
 )
 
-func main() {	
+func main() {
 
-	config.LoadConfig()
+	config.LoadConfig() // load conifg in config file
 
 	clinet := smtpclient.NewClinet()
 	// try cockatielone.biz
@@ -18,12 +18,11 @@ func main() {
 	clinet.SetTimeout(5 * time.Second)
 	clinet.SetFrom("degama@cockatielone.biz")
 	clinet.SetRcpt("parthka.2005@proton.me")
-	clinet.SetRcpt("parthka.2005@gmail.com")	
+	clinet.SetRcpt("parthka.2005@gmail.com")
 	clinet.SetRcpt("hello@parthka.dev")
-	clinet.SetRcpt("parthka.2005@cockatielone.biz")
+	clinet.SetRcpt("parthka.200😡5@cockatielone.biz")
 	clinet.SetHostname("home.lope.dev")
 
-	clinet.Size = 1024
 	// clinet.DSNReturn = smtpclient.DSNReturnFull
 	// clinet.UTF8 = true
 

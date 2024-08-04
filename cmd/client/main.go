@@ -18,15 +18,16 @@ func main() {
 	clinet.SetTimeout(5 * time.Second)
 	clinet.SetFrom("degama@cockatielone.biz")
 	clinet.SetRcpt("parthka.2005@proton.me")
-	clinet.SetRcpt("parthka.200😡5@cockatielone.biz")
-	clinet.SetRcpt("hello@parthka.dev")
 	clinet.SetRcpt("parthka.2005@gmail.com")
+	clinet.SetRcpt("hello@parthka.dev")
+	clinet.SetRcpt("parthka.200😡5@cockatielone.biz")
 	clinet.SetHostname("home.lope.dev")
 
 	// clinet.DSNReturn = smtpclient.DSNReturnFull
 	// clinet.UTF8 = true
 
 	clinet.SetData([]byte(mail))
+	clinet.CheckTlsHost = false
 	err := clinet.SendMail()
 	fmt.Println(err)
 }

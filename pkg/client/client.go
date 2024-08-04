@@ -15,7 +15,9 @@ const (
 )
 
 type SMTPClinet struct {
-	StartTLS bool
+	StartTls     bool
+	CheckTlsHost bool
+
 	hostname string
 
 	RcptHost string
@@ -38,8 +40,9 @@ type SMTPClinet struct {
 
 func NewClinet() SMTPClinet {
 	return SMTPClinet{
-		StartTLS: true,
-		hostname: "localhost",
+		StartTls:     true,
+		CheckTlsHost: false,
+		hostname:     "localhost",
 
 		RcptHost: "",
 		RcptPort: 25,

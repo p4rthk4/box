@@ -61,7 +61,7 @@ func (conn *ClientConn) handleConn() error {
 
 	fmt.Println(conn.extension)
 
-	if conn.smtpClient.StartTLS {
+	if conn.smtpClient.StartTls {
 		if ok, _ := conn.Extension("STARTTLS"); ok {
 			err = conn.starttls()
 			if err != nil {
@@ -265,8 +265,11 @@ func (conn *ClientConn) starttls() error {
 		return err
 	}
 
-	fmt.Println(conn.smtpClient.RcptHost)
-	config.ServerName = conn.smtpClient.RcptHost
+	if conn.smtpClient.CheckTlsHost {
+		config.ServerName = conn.smtpClient.RcptHost
+	} else {
+		config.InsecureSkipVerify = true
+	}
 
 	tlsConn := tls.Client(conn.conn, config)
 	conn.conn = tlsConn

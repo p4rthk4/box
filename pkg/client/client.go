@@ -49,7 +49,7 @@ func NewClinet() SMTPClinet {
 
 		timeout: time.Minute * 2,
 
-		chunkSize: 100,
+		chunkSize: 1024 * 2,
 	}
 }
 

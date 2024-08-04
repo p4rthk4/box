@@ -1,6 +1,7 @@
 package client
 
 import (
+	"bytes"
 	"crypto/tls"
 	"errors"
 	"fmt"
@@ -16,6 +17,8 @@ type ClientConn struct {
 
 	helloDone bool
 	extension map[string]string
+
+	bataBuffer *bytes.Buffer
 
 	smtpClient *SMTPClinet
 }
@@ -58,7 +61,7 @@ func (conn *ClientConn) handleConn() error {
 
 	fmt.Println(conn.extension)
 
-	if config.ConfOpts.Client.TryTls {
+	if conn.smtpClient.StartTLS {
 		if ok, _ := conn.Extension("STARTTLS"); ok {
 			err = conn.starttls()
 			if err != nil {
@@ -77,9 +80,16 @@ func (conn *ClientConn) handleConn() error {
 		return serverErrToClientErr(err)
 	}
 
-	err = conn.data()
-	if err != nil {
-		return err
+	if ok, _ := conn.Extension("CHUNKING"); ok {
+		err = conn.bdat()
+		if err != nil {
+			return err
+		}
+	} else {
+		err = conn.data()
+		if err != nil {
+			return err
+		}
 	}
 
 	err = conn.quit()
@@ -217,6 +227,31 @@ func (conn *ClientConn) data() error {
 
 	_, _, err = conn.rw.data(conn.smtpClient.data)
 	return err
+}
+
+func (conn *ClientConn) bdat() error {
+	if conn.bataBuffer == nil {
+		conn.bataBuffer = bytes.NewBuffer(conn.smtpClient.data)
+	}
+	
+	if conn.bataBuffer.Len() < 1 {
+		return nil
+	}
+
+	last := false
+	n := conn.smtpClient.chunkSize
+
+	if conn.bataBuffer.Len() <= conn.smtpClient.chunkSize {
+		last = true
+		n = conn.bataBuffer.Len()
+	}
+
+	_, _, err := conn.rw.bdat(conn.bataBuffer, n, last)
+	if err != nil {
+		return err
+	}
+
+	return conn.bdat()
 }
 
 func (conn *ClientConn) starttls() error {

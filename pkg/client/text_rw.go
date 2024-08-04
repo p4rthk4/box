@@ -88,6 +88,31 @@ func (rw *TextReaderWriter) cmd(expectCode int, format string, args ...interface
 	return rw.readResponse(expectCode)
 }
 
+func (rw *TextReaderWriter) bdat(r io.Reader, n int, last bool) (int, string, error) {
+	f := fmt.Sprintf("BDAT %d", n)
+	if last {
+		f += " LAST"
+	}
+
+	id, err := rw.t.Cmd(f)
+	if err != nil {
+		if protoErr, ok := err.(*textproto.Error); ok {
+			err = toSMTPServerErr(protoErr)
+		}
+		return 0, "", err
+	}
+
+	lr := io.LimitReader(r, int64(n))
+	io.Copy(rw.t.W, lr)
+
+	rw.t.W.Flush()
+	
+	rw.t.StartResponse(id)
+	defer rw.t.EndResponse(id)
+
+	return rw.readResponse(250)
+}
+
 func (rw *TextReaderWriter) data(data []byte) (int, string, error) {
 	dataReader := bytes.NewReader(data)
 	dataWriter := rw.t.DotWriter()
@@ -102,7 +127,7 @@ func (rw *TextReaderWriter) data(data []byte) (int, string, error) {
 		if protoErr, ok := err.(*textproto.Error); ok {
 			err = toSMTPServerErr(protoErr)
 		}
-		return 0, "", err
+		return 0, "", err		
 	}
 
 	return rw.readResponse(250)

@@ -32,6 +32,8 @@ type SMTPClinet struct {
 	UTF8 bool
 	// RequireTLS bool
 	// DSNReturn  DSNReturnType
+
+	chunkSize int
 }
 
 func NewClinet() SMTPClinet {
@@ -46,6 +48,8 @@ func NewClinet() SMTPClinet {
 		Rcpt: "",
 
 		timeout: time.Minute * 2,
+
+		chunkSize: 100,
 	}
 }
 

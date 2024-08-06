@@ -30,13 +30,13 @@ func main() {
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myworkspacel.ink;
-        q=dns/txt; s=draft; bh=10ksEvlgKQRSmdzeDKsGBQ3BXzRiT4pq9KuMlBwqjqg=;
-        h=from:subject:to:mime-version:content-type;
-        b=SkFp6oV3PBAguAGQE64B8SF1jUhuWXqdFxK6V0STCl3Iriey8DcPkASHqkJulE/C2CD6l/ys/
-         PvaEAggikO8heKu2v2t5qrxANSYmISwj/Lva1Gza508neHbepruMbbRW2xMw7JuSIRn6jB8k9mI
-         JolzwXWKkonluRI4yalqCAxCmRfMIafi6seliyW/0g6ewGqyUKYFtS/++OhEqTEZVAo//5uI5Cw
-         bxqhsj33Pcw5ei0ZzsZINLFpqiCLAULejqEp6mbSllrbP1frQfOxJjrK88/0GOqQubCYYmXIshG
-         jZzFqp4uWdjaZNrcgLAtnWqYPpKwzhjumHgmQISXYJBg==
+ q=dns/txt; s=draft; bh=10ksEvlgKQRSmdzeDKsGBQ3BXzRiT4pq9KuMlBwqjqg=;
+ h=from:subject:to:mime-version:content-type;
+ b=SkFp6oV3PBAguAGQE64B8SF1jUhuWXqdFxK6V0STCl3Iriey8DcPkASHqkJulE/C2CD6l/ys/
+ PvaEAggikO8heKu2v2t5qrxANSYmISwj/Lva1Gza508neHbepruMbbRW2xMw7JuSIRn6jB8k9mI
+ JolzwXWKkonluRI4yalqCAxCmRfMIafi6seliyW/0g6ewGqyUKYFtS/++OhEqTEZVAo//5uI5Cw
+ bxqhsj33Pcw5ei0ZzsZINLFpqiCLAULejqEp6mbSllrbP1frQfOxJjrK88/0GOqQubCYYmXIshG
+ jZzFqp4uWdjaZNrcgLAtnWqYPpKwzhjumHgmQISXYJBg==
 From: parthdegama@myworkspacel.ink
 To: parthka.2005@gmail.com
 Subject: Test Message!

@@ -16,12 +16,9 @@ func main() {
 	// try cockatielone.biz
 	// clinet.SetHost("alt3.gmail-smtp-in.l.google.com")
 	clinet.SetTimeout(5 * time.Second)
-	clinet.SetFrom("degama@cockatielone.biz")
-	clinet.SetRcpt("parthka.2005@proton.me")
+	clinet.SetFrom("parthka@myworkspacel.ink")
 	clinet.SetRcpt("parthka.2005@gmail.com")
-	clinet.SetRcpt("hello@parthka.dev")
-	clinet.SetRcpt("parthka.200😡5@cockatielone.biz")
-	clinet.SetHostname("home.lope.dev")
+	clinet.SetHostname("mx.myworkspacel.ink")
 
 	// clinet.DSNReturn = smtpclient.DSNReturnFull
 	// clinet.UTF8 = true
@@ -32,19 +29,32 @@ func main() {
 	fmt.Println(err)
 }
 
-var mail string = `Content-Type: multipart/mixed;
- boundary="----sinikael-?=_1-17221480878150.018640130471523797"
-From: degama@cockatielone.biz
-To: parthka.2005@proton.me
-Subject: Hello Lope =?UTF-8?B?8J+Siw==?=
-Date: Sun, 28 Jul 2024 06:28:07 +0000
-Message-Id: <1722148087817-999db44e-b6240e4d-3497e6f5@cockatielone.biz>
+var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myworkspacel.ink;
+ q=dns/txt; s=draft; bh=s2qpmZEFQIbCjNBfNLLS3B4ppmEvvhogCEM45G2nna4=;
+ h=from:subject:to:mime-version:content-type;
+ b=IGvFQePiKUulKsPpf3V0PYSdDB409wQHs7LOijutvGq7BEhG4o9w1SUl+2FksleaRSB+ueZ2L
+ OonPqN/HcMv1IgOO52PuFl02EoOG7hLybiEGFBjUgMEt8Xu3grmGznydbDopVA3Msxy+79/k2Sa
+ qesB0BHf293lZ87MKgSzLHYIhSvUNtVmpfDtBLGqYWd1PH7uLlkMxmbTkuJ/JXfoPm+8N2DqUJF
+ zVn+tcxjp8BlJcCOhK6scrggvQoDqtF8iD+DHVFpDwPt0sf6SvG9DmJ5TiP4mdbNQeQd3PHWgLU
+ dwc0PzJP5OP3CGcj5h3YRFKMoNePTZHwdL9wQuYFP+ew==
+From: parthka@myworkspacel.ink
+To: Parth <parthka.2005@gmail.com>
+Subject: Test Message!
+Message-ID: <5e199cdf-564b-b17e-81fd-b759e613795e@myworkspacel.ink>
+Date: Tue, 06 Aug 2024 15:49:17 +0000
 MIME-Version: 1.0
+Content-Type: multipart/alternative;
+ boundary="--_NmP-164e1edfd71a02c6-Part_1"
 
-------sinikael-?=_1-17221480878150.018640130471523797
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
+----_NmP-164e1edfd71a02c6-Part_1
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-VGhpcyBpcyB0aGUgcGxhaW4gdGV4dCB2ZXJzaW9uICBvZiB0aGUgZW1haWwuIA==
-------sinikael-?=_1-17221480878150.018640130471523797--
+Hello World
+----_NmP-164e1edfd71a02c6-Part_1
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<h1>Hello!</h1>
+----_NmP-164e1edfd71a02c6-Part_1--
 `

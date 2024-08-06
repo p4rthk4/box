@@ -30,31 +30,31 @@ func main() {
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=myworkspacel.ink;
- q=dns/txt; s=draft; bh=UN1Luk0CfA92T8/KKG0F5isLo3kzJdhmFjMztTyXB40=;
- h=from:subject:to:mime-version:content-type;
- b=kDH+tTQLJWmFgs3DLszQ2u8kmxzay9A0I9xWIV3oQn+hA83Xr0FgOAWYPlBqcr2RwBvWOcRjb
- 5fIpuF8Q1eWwDAteQWrewSAKzrvHlFLaBlTUoPPT4UrC034+bZwkAE8JFnXlXi02zNxE+OBGYDn
- sV/G/LC340A5CpegERri40TEk1RA6aY8LxkRJ5l/kODrP8X5c/sLM9kOukAxEO9Oxfq3opPbAQ+
- ALXg7KOrcffriHci8bLM7taPISRvGDpUI1Vn8U7dmHydVWU9pwnghxhOaB2V7XDECuTJUqvzGDH
- +FLx6v+qsZYHbj7i3IxFWywQlFUOhsKL0/fykZOK2+vw==
+        q=dns/txt; s=draft; bh=qIkyo9AJwHq7QIGLlqRVwF5vnC+cxPXFIpgrPuOdSNI=;
+        h=from:subject:to:mime-version:content-type;
+        b=dm9qFzUPNua475y5GnLyhI1bLHgJicfRrSgXX7lzmbGCBMfQ1iWWE7ETxLyH4hxrm/85oXd9i
+         DKK38P12DFUsquwVGlQSMUYJEBgDZgy5H5fyYWJF4pBk7146KNwX0zZ0KVPRD8p9Er7/BL+FNjq
+         4YEeS6bLWl2gSCjPiFpV3Va5u6q+5YCjtizVKCSa3NSoveYMBsFVcO+sLGLIHaerRZ+lOz8I7TN
+         UoafraL4SUCDyCne8esSuIUUgehcjRZkA0KEoaZqMD6wWQqjduBB44Ha0gUcR+M8BKNgvDFrRlq
+         U5BP6dEUOT87PSw+U9Psf4S+VxhB0UXzejdOHXYRRodw==
 From: parthka@myworkspacel.ink
 To: Parth <parthka.2005@gmail.com>
 Subject: Test Message!
-Message-ID: <32ff42dc-d901-16e0-6c5a-2c1b5baf1843@myworkspacel.ink>
-Date: Tue, 06 Aug 2024 16:17:03 +0000
+Message-ID: <3123907b-9492-b26f-5b9f-900b75a9d864@myworkspacel.ink>
+Date: Tue, 06 Aug 2024 16:19:43 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
- boundary="--_NmP-5e2249bfe0044c95-Part_1"
+ boundary="--_NmP-aec7bcdd5a19b50d-Part_1"
 
-----_NmP-5e2249bfe0044c95-Part_1
+----_NmP-aec7bcdd5a19b50d-Part_1
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 
 Hello World
-----_NmP-5e2249bfe0044c95-Part_1
+----_NmP-aec7bcdd5a19b50d-Part_1
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: 7bit
 
 <h1>Hello!</h1>
-----_NmP-5e2249bfe0044c95-Part_1--
+----_NmP-aec7bcdd5a19b50d-Part_1--
 `

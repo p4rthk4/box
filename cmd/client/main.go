@@ -24,6 +24,7 @@ func main() {
 	// clinet.UTF8 = true
 
 	clinet.SetData([]byte(mail))
+	fmt.Println([]byte(mail))
 	clinet.CheckTlsHost = false
 	err := clinet.SendMail()
 	fmt.Println(err)

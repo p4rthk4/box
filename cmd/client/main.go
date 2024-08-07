@@ -32,22 +32,23 @@ func main() {
 var mail string = `From: PARTH <parthdegama@cockatielone.biz>
 To: Parthka <pthreeh@outlook.com>
 Subject: Hello Test Message From Parth!
-Message-ID: <6416171d-08bc-16b7-c388-f1b22f96ae9b@cockatielone.biz>
-Date: Wed, 07 Aug 2024 04:52:46 +0000
+Message-ID: <7be02c46-c287-526f-8308-68016d92707b@cockatielone.biz>
+Date: Wed, 07 Aug 2024 04:56:37 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
- boundary="b1_ef8joBCfkrkh2RYftVW8WJCb3gWV1cA5gpuUeEGtDHA"
+ boundary="--_NmP-179eaccf9a33fea7-Part_1"
 
---b1_ef8joBCfkrkh2RYftVW8WJCb3gWV1cA5gpuUeEGtDHA
+----_NmP-179eaccf9a33fea7-Part_1
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: base64
 
 SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1l
---b1_ef8joBCfkrkh2RYftVW8WJCb3gWV1cA5gpuUeEGtDHA
+----_NmP-179eaccf9a33fea7-Part_1
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: base64
 
 PGI+SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1lPC9i
 Pg==
---b1_ef8joBCfkrkh2RYftVW8WJCb3gWV1cA5gpuUeEGtDHA--
+----_NmP-179eaccf9a33fea7-Part_1--
+
 `

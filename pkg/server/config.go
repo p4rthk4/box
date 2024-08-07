@@ -1,5 +1,7 @@
 package server
 
+import "time"
+
 var config *SMTPConfig = nil
 
 type SMTPConfig struct {
@@ -22,7 +24,8 @@ type SMTPConfig struct {
 
 	TlsConfig TlsKeyCert
 
-	Dev bool
+	Timeout time.Duration // read timeout
+	Dev     bool
 }
 
 type ESMTPOptions struct {
@@ -39,7 +42,7 @@ type TlsKeyCert struct {
 }
 
 // This is globle and overridable
-// and give all option because not 
+// and give all option because not
 // verify or default blank option
 func SetConfig(conf SMTPConfig) {
 	config = &conf

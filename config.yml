@@ -18,7 +18,7 @@ dev: true
 spf_check: false
 
 max_recipients: -1
-check_mailbox: true
+check_mailbox: false
 max_clients: 6
 
 

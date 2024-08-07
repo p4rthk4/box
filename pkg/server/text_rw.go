@@ -103,14 +103,14 @@ func (rw *TextReaderWriter) setMaxLineSize(size int) int {
 
 func (rw *TextReaderWriter) readLine() (string, error) {
 	// TODO: timeout all
-	rw.setTimeout(2 * time.Minute)
+	rw.setTimeout(config.Timeout)
 	defer rw.clearTimeout()
 
 	return rw.t.ReadLine()
 }
 
 func (rw *TextReaderWriter) readData() ([]byte, error) {
-	rw.setTimeout(15 * time.Minute)
+	rw.setTimeout(config.Timeout * 5)
 	defer rw.clearTimeout()
 
 	return rw.t.ReadDotBytes()

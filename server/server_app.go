@@ -2,6 +2,7 @@ package serverapp
 
 import (
 	"sync"
+	"time"
 
 	"github.com/p4rthk4/u2smtp/config"
 	"github.com/p4rthk4/u2smtp/pkg/server"
@@ -35,6 +36,7 @@ func StartServer() {
 
 		LogDirPath:  config.ConfOpts.LogDirPath,
 		LogFilePath: config.ConfOpts.LogFilePath,
+		Timeout:     time.Minute * 5,
 		Dev:         config.ConfOpts.Dev,
 	})
 

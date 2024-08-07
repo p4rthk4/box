@@ -19,6 +19,7 @@ type Email struct {
 
 	Domain   string `yaml:"domain"`
 	PtrMatch bool   `yaml:"ptr_match"`
+	SpfFail  bool   `yaml:"spf_fail"`
 
 	From       string   `yaml:"from"`
 	Recipients []string `yaml:"recipients"`

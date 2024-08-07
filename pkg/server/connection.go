@@ -33,6 +33,7 @@ type Connection struct {
 	domain        string
 	mailFrom      string
 	recipients    []string
+	spfFail       bool
 	forwardStatus MailForwardCode
 	data          []byte
 	dataBuffer    *bytes.Buffer // for bdat
@@ -211,6 +212,7 @@ func (conn *Connection) forward() {
 
 			Domain:   conn.domain,
 			PtrMatch: false,
+			SpfFail:  conn.spfFail,
 
 			From:       conn.mailFrom,
 			Recipients: conn.recipients,

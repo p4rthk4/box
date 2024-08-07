@@ -298,6 +298,7 @@ func (conn *Connection) handleData() HandleCommandStatus {
 
 	ok := conn.checkSpf()
 	if !ok {
+		conn.spfFail = true
 		conn.forwardStatus = MailForwardFaild
 		conn.reset()
 
@@ -371,6 +372,7 @@ func (conn *Connection) handleBdat(arg string) {
 
 		ok := conn.checkSpf()
 		if !ok {
+			conn.spfFail = true
 			conn.forwardStatus = MailForwardFaild
 			conn.reset()
 
@@ -391,8 +393,10 @@ func (conn *Connection) handleBdat(arg string) {
 	}
 }
 
-// return value is pass,
 func (conn *Connection) checkSpf() bool {
+	if !config.ConfOpts.SpfCheck {
+		return true
+	}
 	domain, err := getDomainFromEmail(conn.mailFrom)
 	if err != nil {
 		conn.rw.replyLines(550, []string{
@@ -408,7 +412,7 @@ func (conn *Connection) checkSpf() bool {
 		conn.rw.replyLines(550, []string{
 			"email doesn't delivered because sender",
 			fmt.Sprintf("domain [%s] does not", domain),
-			fmt.Sprintf("designate %s as", 	conn.remoteAddress.ip.String()),
+			fmt.Sprintf("designate %s as", conn.remoteAddress.ip.String()),
 			"permitted sender.",
 		})
 		return false

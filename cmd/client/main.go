@@ -16,7 +16,7 @@ func main() {
 	// try cockatielone.biz
 	// clinet.SetHost("alt3.gmail-smtp-in.l.google.com")
 	clinet.SetTimeout(5 * time.Second)
-	clinet.SetFrom("lopel111@cockatielone.biz")
+	clinet.SetFrom("lopel@cockatielone.biz")
 	clinet.SetRcpt("pthreeh@outlook.com")
 	clinet.SetHostname("mx.myworkspacel.ink")
 
@@ -32,19 +32,20 @@ func main() {
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
 	q=dns/txt; s=draft; bh=PKtoTjqHuudr64nYpizw9stW9CenBfl0sXHFI8KEfBA=;
 	h=from:subject:to:mime-version:content-type:content-transfer-encoding;
-	b=U4qYOMP8InhfY2pXhqVW8HlNS+xukXqgk+qL7N5rpmuuc9H2GAQBtvTJzvnGTdHu+V5MidvMB
-	 vdhM9REw7Q9QYeMBDjvu4AB8qDoBc0tTTxpZkLB5Xr18xegu+ankojTppFfwlR1K/uuQcnk8ya9
-	 7eQlshyXJ/U9K7vaF3u5Zlz2M84qg+ZlhBuFI8srVMPvNpzFvYM2DQhr2sukfBToXsdVxwCpmkt
-	 xo3bTBeCwPStBQXeaQCxn9+mmEj3CwFG3Mwi4BI5A1+whvchYOCjVaewasqpyS5u2Rd44aU8Ejg
-	 7x650TAbha6gStNmwMePlfICkI8OemV5FPtEQGCMa37A==
-From: lopel@cockatielone.biz
+	b=FyH1Vt0URXqWlRQz72cMnDs5U4De1YzU0CAVgVj1+dXpinlvXS5/UviNIg3tzBS7KP1gCjiK0
+	 xgaQ+TpBNezL+YKenR0wCC+YZDtgq/QVOrUlogVTzfkOQE+QPjs0YaVULN/t6y5VRjBz/JXIuBf
+ 	 v/ADu0T2allxJXh6yLtorP8S8dwjvov4zJIIN5oKwXylKIAbfYd3SQ76JLEzPGjQ4neBpEC1eD1
+ 	 cBbG2NnJIbe4B75CYOUJDv0jri5vvDRX7cAaQNuW4cUfaOyg02s9MsANWlIkZHfN7uDhJ86CsCV
+sUExIeN1ZKtAJsywB1UEeG0LbYBCOlIhVxMzV2/lua2A==
+From: parthdegama@cockatielone.biz
 To: pthreeh@outlook.com
 Subject: Hello Test Message From Parth!
-Message-ID: <2fdf2cf5-4117-7ce7-3cdc-44bd4c8f770e@cockatielone.biz>
+Message-ID: <1fd66bea-7e9e-24eb-a4f1-1685c7451eb6@cockatielone.biz>
 Content-Transfer-Encoding: 7bit
-Date: Wed, 07 Aug 2024 03:32:35 +0000
+Date: Wed, 07 Aug 2024 03:37:18 +0000
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 
 Hello World!, my name is parth degama and your name
+
 `

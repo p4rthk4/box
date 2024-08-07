@@ -2,7 +2,7 @@ package config
 
 func defaultConfig() ConfigsOptions {
 	return ConfigsOptions{
-		Name:     "S2SMTP",
+		Name:     "U2SMTP",
 		HostName: "localhost",
 		Server: ServerOptions{
 			Host:        "",
@@ -25,6 +25,8 @@ func defaultConfig() ConfigsOptions {
 			Key:  "",
 			Cert: "",
 		},
+
+		SpfCheck: true,
 
 		LogDirPath:  "./logs",
 		LogFilePath: "email.log",

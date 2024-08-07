@@ -9,6 +9,8 @@ type ConfigsOptions struct {
 	ESMTP ESMTPOptions `yaml:"esmtp"`
 	Tls   TlsKeyCert   `yaml:"tls"`
 
+	SpfCheck bool `yaml:"spf_check"`
+
 	LogDirPath  string `yaml:"log_dir"`
 	LogFilePath string `yaml:"log_file"`
 

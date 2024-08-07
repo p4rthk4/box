@@ -5,9 +5,11 @@ import (
 	"crypto/tls"
 	"fmt"
 	"io"
+	"regexp"
 	"strconv"
 	"strings"
 
+	"github.com/mileusna/spf"
 	"github.com/p4rthk4/u2smtp/pkg/config"
 )
 
@@ -336,7 +338,7 @@ func (conn *Connection) handleBdat(arg string) {
 		conn.dataBuffer = new(bytes.Buffer)
 	}
 
-	if config.ConfOpts.ESMTP.MessageSize > 0 && conn.dataBuffer.Len() + int(size) > config.ConfOpts.ESMTP.MessageSize {
+	if config.ConfOpts.ESMTP.MessageSize > 0 && conn.dataBuffer.Len()+int(size) > config.ConfOpts.ESMTP.MessageSize {
 		conn.rw.reply(552, "Max message size exceeded")
 		return
 	}
@@ -352,6 +354,12 @@ func (conn *Connection) handleBdat(arg string) {
 		return
 	}
 
+	_, err = conn.checkSpf()
+	if err != nil {
+		conn.logger.Warn(err.Error())
+		// TODO: error for spf
+	}
+
 	if last {
 		conn.data = conn.dataBuffer.Bytes()
 		conn.rw.reply(250, "Ok, last %d octets received, total %d", size, conn.dataBuffer.Len())
@@ -364,4 +372,29 @@ func (conn *Connection) handleBdat(arg string) {
 	} else {
 		conn.rw.reply(250, "%d octets received, total %d", size, conn.dataBuffer.Len())
 	}
+}
+
+func (conn *Connection) checkSpf() (bool, error) {
+	if domain, err := getDomainFromEmail(conn.mailFrom); err == nil {
+		a := spf.CheckHost(conn.remoteAddress.ip	, domain, conn.mailFrom, "")
+		fmt.Println("spfresult", a)
+		return true, nil
+	}
+
+	return false, fmt.Errorf("error in email parse for spf")
+}
+
+func isValidEmail(email string) bool {
+	email = strings.TrimSpace(email)
+	emailRegex := regexp.MustCompile(`^[\p{L}\p{N}\p{M}\p{S}\p{P}._%+\-]+@[\p{L}\p{N}.\-]+\.[\p{L}]{2,}$`)
+	return emailRegex.MatchString(email)
+}
+
+func getDomainFromEmail(email string) (string, error) {
+	email = strings.TrimSpace(email)
+	if !isValidEmail(email) {
+		return "", fmt.Errorf("invalid email address")
+	}
+	parts := strings.Split(email, "@")
+	return parts[1], nil
 }

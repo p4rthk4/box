@@ -89,7 +89,6 @@ func (conn *Connection) handleStartTls() {
 
 	tlsConn := tls.Server(conn.conn, tlsConfig)
 	if err := tlsConn.Handshake(); err != nil {
-		fmt.Println("TLS Handshake faild", err) // TODO: Remove...
 		conn.rw.reply(550, "TLS Handshake error")
 		return
 	}

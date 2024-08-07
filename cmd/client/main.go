@@ -30,32 +30,22 @@ func main() {
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
- q=dns/txt; s=draft; bh=cwVlsOsYr8jpWoqSEZl2vgUNnNMbmD+g62zYpDEYxl8=;
- h=from:subject:to:mime-version:content-type;
- b=KbKQy4rPpiJnyRknxp9j2bASfB+89wu93G5lsP6tIVO2ZHIdSCYVii8KqgaDkW0UjlhaZ5X9L
- CiHTOaqsAMNzj/mG9MJ0dJ23K7wISQU3XPpXevjZ1uKfgz36mnBtZTGT1fTDQzDXVQIP3pKO+Xu
- hX6jSKN++15s5rFokUxr2DC3GhMPUobpPnsWEEfcxSY+mu2leERjInqPyI59+ffJmW2NQ/Tdghv
- xkbrfaR13ZGcDx4zspr77FiQggmW6YOTrtjbpRihlPfFviGfSJPxMB07GtOeEBj02r8MRelDNDj
- rTK128YG5L3bhUf0qc2zwaRO797PlL5rfbyc0L9zqYaA==
-From: lo🤑pel111@cockatielone.biz
+ q=dns/txt; s=draft; bh=sIAi0xXPHrEtJmW97Q5q9AZTwKC+l1Iy+0m8vQIc/DY=;
+ h=from:subject:to:mime-version:content-type:content-transfer-encoding;
+ b=V8c/X9JzyFXV1jaRSM8ShWz8a9rVkyj8i83U43g3/yRYPooaApbym5dj53JH9YLSJoZfFHIqa
+ CgSi9gPw7rhBRDSnPuqyV9guasN6mtB0oj8F6tjALDats1mmECe7Cu72xO0KNvQ+Nb3J3OXO5Ys
+ RvWThpuDChPMFJcUYvS7TnSEFb2t+zbnpVtd8K03B0f5CoOvsHvPoAi9a1SY92GIN/c0+MT7jvR
+ SbKS0dOFAF33lJ7yKpGAxtvqZFlAi93qDF9gE6wV5m6t7CIm10eIt8ft+PPfOyYYQyh5nOwWnRM
+ FdtQZylmfvN8nqQZ1pBugEuumoZ2R+h4QIYwzNNK0w9w==
+From: lopel@cockatielone.biz
 To: pthreeh@outlook.com
-Subject: Hello Test Message!
-Message-ID: <437538c5-ca70-3c6b-85fe-d24002c92f97@cockatielone.biz>
-Date: Wed, 07 Aug 2024 03:22:52 +0000
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="--_NmP-1badf63e3634940f-Part_1"
-
-----_NmP-1badf63e3634940f-Part_1
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-Hello World =F0=9F=A4=91=F0=9F=A4=91
-----_NmP-1badf63e3634940f-Part_1
-Content-Type: text/html; charset=utf-8
+Subject: Hello Test Message From Parth!
+Message-ID: <b3ba2989-06f7-aa15-3093-a7a75fb99400@cockatielone.biz>
 Content-Transfer-Encoding: 7bit
+Date: Wed, 07 Aug 2024 03:26:22 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 
-<h1>Hello!</h1>
-----_NmP-1badf63e3634940f-Part_1--
-
+Hello World
+	
 `

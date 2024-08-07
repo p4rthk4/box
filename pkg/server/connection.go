@@ -118,6 +118,9 @@ func (conn *Connection) handle() {
 				status := conn.handleCommand(cmd, args)
 				if status == HandleCommandClose { // if connect close with QUIT...
 					break
+				} else if status == HandleCommandEOF {
+					conn.closeWithFail()
+					break
 				}
 			} else {
 				conn.rw.cmdNotRecognized(cmd)

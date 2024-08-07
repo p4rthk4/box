@@ -17,6 +17,7 @@ type HandleCommandStatus int
 
 const (
 	HandleCommandOk HandleCommandStatus = iota
+	HandleCommandEOF
 	HandleCommandClose
 )
 
@@ -39,7 +40,7 @@ func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStat
 	case "RCPT":
 		conn.handleRcpt(args)
 	case "DATA":
-		conn.handleData()
+		return conn.handleData()
 	case "BDAT":
 		conn.handleBdat(args)
 	case "RSET":
@@ -278,10 +279,10 @@ func (conn *Connection) handleReset() {
 	conn.rw.reply(250, "Flushed")
 }
 
-func (conn *Connection) handleData() {
+func (conn *Connection) handleData() HandleCommandStatus {
 	if len(conn.recipients) == 0 {
 		conn.rw.reply(503, "Error: send RCPT first")
-		return
+		return HandleCommandOk
 	}
 
 	// TODO: through error when body type is binerymime
@@ -290,18 +291,20 @@ func (conn *Connection) handleData() {
 
 	data, err := conn.rw.readData()
 	if err == io.ErrUnexpectedEOF || err != nil {
-		fmt.Println("Lol Error...")
-		return
-	}
-
-
-	_, err = conn.checkSpf()
-	if err != nil {
-		conn.logger.Warn(err.Error())
-		// TODO: error for spf
+		return HandleCommandEOF
 	}
 
 	conn.data = data
+
+	ok := conn.checkSpf()
+	if !ok {
+		conn.forwardStatus = MailForwardFaild
+		conn.reset()
+
+		conn.logger.Warn("%d email received successfully but spf status faild from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
+		conn.mailCount += 1
+		return HandleCommandOk
+	}
 
 	conn.rw.reply(250, "Ok")
 	conn.forwardStatus = MailForwardSuccess
@@ -309,6 +312,8 @@ func (conn *Connection) handleData() {
 
 	conn.logger.Success("%d email received successfully from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 	conn.mailCount += 1
+
+	return HandleCommandOk
 }
 
 func (conn *Connection) handleBdat(arg string) {
@@ -361,14 +366,19 @@ func (conn *Connection) handleBdat(arg string) {
 		return
 	}
 
-	_, err = conn.checkSpf()
-	if err != nil {
-		conn.logger.Warn(err.Error())
-		// TODO: error for spf
-	}
-
 	if last {
 		conn.data = conn.dataBuffer.Bytes()
+
+		ok := conn.checkSpf()
+		if !ok {
+			conn.forwardStatus = MailForwardFaild
+			conn.reset()
+
+			conn.logger.Warn("%d email received successfully but spf status faild from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
+			conn.mailCount += 1
+			return
+		}
+
 		conn.rw.reply(250, "Ok, last %d octets received, total %d", size, conn.dataBuffer.Len())
 
 		conn.forwardStatus = MailForwardSuccess
@@ -381,14 +391,30 @@ func (conn *Connection) handleBdat(arg string) {
 	}
 }
 
-func (conn *Connection) checkSpf() (bool, error) {
-	if domain, err := getDomainFromEmail(conn.mailFrom); err == nil {
-		a := spf.CheckHost(conn.remoteAddress.ip	, domain, conn.mailFrom, "")
-		fmt.Println("spfresult", a)
-		return true, nil
+// return value is pass,
+func (conn *Connection) checkSpf() bool {
+	domain, err := getDomainFromEmail(conn.mailFrom)
+	if err != nil {
+		conn.rw.replyLines(550, []string{
+			"email doesn't delivered because sender",
+			fmt.Sprintf("[%s] domain name", conn.mailFrom),
+			"is invalid.",
+		})
+		return false
 	}
 
-	return false, fmt.Errorf("error in email parse for spf")
+	a := spf.CheckHost(conn.remoteAddress.ip, domain, conn.mailFrom, "")
+	if a != "PASS" {
+		conn.rw.replyLines(550, []string{
+			"email doesn't delivered because sender",
+			fmt.Sprintf("domain [%s] does not", domain),
+			fmt.Sprintf("designate %s as", 	conn.remoteAddress.ip.String()),
+			"permitted sender.",
+		})
+		return false
+	}
+
+	return true
 }
 
 func isValidEmail(email string) bool {

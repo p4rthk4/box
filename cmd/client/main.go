@@ -32,26 +32,34 @@ func main() {
 	fmt.Println(err)
 }
 
-var mail string = `From: PARTH <parthdegama@cockatielone.biz>
+var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
+ q=dns/txt; s=draft; bh=/W9YZjqmeW2SEYNlLZjjGzd//yNcXYtg/3+BADllX+Q=;
+ h=from:subject:to:mime-version:content-type;
+ b=T4Dr0uoR5IFYWKgwoK4wjXlr0BcQHxgeAdh1j0XGOeyOg6fVPhLHGmUYV1miSGNvBFEqugtaC
+ w7wJEoBe1NUgQs2/D+18bRHD/Amv7pUVf8KWvbIHkt26qhYZKzWv2sF9upxIVPiD9rdFtFYAhqq
+ 4LbgbZm7vXdTIpXgdBUoD1/TYMhyxi2m3PP3KXLsWY7+6qJB3obQZhtZk8tY3EDAqFfEzJ+9pkC
+ LjIsfI9B86iuKG0IldGGW+GBRlB87alpAclZugmvfg2g6LZbZcWt9rfaN1KUtzeljUzWD1zknLn
+ qlin2AUjvNH1BCQXWe3NiG+iA7naDC2irj1UrPIlDUhg==
+From: PARTH <parthdegama@cockatielone.biz>
 To: Parthka <pthreeh@outlook.com>
-Subject: Hello Test Message From Parth!
-Message-ID: <29b208f0-89f4-9150-2ce5-723d5f948c90@cockatielone.biz>
-Date: Wed, 07 Aug 2024 05:00:17 +0000
+Subject: Hello Test Message From India!
+Message-ID: <652f6881-662e-ce06-9f3f-1bddd2c8af3e@cockatielone.biz>
+Date: Wed, 07 Aug 2024 05:04:12 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
- boundary="--_NmP-537d6703f74f3988-Part_1"
+ boundary="--_NmP-a192fa3e5098ee4e-Part_1"
 
-----_NmP-537d6703f74f3988-Part_1
+----_NmP-a192fa3e5098ee4e-Part_1
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: base64
 
 SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1l
-----_NmP-537d6703f74f3988-Part_1
+----_NmP-a192fa3e5098ee4e-Part_1
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: base64
 
-PGI+SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1lPC9i
-Pg==
-----_NmP-537d6703f74f3988-Part_1--
+PGgxPjxiPkhlbGxvIFdvcmxkISwgbXkgbmFtZSBpcyBwYXJ0aCBkZWdhbWEgYW5kIHlvdXIgbmFt
+ZTwvYj48L2gxPg==
+----_NmP-a192fa3e5098ee4e-Part_1--
 
 `

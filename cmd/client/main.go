@@ -35,33 +35,33 @@ func main() {
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
- q=dns/txt; s=draft; bh=syf40hXwgZLxjCerTMBtjRy78eOxi8/4c07t9KzYT70=;
+ q=dns/txt; s=draft; bh=gNV3UrXsTQZbe7uc/s9LXtlsoIcIdnFRHD8qR38qDWg=;
  h=from:subject:to:mime-version:content-type;
- b=gHvhZj2wr/YrTbjqnhCJAqlZrFG3lNZRkMfmYPJQMQ5BquVU+UZA58XP2Z0ORPdlMeSM5tBOY
- 0k/ARX41nZvqhydFAczVbOAu2okA5lje1A9vqyVYw3/0lIaxVvhGUfRWf7j9grBSBrNDehC6sXD
- aUtPyLEpHxReSNygV8ZJXDRhbAnp2COWPBEqDU7EURUqGwWM9CPgYsOJ1aap4J8zX1P7EDJtKu8
- 8PtexWm4/dFUPw+716YbLcOI3n2xPZMinw7I9O+QG54KHuqRGAUU4dTWv4hx95y8KZktGxBG5Ph
- q7RfLuFLuDeAQ7DZqCNx40sM5DuieVZ9leAzdBiI36nQ==
+ b=MbJkBsa3oRCryWhWdrVJpmpJODaJm/fKDnPlC8jXLfrAB433vKTu4UB9huMVMphkqrixgKsfe
+ V0LvhsLy8eA+SkiA0iBZfbvokR/tMDoahXgibcpmmTPJZhWkO4tkG1DxE0OwHsz7B989F7nYk5m
+ dW/0NVpPcIweyBSwJtSkv4IfYDQeW7DltEdgaJ8DheuxNccokGdxYCK+uqtwt1Zh1s1YOvhH1BN
+ um8/fd7cAbowfFi3x3C12VKEyQaapDjf1b8n8AunKnHsLpzdgLHZnsIrBF0125Km0WqE3TUkVis
+ uuG9ig0/kyyccFyedT6EZuUUl595e+EaAnTVLVCd8Fyw==
 From: PARTH <aly@cockatielone.biz>
 To: Parthka <hello@parthka.dev>
 Subject: Final Helo Mail
-Message-ID: <49625f91-b609-6619-0164-1177052f5cb9@cockatielone.biz>
-Date: Wed, 07 Aug 2024 06:24:53 +0000
+Message-ID: <23286281-77a3-f0f1-103b-572eff747d22@cockatielone.biz>
+Date: Wed, 07 Aug 2024 06:27:49 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
- boundary="--_NmP-b2260b694d6fd9b8-Part_1"
+ boundary="--_NmP-44fd71683cf1b1f6-Part_1"
 
-----_NmP-b2260b694d6fd9b8-Part_1
+----_NmP-44fd71683cf1b1f6-Part_1
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: base64
 
 SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1l
-----_NmP-b2260b694d6fd9b8-Part_1
+----_NmP-44fd71683cf1b1f6-Part_1
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: base64
 
 PGgxPjxiPkhlbGxvIFdvcmxkISwgbXkgbmFtZSBpcyBwYXJ0aCBkZWdhbWEgYW5kIHlvdXIgbmFt
 ZTwvYj48L2gxPg==
-----_NmP-b2260b694d6fd9b8-Part_1--
+----_NmP-44fd71683cf1b1f6-Part_1--
 
 `

@@ -29,27 +29,23 @@ func main() {
 	fmt.Println(err)
 }
 
-var mail string = `Content-Transfer-Encoding: base64
-From: PARTH <parthdegama@cockatielone.biz>
+var mail string = `From: PARTH <parthdegama@cockatielone.biz>
 To: Parthka <pthreeh@outlook.com>
 Subject: Hello Test Message From Parth!
-Message-ID: <139244aa-5f4d-4a08-67d5-db284cefab62@cockatielone.biz>
-Date: Wed, 07 Aug 2024 04:34:52 +0000
+Message-ID: <b1f7e0c1-331f-eca6-a633-d724e596da43@cockatielone.biz>
+Date: Wed, 07 Aug 2024 04:42:33 +0000
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="--_NmP-3e34254ed23852ad-Part_1"
+Content-Type: multipart/alternative; boundary="000000000000ddaf2c061f104677"
 
-----_NmP-3e34254ed23852ad-Part_1
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+--000000000000ddaf2c061f104677
+Content-Type: text/plain; charset="UTF-8"
 
-SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1l
+I Am *Parth* Degama
 
-----_NmP-3e34254ed23852ad-Part_1
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: base64
+--000000000000ddaf2c061f104677
+Content-Type: text/html; charset="UTF-8"
 
-PGI+SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1lPC9i
-PiAgIA==
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"><div dir="ltr"><div class="gmail_default" style="font-family:arial,sans-serif">I Am <b>Parth</b> Degama</div></div>
 
-----_NmP-3e34254ed23852ad-Part_1--
+--000000000000ddaf2c061f104677--
 `

@@ -24,9 +24,11 @@ func main() {
 	// clinet.DSNReturn = smtpclient.DSNReturnFull
 	// clinet.UTF8 = true
 
-	mail = strings.ReplaceAll(mail, "\n", "\r\n")
+	if !strings.Contains(mail, "\r\n") {
+		fmt.Println("Not Any \\r\\n found!!!")
+		mail = strings.ReplaceAll(mail, "\n", "\r\n")
+	}
 	clinet.SetData([]byte(mail))
-	fmt.Println([]byte(mail))
 	clinet.CheckTlsHost = false
 	err := clinet.SendMail()
 	fmt.Println(err)
@@ -43,7 +45,7 @@ var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cocka
 From: PARTH <parthdegama@cockatielone.biz>
 To: Parthka <pthreeh@outlook.com>
 Subject: Hello Test Message From India!
-Message-ID: <652f6881-662e-ce06-9f3f-1bddd2c8af3e@cockatielone.biz>
+Message-ID: <652f6881-662e-ce06-9f3f-1bddd2c8af3a@cockatielone.biz>
 Date: Wed, 07 Aug 2024 05:04:12 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;

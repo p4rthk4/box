@@ -16,7 +16,7 @@ func main() {
 	// try cockatielone.biz
 	// clinet.SetHost("alt3.gmail-smtp-in.l.google.com")
 	clinet.SetTimeout(5 * time.Second)
-	clinet.SetFrom("lopel@cockatielone.biz")
+	clinet.SetFrom("lo🤑pel111@cockatielone.biz")
 	clinet.SetRcpt("deg4m4@gmail.com")
 	clinet.SetHostname("mx.myworkspacel.ink")
 
@@ -30,33 +30,32 @@ func main() {
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
- q=dns/txt; s=draft; bh=8xP40pIb4CiJd05NKONcInIjO4M8/Z9DwA9Xj5NCMDo=;
+ q=dns/txt; s=draft; bh=eZaSOTcz4Jd30CNA9/D0uabLRmgjJPgtB3GV/IMOeno=;
  h=from:subject:to:mime-version:content-type;
- b=OJYKmbqJTt9PDJoSDICNClPfi4bOev3lhhCWSgZAZZyd7QojHzByDGA4sdv276EV2wHFDQJJS
- /iW8pH1qVwRzdx3OzxsmhEfTNqEW41cH9naZYatddRue9WT07nH3HVZNUu3OpHvw+7vE0Znr2/L
- VCH+FC80InKumiCDU9NqSnQFfypIBXuX+mBoLO16RHzXbP4HXygXq6LOBEtxbXJeWaxlFlwHtOW
- RcJt2ZW17f+rGaQgoujNhWxSV5mlTNIOCdJ755bLv00zSl4SaWFKuyvZePcjljbeKS9QO9DqOY0
- UYD8GcL1l1wFzOGI3db10z9I3rJotydFoSW3/CKcvZyA==
-From: lopel@cockatielone.biz
+ b=Vyx+RLqTwm7E8ARSD5avyBRKkooyTfrt+4OLuVvdcJVSgpi5j35Asb8DtIpsN2WiqyJPLRzT5
+ xquHowpOMhfJQ9xEDLFXGM3x/mDHYP1Rc8hA/s4RH3Mur4GX5AsPybgXe0lloxOcnK0bm/zbN7v
+ 3F09t59K2NJGsZF4AmoPMZQtTDc5NkaOBxAv+UWDsuDWU2JsPUUVJMPT4XiNT/kedzUsQfvoobi
+ uOBIkAZPTSVq0MAkI88sSfheduk9FjlE4ifVAyAIbF2q+Z4jdPRRYEzpE8/q+zEj7U5LiMVYN4t
+ OCpuiNfzNo3d4rnxnwjnT49GXOZKGUTD3GsVuKImKf/Q==
+From: lo🤑pel111@cockatielone.biz
 To: deg4m4@gmail.com
-Subject: Test Message!
-Message-ID: <a7500a67-33d3-9f4d-1456-085daaf70273@cockatielone.biz>
-Date: Tue, 06 Aug 2024 18:36:32 +0000
+Subject: Hello Test Message!
+Message-ID: <2264435b-4da1-4be5-fba2-36d43bcc86a9@cockatielone.biz>
+Date: Wed, 07 Aug 2024 03:09:18 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
- boundary="--_NmP-545163bbd7588cf1-Part_1"
+ boundary="--_NmP-5df745e086c847f7-Part_1"
 
-----_NmP-545163bbd7588cf1-Part_1
+----_NmP-5df745e086c847f7-Part_1
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 
-Hello World
-----_NmP-545163bbd7588cf1-Part_1
+Hello World =F0=9F=A4=91=F0=9F=A4=91
+----_NmP-5df745e086c847f7-Part_1
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: 7bit
 
 <h1>Hello!</h1>
-----_NmP-545163bbd7588cf1-Part_1--
-
+----_NmP-5df745e086c847f7-Part_1--
 
 `

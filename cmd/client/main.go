@@ -16,8 +16,8 @@ func main() {
 	// try cockatielone.biz
 	// clinet.SetHost("alt3.gmail-smtp-in.l.google.com")
 	clinet.SetTimeout(5 * time.Second)
-	clinet.SetFrom("lopel@cockatielone.biz")
-	clinet.SetRcpt("pthreeh@outlook.com")
+	clinet.SetFrom("parthdegama@cockatielone.biz")
+	clinet.SetRcpt("parthka.2005@gmail.com")
 	clinet.SetHostname("mx.myworkspacel.ink")
 
 	// clinet.DSNReturn = smtpclient.DSNReturnFull

@@ -18,7 +18,7 @@ func main() {
 	// clinet.SetHost("alt3.gmail-smtp-in.l.google.com")
 	clinet.SetTimeout(5 * time.Second)
 	clinet.SetFrom("aly@cockatielone.biz")
-	clinet.SetRcpt("hello@parthka.dev")
+	clinet.SetRcpt("parthka.2005@gmail.com")
 	clinet.SetHostname("mx.myworkspacel.ink")
 
 	// clinet.DSNReturn = smtpclient.DSNReturnFull
@@ -35,33 +35,34 @@ func main() {
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
- q=dns/txt; s=draft; bh=gNV3UrXsTQZbe7uc/s9LXtlsoIcIdnFRHD8qR38qDWg=;
+ q=dns/txt; s=draft; bh=HEb4TOg3xzbFG7FxyrCf9B8kmU18dmMz8/VFoFL50TA=;
  h=from:subject:to:mime-version:content-type;
- b=MbJkBsa3oRCryWhWdrVJpmpJODaJm/fKDnPlC8jXLfrAB433vKTu4UB9huMVMphkqrixgKsfe
- V0LvhsLy8eA+SkiA0iBZfbvokR/tMDoahXgibcpmmTPJZhWkO4tkG1DxE0OwHsz7B989F7nYk5m
- dW/0NVpPcIweyBSwJtSkv4IfYDQeW7DltEdgaJ8DheuxNccokGdxYCK+uqtwt1Zh1s1YOvhH1BN
- um8/fd7cAbowfFi3x3C12VKEyQaapDjf1b8n8AunKnHsLpzdgLHZnsIrBF0125Km0WqE3TUkVis
- uuG9ig0/kyyccFyedT6EZuUUl595e+EaAnTVLVCd8Fyw==
+ b=IuIEdcKwe84iwv7J2tQxscxmfL5v97HlWMwVggUxYCzb9TkYp3qfzz3t/keZX74FnMd0oCSVE
+ +jgOx017PZED/vQqp6LBGHbuLXJUXc0KXDko7Fgb7SnBazrIDGiQDqmOML6SVwQTCzogc7utThH
+ erlRrWlhbts37iCVu41qpbjBn1OXX2guMqusfbB3StA3H5sPf8zlH2YIsXx7+lci+3owFqGJH5f
+ t9D3UymhJIdH0zQBgh0AAD6R7AOyaoPfxQRtp+GT6crx6NK1FL2MV1LCnaYIAHN3EA6imvEhR+w
+ ci6+5IEbhX5d+HgmZWnF91u6NI/fa12F6K8MP+/Y/SzQ==
 From: PARTH <aly@cockatielone.biz>
-To: Parthka <hello@parthka.dev>
+To: Parthka <parthka.2005@gmail.com>
 Subject: Final Helo Mail
-Message-ID: <23286281-77a3-f0f1-103b-572eff747d22@cockatielone.biz>
-Date: Wed, 07 Aug 2024 06:27:49 +0000
+Message-ID: <fd1a82e2-c59b-1021-c27b-d3b788bd7980@cockatielone.biz>
+Date: Wed, 07 Aug 2024 06:30:31 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
- boundary="--_NmP-44fd71683cf1b1f6-Part_1"
+ boundary="--_NmP-36e3577c80e6410a-Part_1"
 
-----_NmP-44fd71683cf1b1f6-Part_1
+----_NmP-36e3577c80e6410a-Part_1
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: base64
 
 SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1l
-----_NmP-44fd71683cf1b1f6-Part_1
+----_NmP-36e3577c80e6410a-Part_1
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: base64
 
 PGgxPjxiPkhlbGxvIFdvcmxkISwgbXkgbmFtZSBpcyBwYXJ0aCBkZWdhbWEgYW5kIHlvdXIgbmFt
 ZTwvYj48L2gxPg==
-----_NmP-44fd71683cf1b1f6-Part_1--
+----_NmP-36e3577c80e6410a-Part_1--
+
 
 `

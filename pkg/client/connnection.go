@@ -80,17 +80,17 @@ func (conn *ClientConn) handleConn() error {
 		return serverErrToClientErr(err)
 	}
 
-	// if ok, _ := conn.Extension("CHUNKING"); ok {
-	// 	err = conn.bdat()
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// } else {
+	if ok, _ := conn.Extension("CHUNKING"); ok {
+		err = conn.bdat()
+		if err != nil {
+			return err
+		}
+	} else {
 		err = conn.data()
 		if err != nil {
 			return err
 		}
-	// }
+	}
 
 	err = conn.quit()
 	if err != nil {
@@ -246,6 +246,7 @@ func (conn *ClientConn) bdat() error {
 		n = conn.bataBuffer.Len()
 	}
 
+	fmt.Println("size", n)
 	_, _, err := conn.rw.bdat(conn.bataBuffer, n, last)
 	if err != nil {
 		return err

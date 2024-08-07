@@ -14,20 +14,16 @@ func main() {
 	config.LoadConfig() // load conifg in config file
 
 	clinet := smtpclient.NewClinet()
-	// try cockatielone.biz
-	// clinet.SetHost("alt3.gmail-smtp-in.l.google.com")
 	clinet.SetTimeout(5 * time.Second)
 	clinet.SetFrom("aly@cockatielone.biz")
-	clinet.SetRcpt("pthreeh@outlook.com")
+	clinet.SetRcpt("parthka.2005@yandex.com")
 	clinet.SetHostname("mx.myworkspacel.ink")
-
-	// clinet.DSNReturn = smtpclient.DSNReturnFull
-	// clinet.UTF8 = true
 
 	if !strings.Contains(mail, "\r\n") {
 		fmt.Println("Not Any \\r\\n found!!!")
 		mail = strings.ReplaceAll(mail, "\n", "\r\n")
 	}
+	
 	clinet.SetData([]byte(mail))
 	clinet.CheckTlsHost = false
 	err := clinet.SendMail()
@@ -35,33 +31,33 @@ func main() {
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
- q=dns/txt; s=draft; bh=awFkpYpIVVN9jx6j/meesqwnbMSMS2rJVGnxh3jV+x8=;
+ q=dns/txt; s=draft; bh=28InEHXYZSFdNCv2dBpPHBwEr+J3uxCsYyQldgTfMOw=;
  h=from:subject:to:mime-version:content-type;
- b=ANkOW1I/tTsUpEPClU/OlDE5xPAXxvSU0KmSOp8sW3kxzMUN4a0CG6bafGlgIv83KgmQZLKSF
- 9ZvCwrQGNcsMn0SBi1tW0HLzHjZ+uAa5IuyR6oSX7Ijdp4ep/LXPetjxL6LOpsif7r0gJxVYhv6
- 5cpepDoJ/GEbfAUZMsBoDHudUmlzfbSSN3IdntF7fsLRQaQ7271NzgRdsujueI1Jzl0FkDmv5vd
- 1HJIxx3HA17Aod7ztSnj2CySNmr1eRh0y9v0qwaSD2Ksiqsaus7qsoo3JkSmOswjHQrMSeQKxX/
- 3asWLZyfd0iiTJWrov0Vzb9ADyQPyDZdoRVZZwwm7RyQ==
-From: PARTH <aly@cockatielone.biz>
-To: Parthka <pthreeh@outlook.com>
-Subject: Final Helo Mail
-Message-ID: <c838c781-af32-149b-640b-cb85611c1f12@cockatielone.biz>
-Date: Wed, 07 Aug 2024 06:33:48 +0000
+ b=A4AJt5quASgN7/9QF03XsLteS6KeyUYxoaoF7YktkI1yCFIf5D//ajzzLZPVsYNp7RSFWfKEo
+ +FjVDoYu9lgQMQaCEjS/loPxme2BCOtzmaBbmfk2DfHHLwJ20P6GzdGo+9vBpxyLjuxCz0Jm0jp
+ B6RbTOwjxLdYll79kilJm7gwbQ6Vjet2sCPzjkcha4oASkl5KHe1kM7/BAhQDp7O2krp9tkpG8f
+ IvGPOqrRgXPBCNe6CCzW+pvO5JqQNwOsgo8+4zThTIW1sBEF5nizzD01zJnrkFFpKNM0x+spMai
+ jnB0WRB/d2LmhVk32JIlV6iqLaiHzreEFOATxfIB+R8Q==
+From: PARTH <parthdegama@cockatielone.biz>
+To: Parthka <parthka.2005@yandex.com>
+Subject: Hello Test Message From India!
+Message-ID: <860f0464-2805-45b1-c6a4-6624fa060a6b@cockatielone.biz>
+Date: Wed, 07 Aug 2024 17:48:32 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
- boundary="--_NmP-73cafc4cba2668a6-Part_1"
+ boundary="--_NmP-f66ddb6c316e9fc2-Part_1"
 
-----_NmP-73cafc4cba2668a6-Part_1
+----_NmP-f66ddb6c316e9fc2-Part_1
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: base64
 
 SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1l
-----_NmP-73cafc4cba2668a6-Part_1
+----_NmP-f66ddb6c316e9fc2-Part_1
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: base64
 
 PGgxPjxiPkhlbGxvIFdvcmxkISwgbXkgbmFtZSBpcyBwYXJ0aCBkZWdhbWEgYW5kIHlvdXIgbmFt
 ZTwvYj48L2gxPg==
-----_NmP-73cafc4cba2668a6-Part_1--
+----_NmP-f66ddb6c316e9fc2-Part_1--
 
 `

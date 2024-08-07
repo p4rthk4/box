@@ -8,6 +8,7 @@ type ForwardBackend interface {
 	ExistMailBox(string) bool
 }
 
+// this is globle and overridable
 func SetMailFwdMethod(backend ForwardBackend) {
 	mailFwd = backend
 	mailFwd.Init()

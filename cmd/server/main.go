@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/p4rthk4/u2smtp/server"
-	"github.com/p4rthk4/u2smtp/pkg/config"
+	"github.com/p4rthk4/u2smtp/config"
 )
 
 func main() {

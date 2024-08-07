@@ -6,7 +6,7 @@ import (
 	"time"
 
 	smtpclient "github.com/p4rthk4/u2smtp/pkg/client"
-	"github.com/p4rthk4/u2smtp/pkg/config"
+	"github.com/p4rthk4/u2smtp/config"
 )
 
 func main() {

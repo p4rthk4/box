@@ -7,7 +7,6 @@ import (
 	"net/textproto"
 	"time"
 
-	"github.com/p4rthk4/u2smtp/pkg/config"
 	limitlinereader "github.com/p4rthk4/u2smtp/pkg/limit_line_reader"
 )
 
@@ -60,11 +59,11 @@ func (rw *TextReaderWriter) replyLines(code int, lines []string) {
 }
 
 func (rw *TextReaderWriter) greet(hostname string) {
-	rw.t.PrintfLine("220 %s %s", hostname, config.ConfOpts.ClientGreet)
+	rw.t.PrintfLine("220 %s %s", hostname, config.ClientGreet)
 }
 
 func (rw *TextReaderWriter) byyy() {
-	rw.t.PrintfLine("221 %s", config.ConfOpts.ClientByyy)
+	rw.t.PrintfLine("221 %s", config.ClientByyy)
 }
 
 func (rw *TextReaderWriter) busy(hostname string) {
@@ -93,10 +92,6 @@ func (rw *TextReaderWriter) cmdNotRecognized(cmd string) {
 
 func (rw *TextReaderWriter) cmdNotImplemented(cmd string) {
 	rw.t.PrintfLine("502 Error: %s command not implemented", cmd)
-}
-
-func (rw *TextReaderWriter) esmtpDisable() {
-	rw.t.PrintfLine("502 Error: ESMTP Disable")
 }
 
 // set max lines size and return return old size

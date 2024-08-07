@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/p4rthk4/u2smtp/pkg/config"
+	"github.com/p4rthk4/u2smtp/config"
 	"github.com/p4rthk4/u2smtp/pkg/server"
 	amqp "github.com/rabbitmq/amqp091-go"
 )

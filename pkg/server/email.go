@@ -5,7 +5,6 @@ import (
 	"log"
 
 	"github.com/mnako/letters"
-	"github.com/p4rthk4/u2smtp/pkg/config"
 	"gopkg.in/yaml.v3"
 )
 
@@ -53,7 +52,7 @@ func (e *Email) ParseMail() (letters.Email, bool) {
 	emailReader := bytes.NewReader([]byte(e.Data))
 	email, err := letters.ParseEmail(emailReader)
 	if err != nil {
-		if config.ConfOpts.Dev {
+		if config.Dev {
 			log.Println(err)
 		}
 		return letters.Email{}, false

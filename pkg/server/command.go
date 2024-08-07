@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/mileusna/spf"
-	"github.com/p4rthk4/u2smtp/pkg/config"
 )
 
 type HandleCommandStatus int
@@ -62,8 +61,8 @@ func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStat
 }
 
 func (conn *Connection) handleEHello(args string) {
-	if !config.ConfOpts.ESMTP.Enable {
-		conn.rw.esmtpDisable()
+	if !config.ESMTP.Enable {
+		conn.rw.reply(502, "Error: ESMTP Disable")
 		return
 	}
 
@@ -81,8 +80,8 @@ func (conn *Connection) handleEHello(args string) {
 }
 
 func (conn *Connection) handleStartTls() {
-	if !config.ConfOpts.ESMTP.Enable || !config.ConfOpts.ESMTP.Tls {
-		conn.rw.esmtpDisable()
+	if !config.ESMTP.Enable || !config.ESMTP.Tls {
+		conn.rw.reply(502, "Error: starttls Disable")
 		return
 	}
 
@@ -108,7 +107,7 @@ func (conn *Connection) handleHello(args string) {
 
 	conn.domain = domain
 	conn.useEsmtp = false
-	conn.rw.reply(250, "%s ready for you", config.ConfOpts.HostName)
+	conn.rw.reply(250, "%s ready for you", config.Name)
 }
 
 func (conn *Connection) handleMail(args string) {
@@ -150,14 +149,14 @@ func (conn *Connection) handleMail(args string) {
 				conn.rw.reply(501, "Unable to parse SIZE as an integer")
 				return
 			}
-			if config.ConfOpts.ESMTP.MessageSize > 0 && int(size) > config.ConfOpts.ESMTP.MessageSize {
+			if config.ESMTP.MessageSize > 0 && int(size) > config.ESMTP.MessageSize {
 				conn.rw.reply(552, "Max message size exceeded")
 				return
 			}
 
 			conn.size = int(size)
 		case "SMTPUTF8":
-			if !config.ConfOpts.ESMTP.Utf8 {
+			if !config.ESMTP.Utf8 {
 				conn.rw.reply(504, "SMTPUTF8 is not implemented")
 				return
 			}
@@ -166,7 +165,7 @@ func (conn *Connection) handleMail(args string) {
 			value = strings.ToUpper(value)
 			switch BodyType(value) {
 			case BodyBinaryMIME:
-				if !config.ConfOpts.ESMTP.BinaryMime {
+				if !config.ESMTP.BinaryMime {
 					conn.rw.reply(504, "BINARYMIME is not implemented")
 					return
 				}
@@ -234,8 +233,8 @@ func (conn *Connection) handleRcpt(args string) {
 		return
 	}
 
-	if len(conn.recipients) == config.ConfOpts.MaxRecipients {
-		conn.rw.reply(452, "Maximum limit of %v recipients reached", config.ConfOpts.MaxRecipients)
+	if len(conn.recipients) == config.MaxRecipients {
+		conn.rw.reply(452, "Maximum limit of %v recipients reached", config.MaxRecipients)
 		return
 	}
 
@@ -252,7 +251,7 @@ func (conn *Connection) handleRcpt(args string) {
 		return
 	}
 
-	if config.ConfOpts.CheckMailBoxExist {
+	if config.CheckMailBoxExist {
 		if !mailFwd.ExistMailBox(rcpt) {
 			conn.rw.reply(550, "mailbox unavailable")
 			return
@@ -317,7 +316,12 @@ func (conn *Connection) handleData() HandleCommandStatus {
 	return HandleCommandOk
 }
 
-func (conn *Connection) handleBdat(arg string) {
+func (conn *Connection) handleBdat(arg string) {	
+	if !config.ESMTP.Enable {
+		conn.rw.reply(502, "Error: ESMTP Disable")
+		return
+	}
+
 	if len(conn.recipients) == 0 {
 		conn.rw.reply(503, "Error: send RCPT first")
 		return
@@ -351,7 +355,7 @@ func (conn *Connection) handleBdat(arg string) {
 		conn.dataBuffer = new(bytes.Buffer)
 	}
 
-	if config.ConfOpts.ESMTP.MessageSize > 0 && conn.dataBuffer.Len()+int(size) > config.ConfOpts.ESMTP.MessageSize {
+	if config.ESMTP.MessageSize > 0 && conn.dataBuffer.Len()+int(size) > config.ESMTP.MessageSize {
 		conn.rw.reply(552, "Max message size exceeded")
 		return
 	}
@@ -394,7 +398,7 @@ func (conn *Connection) handleBdat(arg string) {
 }
 
 func (conn *Connection) checkSpf() bool {
-	if !config.ConfOpts.SpfCheck {
+	if !config.SpfCheck {
 		return true
 	}
 	domain, err := getDomainFromEmail(conn.mailFrom)

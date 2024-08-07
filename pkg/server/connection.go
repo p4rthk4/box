@@ -6,7 +6,6 @@ import (
 	"io"
 	"net"
 
-	"github.com/p4rthk4/u2smtp/pkg/config"
 	limitlinereader "github.com/p4rthk4/u2smtp/pkg/limit_line_reader"
 	"github.com/p4rthk4/u2smtp/pkg/logx"
 	"github.com/p4rthk4/u2smtp/pkg/uid"
@@ -103,7 +102,7 @@ func (conn *Connection) init() bool {
 // handle client connection
 func (conn *Connection) handle() {
 
-	if config.ConfOpts.MaxClients > 0 && clientCount > config.ConfOpts.MaxClients { // if max clients
+	if config.MaxClients > 0 && clientCount > config.MaxClients { // if max clients
 		conn.rw.busy(conn.localAddress.GetPTR())
 		conn.closeForMaxClientsExceeded()
 		return

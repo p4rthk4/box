@@ -1,12 +1,7 @@
 name: Ultra Scalable SMTP Server
 hostname: test.rellitel.ink
 
-server: 
-  host: 0.0.0.0
-  port: 8080
-  host_ipv6: "::"
-  port_ipv6: 8080
-  # IPv6_disable: true
+port: 8080
 
 esmtp:
   enable: true
@@ -14,22 +9,18 @@ esmtp:
   utf8: false
 
 tls: 
+  starttls: false
   key: /home/parthka/u2smtp/temp/server.key
   cert: /home/parthka/u2smtp/temp/server.crt
 
 log_dir: "./temp/logs"
 dev: true
+spf_check: false
 
-max_recipients: 1
-check_mailbox: false
+max_recipients: -1
+check_mailbox: true
+max_clients: 6
 
-max_clients: 3
-
-forward: redis
-redis_conf:
-  host: rellit.email
-  port: 6379
-  password: Rellite@Parth
 
 amqp_conf:
   host: rellit.email
@@ -38,7 +29,3 @@ amqp_conf:
 
 client:
   try_tls: true
-
-# client: 
-#   amqp_conf:
-#     queue: lolking

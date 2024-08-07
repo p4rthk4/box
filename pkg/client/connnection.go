@@ -8,7 +8,7 @@ import (
 	"net"
 	"strings"
 
-	"github.com/p4rthk4/u2smtp/pkg/config"
+	"github.com/p4rthk4/u2smtp/config"
 )
 
 type ClientConn struct {

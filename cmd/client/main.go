@@ -30,21 +30,27 @@ func main() {
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
- q=dns/txt; s=draft; bh=PKtoTjqHuudr64nYpizw9stW9CenBfl0sXHFI8KEfBA=;
- h=from:subject:to:mime-version:content-type:content-transfer-encoding;
- b=FyH1Vt0URXqWlRQz72cMnDs5U4De1YzU0CAVgVj1+dXpinlvXS5/UviNIg3tzBS7KP1gCjiK0
- xgaQ+TpBNezL+YKenR0wCC+YZDtgq/QVOrUlogVTzfkOQE+QPjs0YaVULN/t6y5VRjBz/JXIuBf
- v/ADu0T2allxJXh6yLtorP8S8dwjvov4zJIIN5oKwXylKIAbfYd3SQ76JLEzPGjQ4neBpEC1eD1
- cBbG2NnJIbe4B75CYOUJDv0jri5vvDRX7cAaQNuW4cUfaOyg02s9MsANWlIkZHfN7uDhJ86CsCV
- sUExIeN1ZKtAJsywB1UEeG0LbYBCOlIhVxMzV2/lua2A==
+ q=dns/txt; s=draft; bh=IBv/jOiuxIzffvZsdUAl/YoXRgPE8s6FJKBLZMnWeV0=;
+ h=from:subject:to:mime-version:content-type;
+ b=Cl4EkEJjos5/KgGkjKApqGDbvcKuhMAb+LaEbjXDtHb5ymSx1QonLWBvVWum8mOc73OgM9FzP
+ RdiMS6CJQ0DrLs7P+JY2fWdNCGKPFQehr3pz5Ih9feYRIOCwzQg5Ufrl5jS/M2UZRwGnkDOCjTE
+ Vi8Mww3LVAGXPl2lqHVM/jc/PpRyXDykgrMyufN1tQkZAzjgXhIdyEwY8rMFxMUqFMbmQtTLREx
+ +MWXbSAysr2ty4UexjPgP1M28HY/NZ0ihcuNcmmdmqT+3j68DiBc+yHXhRGagHk4rrvJwzQm7Sm
+ V9HVBCmdWb5Gdf7h7k3ZMCY9mbnIF+ORGWnciVSaWRSg==
+Content-Type: multipart/alternative;
+ boundary="----sinikael-?=_1-17230030192850.5446859609884578"
 From: parthdegama@cockatielone.biz
 To: pthreeh@outlook.com
 Subject: Hello Test Message From Parth!
-Message-ID: <7a20877a-ec53-0dd0-cd36-624af1c4d146@cockatielone.biz>
-Content-Transfer-Encoding: 7bit
-Date: Wed, 07 Aug 2024 03:46:06 +0000
+Date: Wed, 07 Aug 2024 03:56:59 +0000
+Message-Id: <1723003019287-32e460e8-9d67a2c4-2b162709@cockatielone.biz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+
+------sinikael-?=_1-17230030192850.5446859609884578
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
 Hello World!, my name is parth degama and your name
+------sinikael-?=_1-17230030192850.5446859609884578--
+
 `

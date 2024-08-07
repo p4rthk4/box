@@ -293,6 +293,14 @@ func (conn *Connection) handleData() {
 		fmt.Println("Lol Error...")
 		return
 	}
+
+
+	_, err = conn.checkSpf()
+	if err != nil {
+		conn.logger.Warn(err.Error())
+		// TODO: error for spf
+	}
+
 	conn.data = data
 
 	conn.rw.reply(250, "Ok")

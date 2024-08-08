@@ -63,8 +63,7 @@ func (rw *TextReaderWriter) greet(hostname string) {
 }
 
 func (rw *TextReaderWriter) byyy() {
-	err := rw.t.PrintfLine("221 %s", config.ClientByyy)
-	fmt.Println(err)
+	rw.t.PrintfLine("221 %s", config.ClientByyy)
 }
 
 func (rw *TextReaderWriter) busy(hostname string) {

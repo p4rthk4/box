@@ -182,6 +182,8 @@ func (conn *Connection) reset() {
 	conn.forwardStatus = MailForwardIdle
 	conn.dataBuffer = nil
 	conn.spfFail = false
+	conn.totalCmd = 0
+	conn.passCmd = 0
 }
 
 func (conn *Connection) close() {

@@ -29,8 +29,8 @@ const (
 )
 
 func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStatus {
+	fmt.Println("cmd:", cmd, conn.totalCmd, conn.passCmd)
 	conn.totalCmd += 1
-	fmt.Println("cmd:", cmd)
 	switch cmd {
 	case "EHLO":
 		conn.handleEHello(args)

@@ -6,8 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"net"
-	"net/textproto"
-	"os"
 	"strings"
 
 	"github.com/p4rthk4/u2smtp/config"
@@ -235,7 +233,7 @@ func (conn *ClientConn) bdat() error {
 	if conn.bataBuffer == nil {
 		conn.bataBuffer = bytes.NewBuffer(conn.smtpClient.data)
 	}
-
+	
 	if conn.bataBuffer.Len() < 1 {
 		return nil
 	}
@@ -284,26 +282,8 @@ func (conn *ClientConn) starttls() error {
 }
 
 func (conn *ClientConn) quit() error {
-
-	conn.conn.Write([]byte("QUIT\r\n"))
-	os.Exit(1)
-
-
-	id, err := conn.rw.t.Cmd("QUIT")
-	if err != nil {
-		if protoErr, ok := err.(*textproto.Error); ok {
-			err = toSMTPServerErr(protoErr)
-		}
-	}
-	conn.close()
-
-	conn.rw.t.StartResponse(id)
-	defer conn.rw.t.EndResponse(id)
-
-	a, b, c := conn.rw.readResponse(221)
-	fmt.Println(a, b, c)
-
-	return nil
+	_, _, err := conn.rw.cmd(221, "QUIT")
+	return err
 }
 
 func serverErrToClientErr(err error) error {

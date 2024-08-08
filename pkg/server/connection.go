@@ -191,6 +191,17 @@ func (conn *Connection) close() {
 
 	clientCount -= 1
 	err := conn.conn.Close()
+	fmt.Println("clsoe1:", err)
+	if err != nil {
+		if strings.Contains(err.Error(), "but connection was closed anyway") || strings.Contains(err.Error(), "broken pipe") {
+			conn.logger.Warn("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())
+		} else {
+			conn.logger.Error("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())
+		}
+	}
+
+	err = conn.conn.Close()
+	fmt.Println("clsoe2:", err)
 	if err != nil {
 		if strings.Contains(err.Error(), "but connection was closed anyway") || strings.Contains(err.Error(), "broken pipe") {
 			conn.logger.Warn("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())

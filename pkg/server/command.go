@@ -282,9 +282,9 @@ func (conn *Connection) handleQuit() {
 }
 
 func (conn *Connection) handleReset() {
+	conn.passCmd += 1
 	conn.reset()
 	conn.rw.reply(250, "Flushed")
-	conn.passCmd += 1
 }
 
 func (conn *Connection) handleData() HandleCommandStatus {

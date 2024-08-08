@@ -278,6 +278,7 @@ func (conn *Connection) handleNoop() {
 
 func (conn *Connection) handleQuit() {
 	conn.rw.byyy()
+	conn.rw.byyy()
 	conn.passCmd += 1
 	conn.closeWithSuccess()
 }

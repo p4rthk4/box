@@ -398,10 +398,11 @@ func (conn *Connection) handleBdat(arg string) {
 		conn.rw.reply(250, "Ok, last %d octets received, total %d", size, conn.dataBuffer.Len())
 
 		conn.forwardStatus = MailForwardSuccess
-		conn.mailCount += 1
+		conn.passCmd += 1
 		conn.reset()
-
+		
 		conn.logger.Success("%d email received successfully from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
+		conn.mailCount += 1
 	} else {
 		conn.rw.reply(250, "%d octets received, total %d", size, conn.dataBuffer.Len())
 		conn.passCmd += 1

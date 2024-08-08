@@ -30,7 +30,6 @@ const (
 
 func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStatus {
 	conn.totalCmd += 1
-	fmt.Println("cmd: ", cmd)
 	switch cmd {
 	case "EHLO":
 		conn.handleEHello(args)
@@ -277,7 +276,6 @@ func (conn *Connection) handleNoop() {
 }
 
 func (conn *Connection) handleQuit() {
-	conn.rw.byyy()
 	conn.rw.byyy()
 	conn.passCmd += 1
 	conn.closeWithSuccess()

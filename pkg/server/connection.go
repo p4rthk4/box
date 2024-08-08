@@ -47,6 +47,9 @@ type Connection struct {
 
 	logger       *logx.Log
 	serverLogger *logx.Log // print server level log
+
+	totalCmd int
+	passCmd  int
 }
 
 // handle new client connection
@@ -203,11 +206,11 @@ func (conn *Connection) forward() {
 	go func(uid string, count int, conn Connection) {
 
 		email := Email{
-			Uid: fmt.Sprintf("%s_%d", uid, count),
-			Tls: conn.useTls,
-
 			Success: false,
+			Uid:     fmt.Sprintf("%s_%d", uid, count),
 
+			Cmds: fmt.Sprintf("%d/%d", conn.passCmd, conn.totalCmd),
+			Tls:  conn.useTls,
 			PtrIP: ServerClientInfo{
 				ServerPtr: conn.localAddress.GetPTR(),
 				ServerIP:  conn.localAddress.String(),

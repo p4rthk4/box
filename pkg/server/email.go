@@ -13,6 +13,7 @@ type Email struct {
 	Uid     string `yaml:"uid"`
 	Success bool   `yaml:"success"`
 
+	Cmds  string           `yaml:"cmds"`
 	Tls   bool             `yaml:"tls"`
 	PtrIP ServerClientInfo `yaml:"ptr_ip"`
 

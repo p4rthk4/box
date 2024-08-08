@@ -29,6 +29,7 @@ const (
 )
 
 func (conn *Connection) handleCommand(cmd string, args string) HandleCommandStatus {
+	conn.totalCmd += 1
 	switch cmd {
 	case "EHLO":
 		conn.handleEHello(args)
@@ -77,6 +78,7 @@ func (conn *Connection) handleEHello(args string) {
 	replyMsg := []string{"Hello " + domain}
 	replyMsg = append(replyMsg, greetReplyMessage...)
 	conn.rw.replyLines(250, replyMsg)
+	conn.passCmd += 1
 }
 
 func (conn *Connection) handleStartTls() {
@@ -96,6 +98,7 @@ func (conn *Connection) handleStartTls() {
 	conn.conn = tlsConn
 	conn.useTls = true
 	conn.rw = newTextReaderWriter(conn.conn)
+	conn.passCmd += 1
 }
 
 func (conn *Connection) handleHello(args string) {
@@ -108,6 +111,7 @@ func (conn *Connection) handleHello(args string) {
 	conn.domain = domain
 	conn.useEsmtp = false
 	conn.rw.reply(250, "%s ready for you", config.Name)
+	conn.passCmd += 1
 }
 
 func (conn *Connection) handleMail(args string) {
@@ -225,6 +229,7 @@ func (conn *Connection) handleMail(args string) {
 	}
 
 	conn.rw.reply(250, "Ok")
+	conn.passCmd += 1
 }
 
 func (conn *Connection) handleRcpt(args string) {
@@ -262,20 +267,24 @@ func (conn *Connection) handleRcpt(args string) {
 
 	conn.recipients = append(conn.recipients, rcpt)
 	conn.rw.reply(250, "Ok")
+	conn.passCmd += 1
 }
 
 func (conn *Connection) handleNoop() {
 	conn.rw.reply(250, "Yeop")
+	conn.passCmd += 1
 }
 
 func (conn *Connection) handleQuit() {
 	conn.rw.byyy()
 	conn.closeWithSuccess()
+	conn.passCmd += 1
 }
 
 func (conn *Connection) handleReset() {
 	conn.reset()
 	conn.rw.reply(250, "Flushed")
+	conn.passCmd += 1
 }
 
 func (conn *Connection) handleData() HandleCommandStatus {
@@ -313,10 +322,11 @@ func (conn *Connection) handleData() HandleCommandStatus {
 	conn.logger.Success("%d email received successfully from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 	conn.mailCount += 1
 
+	conn.passCmd += 1
 	return HandleCommandOk
 }
 
-func (conn *Connection) handleBdat(arg string) {	
+func (conn *Connection) handleBdat(arg string) {
 	if !config.ESMTP.Enable {
 		conn.rw.reply(502, "Error: ESMTP Disable")
 		return
@@ -395,6 +405,8 @@ func (conn *Connection) handleBdat(arg string) {
 	} else {
 		conn.rw.reply(250, "%d octets received, total %d", size, conn.dataBuffer.Len())
 	}
+
+	conn.passCmd += 1
 }
 
 func (conn *Connection) checkSpf() bool {

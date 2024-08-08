@@ -57,7 +57,7 @@ func smtpServerPreProcess(l *logx.Log) {
 		}
 		tlsConfig = &tls.Config{
 			Certificates: []tls.Certificate{cert},
-			MinVersion:   tls.VersionTLS10,
+			MinVersion:   tls.VersionTLS12,
 		}
 	}
 }

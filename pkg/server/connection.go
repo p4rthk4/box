@@ -182,11 +182,11 @@ func (conn *Connection) reset() {
 
 func (conn *Connection) close() {
 	conn.forward()
-
+	fmt.Println("close time.....")
 	clientCount -= 1
 	err := conn.conn.Close()
 	if err != nil {
-		conn.logger.Error("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err)
+		conn.logger.Error("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())
 	}
 }
 

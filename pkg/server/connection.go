@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"strings"
 
 	limitlinereader "github.com/p4rthk4/u2smtp/pkg/limit_line_reader"
 	"github.com/p4rthk4/u2smtp/pkg/logx"
@@ -182,11 +183,15 @@ func (conn *Connection) reset() {
 
 func (conn *Connection) close() {
 	conn.forward()
-	fmt.Println("close time.....")
+
 	clientCount -= 1
 	err := conn.conn.Close()
 	if err != nil {
-		conn.logger.Error("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())
+		if strings.Contains(err.Error(), "but connection was closed anyway") || strings.Contains(err.Error(), "broken pipe") {
+			conn.logger.Error("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())
+		} else {
+			conn.logger.Error("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())
+		}
 	}
 }
 

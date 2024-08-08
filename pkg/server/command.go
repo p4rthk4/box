@@ -404,9 +404,8 @@ func (conn *Connection) handleBdat(arg string) {
 		conn.logger.Success("%d email received successfully from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 	} else {
 		conn.rw.reply(250, "%d octets received, total %d", size, conn.dataBuffer.Len())
+		conn.passCmd += 1
 	}
-
-	conn.passCmd += 1
 }
 
 func (conn *Connection) checkSpf() bool {

@@ -188,7 +188,7 @@ func (conn *Connection) close() {
 	err := conn.conn.Close()
 	if err != nil {
 		if strings.Contains(err.Error(), "but connection was closed anyway") || strings.Contains(err.Error(), "broken pipe") {
-			conn.logger.Error("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())
+			conn.logger.Warn("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())
 		} else {
 			conn.logger.Error("⚠️⚠️⚠️ conn close error client %s[%s]:%d ⚠️⚠️⚠️ Error: %s", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port, err.Error())
 		}

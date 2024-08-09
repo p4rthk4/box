@@ -203,9 +203,9 @@ func (conn *ClientConn) bdat() error {
 	}
 
 	last := false
-	n := conn.smtpClient.chunkSize
+	n := conn.smtpClient.ChunkSize
 
-	if conn.bataBuffer.Len() <= conn.smtpClient.chunkSize {
+	if conn.bataBuffer.Len() <= conn.smtpClient.ChunkSize {
 		last = true
 		n = conn.bataBuffer.Len()
 	}
@@ -268,7 +268,9 @@ func (conn *ClientConn) Extension(ext string) (bool, string) {
 func (conn *ClientConn) close() {
 	err := conn.conn.Close()
 	if err != nil {
-		// TODO: logs
-		fmt.Println("connecrion close error...")
+		conn.smtpClient.Logger.Error("⚠️⚠️⚠️ conn close error client %s ⚠️⚠️⚠️ Error: %s", conn.conn.RemoteAddr().String(), err)
+	return
 	}
+
+	conn.smtpClient.Logger.Info("server %s conncetion close by client", conn.conn.RemoteAddr().String())
 }

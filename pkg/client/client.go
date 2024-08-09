@@ -5,6 +5,8 @@ import (
 	"net"
 	"os"
 	"time"
+
+	"github.com/p4rthk4/u2smtp/pkg/logx"
 )
 
 type DSNReturnType string
@@ -33,10 +35,12 @@ type SMTPClinet struct {
 	TlsKey       string
 	TlsCert      string
 
-	chunkSize int
+	ChunkSize int
 
-	Timeout time.Duration
+	Timeout  time.Duration
 	Response ClientResponse
+
+	Logger *logx.Log
 }
 
 func NewClinet() SMTPClinet {
@@ -53,7 +57,7 @@ func NewClinet() SMTPClinet {
 
 		Timeout: time.Minute * 2,
 
-		chunkSize: 1024 * 2,
+		ChunkSize: 1024 * 2,
 	}
 }
 
@@ -91,6 +95,7 @@ func (client *SMTPClinet) SetTimeout(t time.Duration) {
 type ClientServerError struct {
 	domainName  string
 	errorString string
+	Code        int // if smtp code avalible
 	ServerError bool
 }
 
@@ -152,6 +157,7 @@ func (client *SMTPClinet) SendMail() {
 				domainName:  m.Host,
 				errorString: err.Error(),
 			})
+			// client.Logger.Warn("error on connect client to %s server")
 			continue
 		}
 
@@ -162,9 +168,6 @@ func (client *SMTPClinet) SendMail() {
 			} else {
 				address = fmt.Sprintf("%s:%d", rcptIP, client.RcptPort)
 			}
-
-			// TODO: log
-			fmt.Printf("send mail to: %s %s:%d\n", m.Host, rcptIP, client.RcptPort)
 
 			client.RcptHost = m.Host
 			conn, err := client.createNewConn(address)
@@ -178,6 +181,8 @@ func (client *SMTPClinet) SendMail() {
 				continue
 			}
 
+			client.Logger.Info("client connected to %s - %s server", m.Host, conn.conn.RemoteAddr())
+
 			err = conn.handleConn()
 			if err != nil {
 				switch e := err.(type) {
@@ -188,7 +193,9 @@ func (client *SMTPClinet) SendMail() {
 					client.Response.Errors = append(client.Response.Errors, ClientServerError{
 						domainName:  m.Host,
 						errorString: err.Error(),
+						Code:        e.Code,
 					})
+					client.Logger.Warn("Email %s", err)
 					continue
 				case net.Error:
 					if e.Timeout() {
@@ -196,7 +203,17 @@ func (client *SMTPClinet) SendMail() {
 							domainName:  m.Host,
 							errorString: fmt.Sprintf("connection timeout with %s by server", address),
 						})
+						client.Logger.Warn("timeout on connect client to %s server", address)
 						client.Response.TempError = true
+						continue
+					} else {
+						client.Response.Errors = append(client.Response.Errors, ClientServerError{
+							domainName:  m.Host,
+							errorString: err.Error(),
+							ServerError: true,
+						})
+						client.Logger.Error("Server Error: %s", err)
+						client.Response.AnyClientError = true
 						continue
 					}
 				default:
@@ -205,12 +222,13 @@ func (client *SMTPClinet) SendMail() {
 						errorString: err.Error(),
 						ServerError: true,
 					})
+					client.Logger.Error("Server Error: %s", err)
 					client.Response.AnyClientError = true
 					continue
 				}
 			}
-
 			client.Response.Success = true
+			client.Logger.Success("email deliver successfull")
 			break
 		}
 	}
@@ -226,16 +244,19 @@ func (client *SMTPClinet) createNewConn(address string) (ClientConn, error) {
 				switch e := e.Err.(type) {
 				case *os.SyscallError:
 					if e.Syscall == "connect" {
-						return ClientConn{}, fmt.Errorf("connection refused when server connect with %s", address)
+						client.Logger.Warn("connection refused when connect client to %s server", address)
+						return ClientConn{}, fmt.Errorf("connection refused when client connect with %s", address)
 					}
 				case net.Error:
 					if e.Timeout() {
+						client.Logger.Warn("timeout on connect client to %s server", address)
 						return ClientConn{}, fmt.Errorf("connection timeout with %s by server", address)
 					}
 				}
 			}
 		case net.Error:
 			if e.Timeout() {
+				client.Logger.Warn("timeout on connect client to %s server", address)
 				return ClientConn{}, fmt.Errorf("connection timeout with %s by server", address)
 			}
 		}

@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/p4rthk4/u2smtp/config"
 	smtpclient "github.com/p4rthk4/u2smtp/pkg/client"
+	"github.com/p4rthk4/u2smtp/pkg/logx"
 )
 
 func main() {
@@ -14,23 +16,38 @@ func main() {
 	config.LoadConfig() // load conifg in config file
 
 	clinet := smtpclient.NewClinet()
-	clinet.SetTimeout(5 * time.Second)
+	
+	// logger
+	logFile := os.Stdout
+	if !config.ConfOpts.Dev {
+		var err error
+		logFile, err = os.OpenFile(config.ConfOpts.LogDirPath+"/"+config.ConfOpts.LogFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		if err != nil {
+			logx.LogError("Error opening file:", err)
+			return
+		}
+	}
+	logger := logx.NewLoggerWithPrefix(logFile, "EMAIL")
+	clinet.Logger = logger
+	
+	clinet.SetHostname(config.ConfOpts.HostName)
+	
 	clinet.SetFrom("aly@cockatielone.biz")
 	clinet.SetRcpt("parthka.2005@cockatielone.biz")
-	clinet.SetHostname("mx.myworkspacel.ink")
-
+	
 	if !strings.Contains(mail, "\r\n") {
 		fmt.Println("Not Any \\r\\n found!!!")
 		mail = strings.ReplaceAll(mail, "\n", "\r\n")
 	}
-	
 	clinet.SetData([]byte(mail))
+
 	clinet.CheckTlsHost = false
-	
-	clinet.TlsKey = config.ConfOpts.Tls.Key 
+	clinet.TlsKey = config.ConfOpts.Tls.Key
 	clinet.TlsCert = config.ConfOpts.Tls.Cert
 	
-	clinet.SendMail()	
+	clinet.Timeout = 5 * time.Second
+	
+	clinet.SendMail()
 	fmt.Println(clinet.GetResponse())
 }
 

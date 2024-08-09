@@ -23,32 +23,9 @@ type ClientConn struct {
 	smtpClient *SMTPClinet
 }
 
-type ClientError struct {
-	tryNext bool
-	faild   bool
-	wait    bool
-
-	err  string
-	code int
-}
-
-func (clientErr ClientError) Error() string {
-	err := ""
-	if clientErr.tryNext {
-		err = "try next connection"
-	}
-	if clientErr.faild {
-		err = "fail to send mail"
-	}
-	if clientErr.wait {
-		err = "wait 1 * (n) minute and try again"
-	}
-
-	return fmt.Sprintf("%s\nserver reply with %03d\n%s", err, clientErr.code, clientErr.err)
-}
-
 func (conn *ClientConn) handleConn() error {
 	defer conn.close()
+	defer conn.quit()
 
 	if err := conn.greet(); err != nil {
 		return err
@@ -56,7 +33,7 @@ func (conn *ClientConn) handleConn() error {
 
 	err := conn.hello()
 	if err != nil {
-		return serverErrToClientErr(err)
+		return err
 	}
 
 	fmt.Println(conn.extension)
@@ -65,19 +42,19 @@ func (conn *ClientConn) handleConn() error {
 		if ok, _ := conn.Extension("STARTTLS"); ok {
 			err = conn.starttls()
 			if err != nil {
-				return serverErrToClientErr(err)
+				return err
 			}
 		}
 	}
 
 	err = conn.mail()
 	if err != nil {
-		return serverErrToClientErr(err)
+		return err
 	}
 
 	err = conn.rcpt()
 	if err != nil {
-		return serverErrToClientErr(err)
+		return err
 	}
 
 	if ok, _ := conn.Extension("CHUNKING"); ok {
@@ -90,11 +67,6 @@ func (conn *ClientConn) handleConn() error {
 		if err != nil {
 			return err
 		}
-	}
-
-	err = conn.quit()
-	if err != nil {
-		return err
 	}
 
 	return nil
@@ -233,7 +205,7 @@ func (conn *ClientConn) bdat() error {
 	if conn.bataBuffer == nil {
 		conn.bataBuffer = bytes.NewBuffer(conn.smtpClient.data)
 	}
-	
+
 	if conn.bataBuffer.Len() < 1 {
 		return nil
 	}
@@ -286,23 +258,6 @@ func (conn *ClientConn) quit() error {
 	return err
 }
 
-func serverErrToClientErr(err error) error {
-	if err != nil {
-		switch e := err.(type) {
-		case SMTPServerError:
-			// TODO: error handling
-			fmt.Println("Got it, this is error...")
-			return ClientError{
-				tryNext: true,
-				err:     e.Message,
-				code:    e.Code,
-			}
-		}
-		return err
-	}
-	return err
-}
-
 func getTlsConfig() (*tls.Config, error) {
 	cert, err := tls.LoadX509KeyPair(config.ConfOpts.Tls.Cert, config.ConfOpts.Tls.Key)
 	if err != nil {
@@ -310,7 +265,6 @@ func getTlsConfig() (*tls.Config, error) {
 	}
 
 	config := &tls.Config{Certificates: []tls.Certificate{cert}}
-
 	return config, nil
 }
 

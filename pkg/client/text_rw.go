@@ -26,6 +26,13 @@ type ReadWriteClose struct {
 	io.Closer
 }
 
+type SMTPErrorType int
+
+const (
+	SMTPErrorTemp SMTPErrorType = iota
+	SMTPErrorFail
+)
+
 type EnhancedCode [3]int
 type SMTPServerError struct {
 	Code         int
@@ -34,9 +41,9 @@ type SMTPServerError struct {
 }
 
 func (err SMTPServerError) Error() string {
-	s := fmt.Sprintf("SMTP error %03d", err.Code)
+	s := fmt.Sprintf("Delivery Error: %03d", err.Code)
 	if err.Message != "" {
-		s += ": " + err.Message
+		s += " - " + err.Message
 	}
 	return s
 }
@@ -106,7 +113,7 @@ func (rw *TextReaderWriter) bdat(r io.Reader, n int, last bool) (int, string, er
 	io.Copy(rw.t.W, lr)
 
 	rw.t.W.Flush()
-	
+
 	rw.t.StartResponse(id)
 	defer rw.t.EndResponse(id)
 
@@ -127,7 +134,7 @@ func (rw *TextReaderWriter) data(data []byte) (int, string, error) {
 		if protoErr, ok := err.(*textproto.Error); ok {
 			err = toSMTPServerErr(protoErr)
 		}
-		return 0, "", err		
+		return 0, "", err
 	}
 
 	return rw.readResponse(250)

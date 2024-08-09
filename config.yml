@@ -3,24 +3,16 @@ hostname: test.rellitel.ink
 
 port: 8080
 
-esmtp:
-  enable: true
-  tls: true
-  utf8: false
-
 tls: 
   starttls: false
   key: /home/parthka/u2smtp/temp/server.key
   cert: /home/parthka/u2smtp/temp/server.crt
 
-log_dir: "./temp/logs"
-dev: true
 spf_check: false
 
 max_recipients: -1
 check_mailbox: false
 max_clients: 6
-
 
 amqp_conf:
   host: rellit.email
@@ -29,3 +21,6 @@ amqp_conf:
 
 client:
   try_tls: true
+
+log_dir: "./temp/logs"
+dev: true

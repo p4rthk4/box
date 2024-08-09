@@ -16,7 +16,7 @@ func main() {
 	clinet := smtpclient.NewClinet()
 	clinet.SetTimeout(5 * time.Second)
 	clinet.SetFrom("aly@cockatielone.biz")
-	clinet.SetRcpt("parthka.2005@yandex.com")
+	clinet.SetRcpt("parthka.2005@cockatielone.biz")
 	clinet.SetHostname("mx.myworkspacel.ink")
 
 	if !strings.Contains(mail, "\r\n") {

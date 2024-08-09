@@ -160,9 +160,8 @@ func (client *SMTPClinet) SendMail() error {
 
 			err = conn.handleConn()
 			if err != nil {
-			retryErr:
 				switch e := err.(type) {
-				case ClientError:
+				case SMTPServerError:
 					allErrors = append(allErrors, ClientServerError{
 						domainName:  m.Host,
 						errorString: err.Error(),
@@ -175,11 +174,7 @@ func (client *SMTPClinet) SendMail() error {
 							errorString: fmt.Sprintf("connection timeout with %s by server", address),
 						})
 						continue
-					}	
-				case SMTPServerError:
-					fmt.Println("Error trnfer in thire area")
-					err = serverErrToClientErr(err)
-					goto retryErr
+					}
 				default:
 					allErrors = append(allErrors, ClientServerError{
 						domainName:  m.Host,

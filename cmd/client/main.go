@@ -26,7 +26,11 @@ func main() {
 	
 	clinet.SetData([]byte(mail))
 	clinet.CheckTlsHost = false
-	clinet.SendMail()
+	
+	clinet.TlsKey = config.ConfOpts.Tls.Key 
+	clinet.TlsCert = config.ConfOpts.Tls.Cert
+	
+	clinet.SendMail()	
 	fmt.Println(clinet.GetResponse())
 }
 

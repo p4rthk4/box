@@ -16,7 +16,7 @@ func main() {
 	clinet := smtpclient.NewClinet()
 	clinet.SetTimeout(5 * time.Second)
 	clinet.SetFrom("aly@cockatielone.biz")
-	clinet.SetRcpt("parthka.2005@cockatielone.biz")
+	clinet.SetRcpt("pthreeh@outlook.com")
 	clinet.SetHostname("mx.myworkspacel.ink")
 
 	if !strings.Contains(mail, "\r\n") {
@@ -31,33 +31,33 @@ func main() {
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
- q=dns/txt; s=draft; bh=28InEHXYZSFdNCv2dBpPHBwEr+J3uxCsYyQldgTfMOw=;
+ q=dns/txt; s=draft; bh=qsJaBTlVweNE/meK3+bX5jaRZpKJ8Ym17OllQAAQWmg=;
  h=from:subject:to:mime-version:content-type;
- b=A4AJt5quASgN7/9QF03XsLteS6KeyUYxoaoF7YktkI1yCFIf5D//ajzzLZPVsYNp7RSFWfKEo
- +FjVDoYu9lgQMQaCEjS/loPxme2BCOtzmaBbmfk2DfHHLwJ20P6GzdGo+9vBpxyLjuxCz0Jm0jp
- B6RbTOwjxLdYll79kilJm7gwbQ6Vjet2sCPzjkcha4oASkl5KHe1kM7/BAhQDp7O2krp9tkpG8f
- IvGPOqrRgXPBCNe6CCzW+pvO5JqQNwOsgo8+4zThTIW1sBEF5nizzD01zJnrkFFpKNM0x+spMai
- jnB0WRB/d2LmhVk32JIlV6iqLaiHzreEFOATxfIB+R8Q==
+ b=Ei3hPdKWQT26APqldl5VUJ9fFW/KJqzSbSYqVt4LVyE6qZx5gLcC7YCbmXDjydKWvXKfEkxfK
+ ruhHnJUhz/Gn9EzJM2JhoPgGG6sAt7gG2FccFlwUseyZvbTN+dF1S2pUe2hn96pv1zFX/0D8ptg
+ dkMc5IMi4sBp/GCuMxC3vUes12anZG67vBEgSgMEmah/Ubiw6CEmVx09KHtRK+U3Hyl50r46xys
+ KFLE16L+lopQewp6EvInExd35IE+4KMbyN2zNYjAP+viXUotJFkDLWYHXg67xQdWyT86QcmoWLe
+ RgPgSuoaa2XdeNFOEIuKBMRd6OKguUms+b/OiwgSG+3A==
 From: PARTH <parthdegama@cockatielone.biz>
-To: Parthka <parthka.2005@yandex.com>
+To: pthreeh@outlook.com
 Subject: Hello Test Message From India!
-Message-ID: <860f0464-2805-45b1-c6a4-6624fa060a6b@cockatielone.biz>
-Date: Wed, 07 Aug 2024 17:48:32 +0000
+Message-ID: <1cd003df-76dd-eb31-e228-efaa49e71d99@cockatielone.biz>
+Date: Fri, 09 Aug 2024 11:50:30 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;
- boundary="--_NmP-f66ddb6c316e9fc2-Part_1"
+ boundary="--_NmP-4da7f6a060b1093c-Part_1"
 
-----_NmP-f66ddb6c316e9fc2-Part_1
+----_NmP-4da7f6a060b1093c-Part_1
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: base64
 
-SGVsbG8gV29ybGQhLCBteSBuYW1lIGlzIHBhcnRoIGRlZ2FtYSBhbmQgeW91ciBuYW1l
-----_NmP-f66ddb6c316e9fc2-Part_1
+SGkgUGFydGghIGkgYW0gamhvbgoKIGFrYSBsb2wga2luZw==
+----_NmP-4da7f6a060b1093c-Part_1
 Content-Type: text/html; charset=utf-8
 Content-Transfer-Encoding: base64
 
-PGgxPjxiPkhlbGxvIFdvcmxkISwgbXkgbmFtZSBpcyBwYXJ0aCBkZWdhbWEgYW5kIHlvdXIgbmFt
-ZTwvYj48L2gxPg==
-----_NmP-f66ddb6c316e9fc2-Part_1--
+PGgxPkhpIFBhcnRoITwvaDE+PGgzPkFrYSBMb2xraW5nPC9oMz4=
+----_NmP-4da7f6a060b1093c-Part_1--
+
 
 `

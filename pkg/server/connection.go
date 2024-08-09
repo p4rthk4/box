@@ -59,9 +59,9 @@ func HandleNewConnection(conn net.Conn, serverLogger *logx.Log) {
 	}
 	clientCount += 1
 
-	err := connection.init()
-	if err {
-		// conn.Close() // importent
+	ok := connection.init()
+	if !ok {
+		conn.Close()
 		return
 	}
 
@@ -74,7 +74,7 @@ func (conn *Connection) init() bool {
 	uid, err := uid.GetNewId()
 	if err != nil {
 		conn.serverLogger.Error("generate email uid error: %v", err)
-		return true
+		return false
 	}
 
 	conn.mailCount = 1
@@ -97,7 +97,7 @@ func (conn *Connection) init() bool {
 
 	conn.logger.Info("client %s[%s]:%d connected", conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 
-	return false // err!
+	return true
 }
 
 func (conn *Connection) handle() {

@@ -6,6 +6,8 @@ import (
 	"github.com/p4rthk4/u2smtp/pkg/logx"
 )
 
+// TODO dont set log from server pkg, use by extrenal program
+
 func (s *SMTPServer) SetLogger() {
 	file := os.Stdout
 	s.logFile = file

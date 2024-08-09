@@ -35,6 +35,8 @@ type SMTPClinet struct {
 	// RequireTLS bool
 	// DSNReturn  DSNReturnType
 
+	Response ClientResponse
+
 	chunkSize int
 }
 
@@ -56,17 +58,17 @@ func NewClinet() SMTPClinet {
 	}
 }
 
-// set rcpt port host
+// set rcpt port host use for make connection
 func (client *SMTPClinet) SetRcptHost(host string) {
 	client.RcptHost = host
 }
 
-// set rcpt port no
+// set rcpt port no use for make connection
 func (client *SMTPClinet) SetRcptPort(port int) {
 	client.RcptPort = port
 }
 
-// set client host name
+// set client host name use in hello
 func (client *SMTPClinet) SetHostname(host string) {
 	client.hostname = host
 }
@@ -90,10 +92,18 @@ func (client *SMTPClinet) SetTimeout(t time.Duration) {
 type ClientServerError struct {
 	domainName  string
 	errorString string
+	ServerError bool
 }
 
-func (client *SMTPClinet) SendMail() error {
+type ClientResponse struct {
+	Errors         []ClientServerError
+	Success        bool
+	TempError      bool // temp error (4yz)
+	AnyClientError bool // any client unknown error
+	Status         string
+}
 
+func (client *SMTPClinet) SendMail() {
 	client.Size = len(client.data) + 5 // add 5 for <crlf>.<crlf>
 
 	mxRecords := []*net.MX{}
@@ -105,16 +115,24 @@ func (client *SMTPClinet) SendMail() error {
 	} else if client.Rcpt != "" {
 		domainName, err := getDomainFromEmail(client.Rcpt)
 		if err != nil {
-			return err
+			return
 		}
 
 		mxs, err := net.LookupMX(domainName)
 		if err != nil {
-			return fmt.Errorf("no any MX records found of %s domain", domainName)
+			client.Response.Errors = append(client.Response.Errors, ClientServerError{
+				domainName:  domainName,
+				errorString: fmt.Sprintf("no any MX records found of %s domain", domainName),
+			})
+			return
 		}
 		mxRecords = mxs
 	} else {
-		return fmt.Errorf("no any host and rcpt found")
+		client.Response.Errors = append(client.Response.Errors, ClientServerError{
+			domainName:  "unknown",
+			errorString: "no any host and rcpt found",
+		})
+		return
 	}
 
 	if IsSMTPUTF8(client.From) {
@@ -124,14 +142,14 @@ func (client *SMTPClinet) SendMail() error {
 		client.UTF8 = true
 	}
 
-	// errors
-	allErrors := []ClientServerError{}
-
-	// loop of sand mail to mx servers
 	for _, m := range mxRecords {
+		if client.Response.Success {
+			break
+		}
+
 		ips, err := getIPFromString(m.Host)
 		if err != nil {
-			allErrors = append(allErrors, ClientServerError{
+			client.Response.Errors = append(client.Response.Errors, ClientServerError{
 				domainName:  m.Host,
 				errorString: err.Error(),
 			})
@@ -146,52 +164,57 @@ func (client *SMTPClinet) SendMail() error {
 				address = fmt.Sprintf("%s:%d", rcptIP, client.RcptPort)
 			}
 
+			// TODO: log
+			fmt.Printf("send mail to: %s %s:%d\n", m.Host, rcptIP, client.RcptPort)
+
 			client.RcptHost = m.Host
 			conn, err := client.createNewConn(address)
 			if err != nil {
-				allErrors = append(allErrors, ClientServerError{
+				// fail log
+				client.Response.Errors = append(client.Response.Errors, ClientServerError{
 					domainName:  m.Host,
 					errorString: err.Error(),
 				})
+				client.Response.TempError = true
 				continue
-			} else {
-				fmt.Println("connect", m.Host)
 			}
 
 			err = conn.handleConn()
 			if err != nil {
 				switch e := err.(type) {
 				case SMTPServerError:
-					allErrors = append(allErrors, ClientServerError{
+					if e.GetErrorType() == SMTPErrorTemp {
+						client.Response.TempError = true
+					}
+					client.Response.Errors = append(client.Response.Errors, ClientServerError{
 						domainName:  m.Host,
 						errorString: err.Error(),
 					})
 					continue
 				case net.Error:
 					if e.Timeout() {
-						allErrors = append(allErrors, ClientServerError{
+						client.Response.Errors = append(client.Response.Errors, ClientServerError{
 							domainName:  m.Host,
 							errorString: fmt.Sprintf("connection timeout with %s by server", address),
 						})
+						client.Response.TempError = true
 						continue
 					}
 				default:
-					allErrors = append(allErrors, ClientServerError{
+					client.Response.Errors = append(client.Response.Errors, ClientServerError{
 						domainName:  m.Host,
 						errorString: err.Error(),
+						ServerError: true,
 					})
+					client.Response.AnyClientError = true
 					continue
 				}
-
 			}
 
-			break // TODO: tmp break for nothing...!
+			client.Response.Success = true
+			break
 		}
-		fmt.Println(ips)
 	}
-
-	fmt.Println(allErrors, len(allErrors))
-	return nil
 }
 
 func (client *SMTPClinet) createNewConn(address string) (ClientConn, error) {
@@ -226,4 +249,20 @@ func (client *SMTPClinet) createNewConn(address string) (ClientConn, error) {
 
 		smtpClient: client,
 	}, nil
+}
+
+
+func (client *SMTPClinet) GetResponse() ClientResponse {
+	if client.Response.Success {
+		client.Response.Status = "SUCCESS"
+		return client.Response
+	}
+
+	if client.Response.TempError {
+		client.Response.Status = "TRYAGAIN"
+	} else {
+		client.Response.Status = "FAIL"
+	}
+	
+	return client.Response
 }

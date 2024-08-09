@@ -9,9 +9,8 @@ import (
 )
 
 func (s *SMTPServer) Listen() {
-
 	address := s.getHostAddress()
-
+	
 	listener, err := reusesocket.Listen("tcp", address)
 	if err != nil {
 		logx.LogError("server listen faild", err)
@@ -19,15 +18,11 @@ func (s *SMTPServer) Listen() {
 	}
 
 	s.listener = listener
-
 	s.logger.Info("server start/listen on %s", address)
-
 }
 
 func (s *SMTPServer) AcceptConnections() {
-
-	// pre process
-	smtpServerPreProcess(s.logger)
+	smtpServerPreProcess(s.logger) // pre process
 
 	for {
 		conn, err := s.listener.Accept()
@@ -38,5 +33,4 @@ func (s *SMTPServer) AcceptConnections() {
 
 		go HandleNewConnection(conn, s.logger)
 	}
-
 }

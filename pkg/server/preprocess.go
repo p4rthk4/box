@@ -32,7 +32,7 @@ func smtpServerPreProcess(l *logx.Log) {
 		if config.ESMTP.BinaryMime {
 			reply = append(reply, "BINARYMIME")
 		}
-		// TODO: DSN
+		// UPDATE: DSN
 		// if c.server.EnableDSN {
 		// 	reply = append(reply, "DSN")
 		// }

@@ -29,8 +29,8 @@ type ReadWriteClose struct {
 type SMTPErrorType int
 
 const (
-	SMTPErrorTemp SMTPErrorType = iota
-	SMTPErrorFail
+	SMTPErrorTemp SMTPErrorType = iota // 4yz  Transient Negative Completion reply
+	SMTPErrorFail                      // 5yz  Permanent Negative Completion reply
 )
 
 type EnhancedCode [3]int
@@ -46,6 +46,13 @@ func (err SMTPServerError) Error() string {
 		s += " - " + err.Message
 	}
 	return s
+}
+
+func (err SMTPServerError) GetErrorType() SMTPErrorType {
+	if err.Code >= 400 && err.Code < 500 {
+		return SMTPErrorTemp
+	}
+	return SMTPErrorFail
 }
 
 func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
@@ -70,7 +77,7 @@ func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
 }
 
 func (rw *TextReaderWriter) readResponse(expectCode int) (int, string, error) {
-	rw.netConn.SetReadDeadline(time.Now().Add(10 * time.Second)) // TODO: get in config file
+	rw.netConn.SetReadDeadline(time.Now().Add(1 * time.Minute)) // TODO: get in config file
 	defer rw.netConn.SetReadDeadline(time.Time{})
 
 	code, msg, err := rw.t.ReadResponse(expectCode)

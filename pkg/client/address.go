@@ -29,7 +29,7 @@ func getIPFromString(addr string) ([]net.IP, error) {
 			}
 
 		default:
-			return nil, fmt.Errorf("internal server error when looking A or AAAA records for %s domain", addr)
+			return nil, fmt.Errorf("Domain Name System (DNS) error when looking A or AAAA records for %s domain", addr)
 		}
 
 		return []net.IP{}, err

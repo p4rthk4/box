@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	smtpclient "github.com/p4rthk4/u2smtp/pkg/client"
 	"github.com/p4rthk4/u2smtp/config"
+	smtpclient "github.com/p4rthk4/u2smtp/pkg/client"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	clinet := smtpclient.NewClinet()
 	clinet.SetTimeout(5 * time.Second)
 	clinet.SetFrom("aly@cockatielone.biz")
-	clinet.SetRcpt("pthreeh@outlook.com")
+	clinet.SetRcpt("parthka.2005@cockatielone.biz")
 	clinet.SetHostname("mx.myworkspacel.ink")
 
 	if !strings.Contains(mail, "\r\n") {
@@ -26,8 +26,8 @@ func main() {
 	
 	clinet.SetData([]byte(mail))
 	clinet.CheckTlsHost = false
-	err := clinet.SendMail()
-	fmt.Println(err)
+	clinet.SendMail()
+	fmt.Println(clinet.GetResponse())
 }
 
 var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
@@ -40,8 +40,8 @@ var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cocka
  RgPgSuoaa2XdeNFOEIuKBMRd6OKguUms+b/OiwgSG+3A==
 From: PARTH <parthdegama@cockatielone.biz>
 To: pthreeh@outlook.com
-Subject: Hello Test Message From India!
-Message-ID: <1cd003df-76dd-eb31-e228-efaa49e71d99@cockatielone.biz>
+Subject: Hello Test Message From India
+Message-ID: <1cd003df-76dd-eb31-e228-efaa49e71d94@cockatielone.biz>
 Date: Fri, 09 Aug 2024 11:50:30 +0000
 MIME-Version: 1.0
 Content-Type: multipart/alternative;

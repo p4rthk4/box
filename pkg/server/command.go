@@ -181,7 +181,7 @@ func (conn *Connection) handleMail(args string) {
 			}
 			conn.body = BodyType(value)
 		case "RET":
-			// TODO: // DSN
+			// UPDATE: // DSN
 			// if !c.server.EnableDSN {
 			// 	c.writeResponse(504, EnhancedCode{5, 5, 4}, "RET is not implemented")
 			// 	return
@@ -196,7 +196,7 @@ func (conn *Connection) handleMail(args string) {
 			// }
 			// opts.Return = DSNReturn(value)
 		case "ENVID":
-			// TODO: // ENVID
+			// UPDATE: // ENVID
 			// if !c.server.EnableDSN {
 			// 	c.writeResponse(504, EnhancedCode{5, 5, 4}, "ENVID is not implemented")
 			// 	return
@@ -263,7 +263,7 @@ func (conn *Connection) handleRcpt(args string) {
 		}
 	}
 
-	// TODO: parse args
+	// UPDATE: parse args
 
 	conn.recipients = append(conn.recipients, rcpt)
 	conn.rw.reply(250, "Ok")
@@ -293,7 +293,7 @@ func (conn *Connection) handleData() HandleCommandStatus {
 		return HandleCommandOk
 	}
 
-	// TODO: through error when body type is binerymime
+	// UPDATE: through error when body type is binerymime
 
 	conn.rw.reply(354, "Start mail input end with <CRLF>.<CRLF>")
 

@@ -6,3 +6,4 @@ U2SMTP mainly work in SMTP Server Wrapper, It make one server or more than one s
 
 ## TODO
 - Enhanced status codes in smtp
+- send mail to multiple rcpts

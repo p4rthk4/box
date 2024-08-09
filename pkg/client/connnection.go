@@ -36,8 +36,6 @@ func (conn *ClientConn) handleConn() error {
 		return err
 	}
 
-	fmt.Println(conn.extension)
-
 	if conn.smtpClient.StartTls {
 		if ok, _ := conn.Extension("STARTTLS"); ok {
 			err = conn.starttls()
@@ -159,7 +157,7 @@ func (conn *ClientConn) mail() error {
 	// 	default:
 	// 		return errors.New("smtp: Unknown RET parameter value")
 	// 	}
-	// 	// TODO: idk
+	// 	// UPDATE: idk
 	// 	// if opts.EnvelopeID != "" {
 	// 	// 	if !isPrintableASCII(opts.EnvelopeID) {
 	// 	// 		return errors.New("smtp: Malformed ENVID parameter value")
@@ -167,8 +165,6 @@ func (conn *ClientConn) mail() error {
 	// 	// 	fmt.Fprintf(&sb, " ENVID=%s", encodeXtext(opts.EnvelopeID))
 	// 	// }
 	// }
-
-	fmt.Println(sb.String())
 
 	_, _, err := conn.rw.cmd(250, "%s", sb.String())
 	return err
@@ -180,7 +176,7 @@ func (conn *ClientConn) rcpt() error {
 
 	fmt.Fprintf(&sb, "RCPT TO:<%s>", conn.smtpClient.Rcpt)
 	if _, ok := conn.extension["DSN"]; ok {
-		// TODO: dsn ...
+		// UPDATE: dsn ...
 		_ = ok
 	}
 
@@ -218,7 +214,6 @@ func (conn *ClientConn) bdat() error {
 		n = conn.bataBuffer.Len()
 	}
 
-	fmt.Println("size", n)
 	_, _, err := conn.rw.bdat(conn.bataBuffer, n, last)
 	if err != nil {
 		return err

@@ -1,10 +1,12 @@
 package serverapp
 
 import (
+	"os"
 	"sync"
 	"time"
 
 	"github.com/p4rthk4/u2smtp/config"
+	"github.com/p4rthk4/u2smtp/pkg/logx"
 	"github.com/p4rthk4/u2smtp/pkg/server"
 )
 
@@ -34,15 +36,25 @@ func StartServer() {
 			Cert: config.ConfOpts.Tls.Cert,
 		},
 
-		LogDirPath:  config.ConfOpts.LogDirPath,
-		LogFilePath: config.ConfOpts.LogFilePath,
-		Timeout:     time.Minute * 5,
-		Dev:         config.ConfOpts.Dev,
+		Timeout: time.Minute * 5,
+		Dev:     config.ConfOpts.Dev,
 	})
 
 	server.SetMailFwdMethod(&MailFwdBackendAmqp{})
 
 	serverWait := sync.WaitGroup{}
+
+	// logger
+	logFile := os.Stdout
+	if !config.ConfOpts.Dev {
+		var err error
+		logFile, err = os.OpenFile(config.ConfOpts.LogDirPath+"/"+config.ConfOpts.LogFilePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+		if err != nil {
+			logx.LogError("Error opening file:", err)
+			return
+		}
+	}
+	logger := logx.NewLogger(logFile)
 
 	// IPv4 listen
 	serverWait.Add(1)
@@ -57,7 +69,7 @@ func StartServer() {
 
 		// fmt.Println(smtpServer)
 
-		smtpServer.SetLogger()
+		smtpServer.SetLogger(logger)
 		smtpServer.Listen()
 		smtpServer.AcceptConnections()
 
@@ -75,9 +87,7 @@ func StartServer() {
 			IsIPv6:          true,
 		}
 
-		// fmt.Println(smtpServer)
-
-		smtpServer.SetLogger()
+		smtpServer.SetLogger(logger)
 		smtpServer.Listen()
 		smtpServer.AcceptConnections()
 

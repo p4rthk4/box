@@ -17,10 +17,10 @@ type Log struct {
 }
 
 func NewLogger(logFile *os.File) *Log {
-	return newLoggerWithPrefix(logFile, "")
+	return NewLoggerWithPrefix(logFile, "")
 }
 
-func newLoggerWithPrefix(logFile *os.File, prefix string) *Log {
+func NewLoggerWithPrefix(logFile *os.File, prefix string) *Log {
 
 	errorColor := color.New(color.FgRed).SprintFunc()
 	warnColor := color.New(color.FgHiYellow).SprintFunc()
@@ -83,5 +83,5 @@ func (l *Log) Success(format string, a ...any) {
 }
 
 func (l *Log) GetNewWithPrefix(prefix string) *Log {
-	return newLoggerWithPrefix(l.logFile, prefix)
+	return NewLoggerWithPrefix(l.logFile, prefix)
 }

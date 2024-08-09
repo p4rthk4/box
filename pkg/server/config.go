@@ -13,9 +13,6 @@ type SMTPConfig struct {
 
 	SpfCheck bool
 
-	LogDirPath  string
-	LogFilePath string
-
 	ClientGreet string
 	ClientByyy  string
 
@@ -44,6 +41,7 @@ type TlsKeyCert struct {
 // This is globle and overridable
 // and give all option because not
 // verify or default blank option
+// WARN: not thread sefty
 func SetConfig(conf SMTPConfig) {
 	config = &conf
 }

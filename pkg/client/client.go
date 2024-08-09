@@ -119,6 +119,11 @@ func (client *SMTPClinet) SendMail() {
 	} else if client.Rcpt != "" {
 		domainName, err := getDomainFromEmail(client.Rcpt)
 		if err != nil {
+			client.Response.Errors = append(client.Response.Errors, ClientServerError{
+				domainName:  domainName,
+				errorString: fmt.Sprintf("invalid doamin (%s) by client", client.Rcpt),
+			})
+			client.Logger.Error("invalid doamin (%s) by client", client.Rcpt)
 			return
 		}
 
@@ -128,6 +133,7 @@ func (client *SMTPClinet) SendMail() {
 				domainName:  domainName,
 				errorString: fmt.Sprintf("no any MX records found of %s domain", domainName),
 			})
+			client.Logger.Error("no any MX records found of %s domain", domainName)
 			return
 		}
 		mxRecords = mxs
@@ -136,6 +142,7 @@ func (client *SMTPClinet) SendMail() {
 			domainName:  "unknown",
 			errorString: "no any host and rcpt found",
 		})
+		client.Logger.Error("no any host and rcpt found")
 		return
 	}
 
@@ -157,7 +164,7 @@ func (client *SMTPClinet) SendMail() {
 				domainName:  m.Host,
 				errorString: err.Error(),
 			})
-			// client.Logger.Warn("error on connect client to %s server")
+			client.Logger.Warn(err.Error())
 			continue
 		}
 

@@ -13,7 +13,6 @@ import (
 	"unicode"
 )
 
-// get ip address from string or
 func getIPFromString(addr string) ([]net.IP, error) {
 	ip := net.ParseIP(addr)
 	if ip != nil {

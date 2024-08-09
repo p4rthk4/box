@@ -52,7 +52,6 @@ type Connection struct {
 	passCmd  int
 }
 
-// handle new client connection
 func HandleNewConnection(conn net.Conn, serverLogger *logx.Log) {
 	connection := Connection{
 		conn:         conn,
@@ -69,8 +68,6 @@ func HandleNewConnection(conn net.Conn, serverLogger *logx.Log) {
 	connection.handle()
 }
 
-// init client connection
-// return true if error
 func (conn *Connection) init() bool {
 	conn.rw = newTextReaderWriter(conn.conn)
 
@@ -103,15 +100,14 @@ func (conn *Connection) init() bool {
 	return false // err!
 }
 
-// handle client connection
 func (conn *Connection) handle() {
 
-	if config.MaxClients > 0 && clientCount > config.MaxClients { // if max clients
+	if config.MaxClients > 0 && clientCount > config.MaxClients {
 		conn.rw.busy(conn.localAddress.GetPTR())
 		conn.closeForMaxClientsExceeded()
 		return
 	} else {
-		conn.rw.greet(conn.localAddress.GetPTR()) // send 220 for conncetion establishment
+		conn.rw.greet(conn.localAddress.GetPTR())
 	}
 
 	for {
@@ -120,7 +116,7 @@ func (conn *Connection) handle() {
 			cmd, args, err := parseCommand(line)
 			if err == CmdParseOk {
 				status := conn.handleCommand(cmd, args)
-				if status == HandleCommandClose { // if connect close with QUIT...
+				if status == HandleCommandClose { // if connection close with QUIT...
 					break
 				} else if status == HandleCommandEOF {
 					conn.closeWithFail()
@@ -132,8 +128,7 @@ func (conn *Connection) handle() {
 			continue
 		}
 
-		// if error not nil
-		if netErr, ok := err.(net.Error); ok && netErr.Timeout() { // if time out
+		if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
 			conn.rw.timeout(conn.localAddress.GetPTR())
 			conn.closeWithFailAnd("timeout exceeded")
 			break
@@ -141,7 +136,7 @@ func (conn *Connection) handle() {
 			conn.rw.longLine(conn.localAddress.GetPTR())
 			conn.closeWithFailAnd("too long line")
 			break
-		} else if err == io.ErrUnexpectedEOF { // eof or connection close
+		} else if err == io.ErrUnexpectedEOF { // eof or client connection close
 			conn.closeWithFail()
 			break
 		} else { // if unexpected

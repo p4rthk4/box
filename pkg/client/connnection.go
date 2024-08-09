@@ -7,8 +7,6 @@ import (
 	"fmt"
 	"net"
 	"strings"
-
-	"github.com/p4rthk4/u2smtp/config"
 )
 
 type ClientConn struct {
@@ -80,8 +78,6 @@ func (conn *ClientConn) hello() error {
 		var smtpServerError SMTPServerError
 		if errors.As(err, &smtpServerError) && (smtpServerError.Code == 500 || smtpServerError.Code == 502) {
 			err = conn.helo()
-		} else {
-			// TODO: error handling
 		}
 	}
 	return err
@@ -228,7 +224,7 @@ func (conn *ClientConn) starttls() error {
 		return err
 	}
 
-	config, err := getTlsConfig()
+	config, err := conn.getTlsConfig()
 	if err != nil {
 		return err
 	}
@@ -241,7 +237,7 @@ func (conn *ClientConn) starttls() error {
 
 	tlsConn := tls.Client(conn.conn, config)
 	conn.conn = tlsConn
-	conn.rw = newTextReaderWriter(conn.conn)
+	conn.rw = newTextReaderWriter(conn.conn, conn.rw.Timeout)
 
 	conn.helloDone = false
 	err = conn.hello()
@@ -253,8 +249,8 @@ func (conn *ClientConn) quit() error {
 	return err
 }
 
-func getTlsConfig() (*tls.Config, error) {
-	cert, err := tls.LoadX509KeyPair(config.ConfOpts.Tls.Cert, config.ConfOpts.Tls.Key)
+func (conn *ClientConn) getTlsConfig() (*tls.Config, error) {
+	cert, err := tls.LoadX509KeyPair(conn.smtpClient.TlsCert, conn.smtpClient.TlsKey)
 	if err != nil {
 		return nil, fmt.Errorf("server: loadkeys: %s", err)
 	}

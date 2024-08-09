@@ -15,9 +15,6 @@ const (
 )
 
 type SMTPClinet struct {
-	StartTls     bool
-	CheckTlsHost bool
-
 	hostname string
 
 	RcptHost string
@@ -28,16 +25,18 @@ type SMTPClinet struct {
 
 	data []byte
 
-	timeout time.Duration
-
 	Size int
 	UTF8 bool
-	// RequireTLS bool
-	// DSNReturn  DSNReturnType
 
-	Response ClientResponse
+	StartTls     bool
+	CheckTlsHost bool
+	TlsKey       string
+	TlsCert      string
 
 	chunkSize int
+
+	Timeout time.Duration
+	Response ClientResponse
 }
 
 func NewClinet() SMTPClinet {
@@ -52,7 +51,7 @@ func NewClinet() SMTPClinet {
 		From: "",
 		Rcpt: "",
 
-		timeout: time.Minute * 2,
+		Timeout: time.Minute * 2,
 
 		chunkSize: 1024 * 2,
 	}
@@ -86,7 +85,7 @@ func (client *SMTPClinet) SetData(data []byte) {
 }
 
 func (client *SMTPClinet) SetTimeout(t time.Duration) {
-	client.timeout = t
+	client.Timeout = t
 }
 
 type ClientServerError struct {
@@ -218,7 +217,7 @@ func (client *SMTPClinet) SendMail() {
 }
 
 func (client *SMTPClinet) createNewConn(address string) (ClientConn, error) {
-	conn, err := net.DialTimeout("tcp", address, client.timeout)
+	conn, err := net.DialTimeout("tcp", address, client.Timeout)
 	if err != nil {
 		switch e := err.(type) {
 		case *net.OpError:
@@ -245,12 +244,11 @@ func (client *SMTPClinet) createNewConn(address string) (ClientConn, error) {
 
 	return ClientConn{
 		conn: conn,
-		rw:   newTextReaderWriter(conn),
+		rw:   newTextReaderWriter(conn, client.Timeout),
 
 		smtpClient: client,
 	}, nil
 }
-
 
 func (client *SMTPClinet) GetResponse() ClientResponse {
 	if client.Response.Success {
@@ -263,6 +261,6 @@ func (client *SMTPClinet) GetResponse() ClientResponse {
 	} else {
 		client.Response.Status = "FAIL"
 	}
-	
+
 	return client.Response
 }

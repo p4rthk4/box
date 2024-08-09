@@ -18,6 +18,7 @@ type TextReaderWriter struct {
 	t   *textproto.Conn
 	*limitlinereader.LimitLineReader
 	netConn net.Conn
+	Timeout time.Duration
 }
 
 type ReadWriteClose struct {
@@ -55,7 +56,7 @@ func (err SMTPServerError) GetErrorType() SMTPErrorType {
 	return SMTPErrorFail
 }
 
-func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
+func newTextReaderWriter(conn net.Conn, timeout time.Duration) *TextReaderWriter {
 	textReader := &limitlinereader.LimitLineReader{
 		Reader:      conn,
 		MaxLineSize: 2000, // Doubled maximum line length per RFC 5321 (Section 4.5.3.1.6)
@@ -73,11 +74,12 @@ func newTextReaderWriter(conn net.Conn) *TextReaderWriter {
 		rwc:             &rwc,
 		t:               text,
 		LimitLineReader: textReader,
+		Timeout:         timeout,
 	}
 }
 
 func (rw *TextReaderWriter) readResponse(expectCode int) (int, string, error) {
-	rw.netConn.SetReadDeadline(time.Now().Add(1 * time.Minute)) // TODO: get in config file
+	rw.netConn.SetReadDeadline(time.Now().Add(rw.Timeout))
 	defer rw.netConn.SetReadDeadline(time.Time{})
 
 	code, msg, err := rw.t.ReadResponse(expectCode)

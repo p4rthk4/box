@@ -228,7 +228,11 @@ func (c *check) checkPTR(ip net.IP, domain, qualifier string) Result {
 		fmt.Println(h, domain)
 		if strings.Contains(h, domain) {
 			s := strings.Split(h, domain)
-			fmt.Println("split text", s, len(s))
+			if len(s) == 2 {
+				if s[1] == "" {
+					return evalQualifier(qualifier)
+				}
+			}
 		}
 	}
 

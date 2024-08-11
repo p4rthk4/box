@@ -226,11 +226,9 @@ func (c *check) checkPTR(ip net.IP, domain, qualifier string) Result {
 		h = strings.TrimRight(h, ".")
 		domain = strings.TrimRight(domain, ".")
 		fmt.Println(h, domain)
-	}
-
-	for _, dom := range hosts {
-		if dom == domain {
-			return evalQualifier(qualifier)
+		if strings.Contains(h, domain) {
+			s := strings.Split(h, domain)
+			fmt.Println("split text", s, len(s))
 		}
 	}
 

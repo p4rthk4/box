@@ -34,6 +34,7 @@ type Connection struct {
 	mailFrom      string
 	recipients    []string
 	spfFail       bool
+	spfStatus     string
 	forwardStatus MailForwardCode
 	data          []byte
 	dataBuffer    *bytes.Buffer // for bdat
@@ -177,6 +178,7 @@ func (conn *Connection) reset() {
 	conn.forwardStatus = MailForwardIdle
 	conn.dataBuffer = nil
 	conn.spfFail = false
+	conn.spfStatus = ""
 	conn.totalCmd = 0
 	conn.passCmd = 0
 }
@@ -215,9 +217,10 @@ func (conn *Connection) forward() {
 				ClientIP:  conn.remoteAddress.String(),
 			},
 
-			Domain:   conn.domain,
-			PtrMatch: false,
-			SpfFail:  conn.spfFail,
+			Domain:    conn.domain,
+			PtrMatch:  false,
+			SpfFail:   conn.spfFail,
+			SpfStatus: conn.spfStatus,
 
 			From:       conn.mailFrom,
 			Recipients: conn.recipients,

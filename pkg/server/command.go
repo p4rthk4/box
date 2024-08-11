@@ -304,7 +304,8 @@ func (conn *Connection) handleData() HandleCommandStatus {
 
 	conn.data = data
 
-	ok := conn.checkSpf()
+	ok, status := conn.checkSpf()
+	conn.spfStatus = status
 	if !ok {
 		conn.spfFail = true
 		conn.forwardStatus = MailForwardFaild
@@ -384,7 +385,8 @@ func (conn *Connection) handleBdat(arg string) {
 	if last {
 		conn.data = conn.dataBuffer.Bytes()
 
-		ok := conn.checkSpf()
+		ok, status := conn.checkSpf()
+		conn.spfStatus = status
 		if !ok {
 			conn.spfFail = true
 			conn.forwardStatus = MailForwardFaild
@@ -409,9 +411,9 @@ func (conn *Connection) handleBdat(arg string) {
 	}
 }
 
-func (conn *Connection) checkSpf() bool {
+func (conn *Connection) checkSpf() (bool, string) {
 	if !config.SpfCheck {
-		return true
+		return true, "PASS"
 	}
 	domain, err := getDomainFromEmail(conn.mailFrom)
 	if err != nil {
@@ -420,22 +422,21 @@ func (conn *Connection) checkSpf() bool {
 			fmt.Sprintf("[%s] domain name", conn.mailFrom),
 			"is invalid.",
 		})
-		return false
+		return false, "FAIL"
 	}
 
 	a := spf.CheckHost(conn.remoteAddress.ip, domain, conn.mailFrom, "")
-	fmt.Println("SPF Status...", a)
-	if a != "PASS" {
+	if a != "PASS" && a != "SOFTFAIL" {
 		conn.rw.replyLines(550, []string{
 			"email doesn't delivered because sender",
 			fmt.Sprintf("domain [%s] does not", domain),
 			fmt.Sprintf("designate %s as", conn.remoteAddress.ip.String()),
 			"permitted sender.",
 		})
-		return false
+		return false, string(a)
 	}
 
-	return true
+	return true, string(a)
 }
 
 func isValidEmail(email string) bool {

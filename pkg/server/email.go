@@ -17,9 +17,10 @@ type Email struct {
 	Tls   bool             `yaml:"tls"`
 	PtrIP ServerClientInfo `yaml:"ptr_ip"`
 
-	Domain   string `yaml:"domain"`
-	PtrMatch bool   `yaml:"ptr_match"`
-	SpfFail  bool   `yaml:"spf_fail"`
+	Domain    string `yaml:"domain"`
+	PtrMatch  bool   `yaml:"ptr_match"`
+	SpfFail   bool   `yaml:"spf_fail"`
+	SpfStatus string `yaml:"spf_status"`
 
 	From       string   `yaml:"from"`
 	Recipients []string `yaml:"recipients"`

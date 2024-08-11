@@ -10,7 +10,7 @@ import (
 
 var (
 	spfDelimiters = []byte(".-+,/_=")
-	macroSyntax   = regexp.MustCompile("%[^{_\\-%}]")
+	macroSyntax   = regexp.MustCompile(`%[^{_\-%}]`)
 	macroMatch    = regexp.MustCompile("%{[^}]+}")
 	macroReplacer = strings.NewReplacer("%%", "%", "%_", " ", "%-", "%20")
 )

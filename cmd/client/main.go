@@ -32,8 +32,8 @@ func main() {
 	
 	clinet.SetHostname(config.ConfOpts.HostName)
 	
-	clinet.SetFrom("aly@cockatielone.biz")
-	clinet.SetRcpt("parthka.2005@cockatielone.biz")
+	clinet.SetFrom("aly@myworkspacel.ink")
+	clinet.SetRcpt("parthka.2005@myworkspacel.ink")
 	
 	if !strings.Contains(mail, "\r\n") {
 		fmt.Println("Not Any \\r\\n found!!!")
@@ -59,7 +59,7 @@ var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cocka
  2KUwvgpbNlJIBMCITQRF3jG7tHDRXOO0Uqp/Nc0d2fm8MGUAlWgD4jx9he09suzhgtpuT/adcEz
  SgaBXc3WxFepahEko+n/wuoLyCl+bZ6GP5GZtmEUhMkGEgZAQRdm+PmvyJ99QDo6k0TDJuuBxkv
  lPxEjCyA4/qdNnkQoQ+mFW+zj6fBTVn3SSjSxXGka+gw==
-From: PARTH <parthdegama@cockatielone.biz>
+From: PARTH <parthdegama@cockatielone.biz>	
 To: pthreeh@outlook.com
 Subject: Hello, I'm From India!
 Message-ID: <e560e7ed-7e22-9575-23a2-606026b6860a@cockatielone.biz>

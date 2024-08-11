@@ -1,7 +1,6 @@
 package spf
 
 import (
-	"fmt"
 	"net"
 	"regexp"
 	"strings"
@@ -225,7 +224,6 @@ func (c *check) checkPTR(ip net.IP, domain, qualifier string) Result {
 	for _, h := range hosts {
 		h = strings.TrimRight(h, ".")
 		domain = strings.TrimRight(domain, ".")
-		fmt.Println(h, domain)
 		if strings.Contains(h, domain) {
 			s := strings.Split(h, domain)
 			if len(s) == 2 {

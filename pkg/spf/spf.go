@@ -202,7 +202,6 @@ func (c *check) checkMX(ip net.IP, domain, cidr, qualifier string) Result {
 
 	for _, mx := range mxs {
 		r := c.check(ip, mx, cidr, qualifier)
-		fmt.Println("mx",r)
 		switch r {
 		case Pass, PermError, Fail:
 			return r
@@ -223,18 +222,13 @@ func (c *check) checkPTR(ip net.IP, domain, qualifier string) Result {
 		return TempError
 	}
 
-	var validated []string
 	for _, h := range hosts {
-		fmt.Println("PTR host:", h)
-		ips, _ := lookupA(h)
-		if len(ips) != 0 {
-			validated = append(validated, h)
-			fmt.Println("Validated", h)
-		}
-
+		h = strings.TrimRight(h, ".")
+		domain = strings.TrimRight(domain, ".")
+		fmt.Println(h, domain)
 	}
 
-	for _, dom := range validated {
+	for _, dom := range hosts {
 		if dom == domain {
 			return evalQualifier(qualifier)
 		}

@@ -32,7 +32,7 @@ func main() {
 	
 	clinet.SetHostname(config.ConfOpts.HostName)
 	
-	clinet.SetFrom("aly@myworkspacel.ink")
+	clinet.SetFrom("aly@cockatielone.biz")
 	clinet.SetRcpt("parthka.2005@myworkspacel.ink")
 	
 	if !strings.Contains(mail, "\r\n") {

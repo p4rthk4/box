@@ -57,9 +57,9 @@ func (c *check) checkHost(ip net.IP, domain, sender string) Result {
 	}
 	// log.Println("\n\n", spf, "\n------------------------")
 	terms, err := parseSPF(spf)
-if err != nil {
-	return TempError
-}
+	if err != nil {
+		return TempError
+	}
 
 	for _, term := range terms {
 		switch t := term.(type) {
@@ -202,6 +202,7 @@ func (c *check) checkMX(ip net.IP, domain, cidr, qualifier string) Result {
 
 	for _, mx := range mxs {
 		r := c.check(ip, mx, cidr, qualifier)
+		fmt.Println("mx",r)
 		switch r {
 		case Pass, PermError, Fail:
 			return r

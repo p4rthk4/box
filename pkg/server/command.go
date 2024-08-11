@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mileusna/spf"
+	"github.com/p4rthk4/u2smtp/pkg/spf"
 )
 
 type HandleCommandStatus int
@@ -400,7 +400,7 @@ func (conn *Connection) handleBdat(arg string) {
 		conn.forwardStatus = MailForwardSuccess
 		conn.passCmd += 1
 		conn.reset()
-		
+
 		conn.logger.Success("%d email received successfully from %s[%s]:%d", conn.mailCount, conn.remoteAddress.GetPTR(), conn.remoteAddress.ip.String(), conn.remoteAddress.port)
 		conn.mailCount += 1
 	} else {
@@ -424,6 +424,7 @@ func (conn *Connection) checkSpf() bool {
 	}
 
 	a := spf.CheckHost(conn.remoteAddress.ip, domain, conn.mailFrom, "")
+	fmt.Println("SPF Status...", a)
 	if a != "PASS" {
 		conn.rw.replyLines(550, []string{
 			"email doesn't delivered because sender",

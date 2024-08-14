@@ -26,12 +26,12 @@ func (s *SMTPServer) getHostAddress() string {
 		} else {
 			ipv6s, err := getIPv6FromDomain(s.Host)
 			if err != nil {
-				logx.LogError(fmt.Sprintf("invalid hostname for IPv6 %s.", s.Host), fmt.Errorf(fmt.Sprintf("invalid hostname for IPv6 %s.", s.Host)))
+				logx.LogError(fmt.Sprintf("invalid hostname for IPv6 %s.", s.Host), fmt.Errorf("invalid hostname for IPv6 %s", s.Host))
 				os.Exit(1)
 			}
 
 			if len(ipv6s) < 1 {
-				logx.LogError(fmt.Sprintf("invalid hostname for IPv6 %s.", s.Host), fmt.Errorf(fmt.Sprintf("invalid hostname for IPv6 %s.", s.Host)))
+				logx.LogError(fmt.Sprintf("invalid hostname for IPv6 %s.", s.Host), fmt.Errorf("invalid hostname for IPv6 %s", s.Host))
 				os.Exit(1)
 			}
 
@@ -45,12 +45,12 @@ func (s *SMTPServer) getHostAddress() string {
 		} else {
 			ipv4s, err := getIPv4FromDomain(s.Host)
 			if err != nil {
-				logx.LogError(fmt.Sprintf("invalid hostname for IPv4 %s.", s.Host), fmt.Errorf(fmt.Sprintf("invalid hostname for IPv4 %s.", s.Host)))
+				logx.LogError(fmt.Sprintf("invalid hostname for IPv4 %s.", s.Host), fmt.Errorf("invalid hostname for IPv4 %s", s.Host))
 				os.Exit(1)
 			}
 
 			if len(ipv4s) < 1 {
-				logx.LogError(fmt.Sprintf("invalid hostname for IPv4 %s.", s.Host), fmt.Errorf(fmt.Sprintf("invalid hostname for IPv4 %s.", s.Host)))
+				logx.LogError(fmt.Sprintf("invalid hostname for IPv4 %s.", s.Host), fmt.Errorf("invalid hostname for IPv4 %s", s.Host))
 				os.Exit(1)
 			}
 

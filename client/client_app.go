@@ -9,6 +9,7 @@ import (
 	"github.com/rellitelink/box/config"
 	"github.com/rellitelink/box/pkg/client"
 	"github.com/rellitelink/box/pkg/logx"
+	"gopkg.in/yaml.v3"
 )
 
 type Email struct {
@@ -20,9 +21,16 @@ type Email struct {
 
 func ClientClient() {
 
+	em, err := openMail([]byte(mailYaml))	
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(em)
+
 	clinet := client.NewClinet()
 
-	// logger
+	// logget
 	logFile := os.Stdout
 	if !config.ConfOpts.Dev {
 		var err error
@@ -37,52 +45,56 @@ func ClientClient() {
 
 	clinet.SetHostname(config.ConfOpts.HostName)
 
-	clinet.SetFrom("aly@cockatielone.biz")
-	clinet.SetRcpt("parthka.2005@myworkspacel.ink")
+	clinet.SetFrom(em.From)
+	clinet.SetRcpt(em.Recipient)
 
-	if !strings.Contains(mail, "\r\n") {
-		fmt.Println("Not Any \\r\\n found!!!")
-		mail = strings.ReplaceAll(mail, "\n", "\r\n")
+	if !strings.Contains(em.Data, "\r\n") {
+		panic("CRLF no found in mail")
 	}
-	clinet.SetData([]byte(mail))
+	
+	clinet.SetData([]byte(em.Data))
 
 	clinet.CheckTlsHost = false
+	clinet.StartTls = false
 	clinet.TlsKey = config.ConfOpts.Tls.Key
 	clinet.TlsCert = config.ConfOpts.Tls.Cert
 
-	clinet.Timeout = 5 * time.Second
+	clinet.Timeout = 2 * time.Minute
 
 	clinet.SendMail()
 	fmt.Println(clinet.GetResponse())
 }
 
-var mail string = `DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cockatielone.biz;
- q=dns/txt; s=draft; bh=TeIFrF74hDBEkjt9OeUkEQZM+ljjmJFn59ulnGw49JQ=;
- h=from:subject:to:mime-version:content-type;
- b=V0bD7B0eplOnGaL27lwIsuXgLBsig2ZbEmDJwEwdIfDtCOmyCcgNgOqD9rthM7/Epr9HyrSOy
- 34oL1XQMfEcXF9pCGELQylaCo5q1L7FmixE3cNr7vkTF+ZVjwMgIfKIkObmbB+q5KBjaI9iGfNP
- 2KUwvgpbNlJIBMCITQRF3jG7tHDRXOO0Uqp/Nc0d2fm8MGUAlWgD4jx9he09suzhgtpuT/adcEz
- SgaBXc3WxFepahEko+n/wuoLyCl+bZ6GP5GZtmEUhMkGEgZAQRdm+PmvyJ99QDo6k0TDJuuBxkv
- lPxEjCyA4/qdNnkQoQ+mFW+zj6fBTVn3SSjSxXGka+gw==
-From: PARTH <parthdegama@cockatielone.biz>	
-To: pthreeh@outlook.com
-Subject: Hello, I'm From India!
-Message-ID: <e560e7ed-7e22-9575-23a2-606026b6860a@cockatielone.biz>
-Date: Sat, 10 Aug 2024 02:08:27 +0000
-MIME-Version: 1.0
-Content-Type: multipart/alternative;
- boundary="--_NmP-9a6384c3eb8355d1-Part_1"
+func openMail(data []byte) (*Email, error) {
+	e := new(Email)
+	err := yaml.Unmarshal(data, e)
+	if err != nil {
+		return nil, err
+	}
 
-----_NmP-9a6384c3eb8355d1-Part_1
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+	if e.Id == "" {
+		return nil, fmt.Errorf("email id not found")
+	}
 
-SGkgUGFydGghIGkgYW0gS1QKCiBha2EgRGhhcnZp
-----_NmP-9a6384c3eb8355d1-Part_1
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: base64
+	if e.From == "" {
+		return nil, fmt.Errorf("email from field not found")
+	}
 
-PGgxPkhpIFBhcnRoITwvaDE+PGgzPkFrYSBMb2xraW5nPC9oMz4=
-----_NmP-9a6384c3eb8355d1-Part_1--
+	if e.Recipient == "" {
+		return nil, fmt.Errorf("email recipient field not found")
+	}
 
+	if e.Data == "" {
+		return nil, fmt.Errorf("email data not found")
+	}
+
+	return e, nil
+}
+
+const mailYaml string = `
+---
+id: dsad
+from: hello@pa.com
+recipient: parthka.2005@gmail.com
+data: "parth\r\n"
 `

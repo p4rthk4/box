@@ -11,6 +11,13 @@ import (
 	"github.com/rellitelink/box/pkg/logx"
 )
 
+type Email struct {
+	Id        string `yaml:"id"`
+	From      string `yaml:"from"`
+	Recipient string `yaml:"recipient"`
+	Data      string `yaml:"data"`
+}
+
 func ClientClient() {
 
 	clinet := client.NewClinet()

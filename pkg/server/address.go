@@ -5,7 +5,7 @@ import (
 	"net"
 	"os"
 
-	"github.com/p4rthk4/u2smtp/pkg/logx"
+	"github.com/rellitelink/box/pkg/logx"
 )
 
 func (s *SMTPServer) getHostAddress() string {

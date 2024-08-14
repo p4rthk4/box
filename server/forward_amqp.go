@@ -6,9 +6,9 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/p4rthk4/u2smtp/config"
-	"github.com/p4rthk4/u2smtp/pkg/server"
 	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/rellitelink/box/config"
+	"github.com/rellitelink/box/pkg/server"
 )
 
 type MailFwdBackendAmqp struct {

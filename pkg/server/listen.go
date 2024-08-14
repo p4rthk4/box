@@ -4,13 +4,13 @@ import (
 	// "fmt"
 	"os"
 
-	"github.com/p4rthk4/u2smtp/pkg/logx"
-	reusesocket "github.com/p4rthk4/u2smtp/pkg/reuse_socket"
+	"github.com/rellitelink/box/pkg/logx"
+	reusesocket "github.com/rellitelink/box/pkg/reuse_socket"
 )
 
 func (s *SMTPServer) Listen() {
 	address := s.getHostAddress()
-	
+
 	listener, err := reusesocket.Listen("tcp", address)
 	if err != nil {
 		logx.LogError("server listen faild", err)

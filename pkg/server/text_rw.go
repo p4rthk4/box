@@ -7,7 +7,7 @@ import (
 	"net/textproto"
 	"time"
 
-	limitlinereader "github.com/p4rthk4/u2smtp/pkg/limit_line_reader"
+	limitlinereader "github.com/rellitelink/box/pkg/limit_line_reader"
 )
 
 type TextReaderWriter struct {

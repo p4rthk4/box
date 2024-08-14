@@ -7,9 +7,9 @@ import (
 	"net"
 	"strings"
 
-	limitlinereader "github.com/p4rthk4/u2smtp/pkg/limit_line_reader"
-	"github.com/p4rthk4/u2smtp/pkg/logx"
-	"github.com/p4rthk4/u2smtp/pkg/uid"
+	limitlinereader "github.com/rellitelink/box/pkg/limit_line_reader"
+	"github.com/rellitelink/box/pkg/logx"
+	"github.com/rellitelink/box/pkg/uid"
 )
 
 type MailForwardCode int

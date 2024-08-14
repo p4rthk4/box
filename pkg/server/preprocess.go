@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/p4rthk4/u2smtp/pkg/logx"
+	"github.com/rellitelink/box/pkg/logx"
 )
 
 var greetReplyMessage []string = []string{} // greet reply message for esmtp/ehlo
@@ -56,8 +56,8 @@ func smtpServerPreProcess(l *logx.Log) {
 			os.Exit(1)
 		}
 		tlsConfig = &tls.Config{
-			Certificates:             []tls.Certificate{cert},
-			MinVersion:               tls.VersionTLS10,
+			Certificates: []tls.Certificate{cert},
+			MinVersion:   tls.VersionTLS10,
 		}
 	}
 }

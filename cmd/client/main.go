@@ -6,9 +6,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/p4rthk4/u2smtp/config"
-	smtpclient "github.com/p4rthk4/u2smtp/pkg/client"
-	"github.com/p4rthk4/u2smtp/pkg/logx"
+	"github.com/rellitelink/box/config"
+	smtpclient "github.com/rellitelink/box/pkg/client"
+	"github.com/rellitelink/box/pkg/logx"
 )
 
 func main() {
@@ -16,7 +16,7 @@ func main() {
 	config.LoadConfig() // load conifg in config file
 
 	clinet := smtpclient.NewClinet()
-	
+
 	// logger
 	logFile := os.Stdout
 	if !config.ConfOpts.Dev {
@@ -29,12 +29,12 @@ func main() {
 	}
 	logger := logx.NewLoggerWithPrefix(logFile, "EMAIL")
 	clinet.Logger = logger
-	
+
 	clinet.SetHostname(config.ConfOpts.HostName)
-	
+
 	clinet.SetFrom("aly@cockatielone.biz")
 	clinet.SetRcpt("parthka.2005@myworkspacel.ink")
-	
+
 	if !strings.Contains(mail, "\r\n") {
 		fmt.Println("Not Any \\r\\n found!!!")
 		mail = strings.ReplaceAll(mail, "\n", "\r\n")
@@ -44,9 +44,9 @@ func main() {
 	clinet.CheckTlsHost = false
 	clinet.TlsKey = config.ConfOpts.Tls.Key
 	clinet.TlsCert = config.ConfOpts.Tls.Cert
-	
+
 	clinet.Timeout = 5 * time.Second
-	
+
 	clinet.SendMail()
 	fmt.Println(clinet.GetResponse())
 }

@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/p4rthk4/u2smtp/server"
-	"github.com/p4rthk4/u2smtp/config"
+	"github.com/rellitelink/box/config"
+	serverapp "github.com/rellitelink/box/server"
 )
 
 func main() {

@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/p4rthk4/u2smtp/pkg/logx"
+	"github.com/rellitelink/box/pkg/logx"
 )
 
 type DSNReturnType string

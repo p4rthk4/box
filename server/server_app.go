@@ -5,9 +5,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/p4rthk4/u2smtp/config"
-	"github.com/p4rthk4/u2smtp/pkg/logx"
-	"github.com/p4rthk4/u2smtp/pkg/server"
+	"github.com/rellitelink/box/config"
+	"github.com/rellitelink/box/pkg/logx"
+	"github.com/rellitelink/box/pkg/server"
 )
 
 func StartServer() {

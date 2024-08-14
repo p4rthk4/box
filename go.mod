@@ -1,6 +1,6 @@
-module github.com/p4rthk4/u2smtp
+module github.com/rellitelink/box
 
-go 1.22.6
+go 1.23.0
 
 require (
 	github.com/fatih/color v1.17.0

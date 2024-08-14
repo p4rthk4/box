@@ -3,7 +3,7 @@ package config
 import (
 	"os"
 
-	"github.com/p4rthk4/u2smtp/pkg/logx"
+	"github.com/rellitelink/box/pkg/logx"
 	"gopkg.in/yaml.v3"
 )
 

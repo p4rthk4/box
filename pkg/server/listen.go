@@ -1,20 +1,13 @@
 package server
 
 import (
-	// "fmt"
-	"fmt"
 	"os"
-	"time"
 
 	"github.com/rellitelink/box/pkg/logx"
 	reusesocket "github.com/rellitelink/box/pkg/reuse_socket"
 )
 
 func (s *SMTPServer) Listen() {
-
-	fmt.Println(time.Now().UTC().String())
-	fmt.Println(time.Now().String())
-
 	address := s.getHostAddress()
 
 	listener, err := reusesocket.Listen("tcp", address)

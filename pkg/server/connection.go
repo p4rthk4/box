@@ -6,6 +6,7 @@ import (
 	"io"
 	"net"
 	"strings"
+	"time"
 
 	limitlinereader "github.com/rellitelink/box/pkg/limit_line_reader"
 	"github.com/rellitelink/box/pkg/logx"
@@ -207,6 +208,7 @@ func (conn *Connection) forward() {
 		email := Email{
 			Success: false,
 			Uid:     fmt.Sprintf("%s_%d", uid, count),
+			Time:    time.Now().UTC().String(),
 
 			Cmds: fmt.Sprintf("%d/%d", conn.passCmd, conn.totalCmd),
 			Tls:  conn.useTls,

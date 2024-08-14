@@ -11,6 +11,7 @@ import (
 // recive mail structure
 type Email struct {
 	Uid     string `yaml:"uid"`
+	Time    string `yaml:"time"`
 	Success bool   `yaml:"success"`
 
 	Cmds  string           `yaml:"cmds"`

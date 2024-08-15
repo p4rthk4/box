@@ -4,7 +4,7 @@ func defaultConfig() ConfigsOptions {
 	return ConfigsOptions{
 		Port: 25,
 
-		Name:       "U2SMTP",
+		Name:       "Box - SMTP",
 		HostName:   "localhost",
 		MaxClients: 0,
 

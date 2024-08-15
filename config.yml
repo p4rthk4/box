@@ -1,4 +1,4 @@
-name: Ultra Scalable SMTP Server
+name: Box - SMTP
 hostname: test.rellitel.ink
 
 port: 8080

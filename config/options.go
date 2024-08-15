@@ -39,11 +39,10 @@ type AmqpConfig struct {
 
 type ClientConfig struct {
 	HostName string `yaml:"hostname"`
+	Worker   int    `yaml:"worker"`
 
 	LogDirPath  string `yaml:"log_dir"`
 	LogFilePath string `yaml:"log_file"`
-
-	TryTls bool `yaml:"try_tls"`
 
 	Amqp AmqpConfig `yaml:"amqp_conf"`
 }

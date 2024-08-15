@@ -24,6 +24,6 @@ func main() {
 	if mode != "client" {
 		serverapp.StartServer()
 	} else {
-		clientapp.ClientClient()
+		clientapp.StartClient()
 	}
 }

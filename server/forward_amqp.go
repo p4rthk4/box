@@ -24,7 +24,6 @@ func (mailFwd *MailFwdBackendAmqp) Init() {
 	// load config
 	encodedPassword := url.QueryEscape(config.ConfOpts.Amqp.Password)
 	mailFwd.uri = fmt.Sprintf("amqp://%s:%s@%s:%d/", config.ConfOpts.Amqp.Username, encodedPassword, config.ConfOpts.Amqp.Host, config.ConfOpts.Amqp.Port)
-	fmt.Println("URI", mailFwd.uri)
 	client, err := amqp.Dial(mailFwd.uri)
 	if err != nil {
 		log.Println("AMQP Connection Faild...")

@@ -34,6 +34,7 @@ func defaultConfig() ConfigsOptions {
 
 		Client: ClientConfig{
 			HostName: "",
+			Worker:   2,
 
 			LogDirPath:  "",
 			LogFilePath: "",

@@ -35,6 +35,7 @@ func GetConfig() *ConfigsOptions {
 
 var configFiles []string = []string{
 	"/etc/box.yaml",
+	"/etc/box.yml",
 	"./config.yaml",
 	"./config.yml",
 }

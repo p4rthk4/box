@@ -30,8 +30,8 @@ func openMail(data []byte) (*EmailYAML, error) {
 		return nil, err
 	}
 
-	if e.Id == "" {
-		return nil, fmt.Errorf("email id not found")
+	if e.Uid == "" {
+		return nil, fmt.Errorf("email uid not found")
 	}
 
 	if e.From == "" {

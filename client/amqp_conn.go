@@ -11,8 +11,8 @@ import (
 )
 
 func getAmqpConn(logger *logx.Log) *amqp.Connection {
-	encodedPassword := url.QueryEscape(config.ConfOpts.Amqp.Password)
-	amqpUri := fmt.Sprintf("amqp://%s:%s@%s:%d/", config.ConfOpts.Amqp.Username, encodedPassword, config.ConfOpts.Amqp.Host, config.ConfOpts.Amqp.Port)
+	encodedPassword := url.QueryEscape(config.ConfOpts.Client.Amqp.Password)
+	amqpUri := fmt.Sprintf("amqp://%s:%s@%s:%d/", config.ConfOpts.Client.Amqp.Username, encodedPassword, config.ConfOpts.Client.Amqp.Host, config.ConfOpts.Client.Amqp.Port)
 	conn, err := amqp.Dial(amqpUri)
 	if err != nil {
 		logger.Error("error on amqp conn: %s", err)

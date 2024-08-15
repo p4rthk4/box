@@ -19,10 +19,20 @@ type EmailHandler struct {
 }
 
 type EmailYAML struct {
-	Id        string `yaml:"id"`
+	Uid       string `yaml:"uid"`
 	From      string `yaml:"from"`
 	Recipient string `yaml:"recipient"`
 	Data      string `yaml:"data"`
+}
+
+type EmailStatus struct {
+	Uid            string
+	Time           string
+	Errors         []smtpClient.ClientServerError
+	Success        bool
+	TempError      bool
+	AnyClientError bool
+	Status         string
 }
 
 func (eh *EmailHandler) handleClient() {
@@ -33,10 +43,21 @@ func (eh *EmailHandler) handleClient() {
 	}
 
 	eh.em = em
-	eh.logger.Info("Worker %d received a message: %s", eh.wid, eh.em.Id)
+	eh.logger.Info("Worker %d received a message: %s", eh.wid, eh.em.Uid)
 
 	res := eh.sendMail()
-	errYaml, err := yaml.Marshal(res)
+
+	newRes := EmailStatus{
+		Uid:            eh.em.Uid,
+		Success:        res.Success,
+		Status:         res.Status,
+		Time:           res.Time,
+		TempError:      res.TempError,
+		AnyClientError: res.AnyClientError,
+		Errors:         res.Errors,
+	}
+
+	errYaml, err := yaml.Marshal(newRes)
 	if err != nil {
 		eh.logger.Error("error on make status yaml, worker-%d: %s", eh.wid, err.Error())
 		return
@@ -47,7 +68,7 @@ func (eh *EmailHandler) handleClient() {
 
 func (eh *EmailHandler) sendMail() smtpClient.ClientResponse {
 	client := smtpClient.NewClinet()
-	client.Logger = eh.logger.GetNewWithPrefix(eh.em.Id)
+	client.Logger = eh.logger.GetNewWithPrefix(eh.em.Uid)
 	client.Timeout = time.Second * 10
 
 	client.SetHostname(config.ConfOpts.Client.HostName)

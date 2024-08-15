@@ -6,16 +6,27 @@ import (
 
 func StartClient() {
 	logger := makeLogger()
-	emails := getAmqpConsume(logger, config.ConfOpts.Client.Amqp.Queue)
-	forever := make(chan bool)
 
+	amqlConn := getAmqpConn(logger)
+	
+	amqlStatus := AmqpStatusPublish{
+		conn:      amqlConn,
+		queueName: config.ConfOpts.Client.Amqp.StatusQueue,
+		logger:    logger,
+	}
+	amqlStatus.setChannel()
+
+	emails := getAmqpConsume(logger, amqlConn, config.ConfOpts.Client.Amqp.Queue)
+
+	forever := make(chan bool)
 	for i := 0; i < config.ConfOpts.Client.Worker; i++ {
 		go func(workerID int) {
 			for d := range emails {
 				emailHandler := EmailHandler{
-					logger:    logger,
-					emailYaml: d.Body,
-					wid:       workerID,
+					emailYaml:  d.Body,
+					amqpStatus: &amqlStatus,
+					logger:     logger,
+					wid:        workerID,
 				}
 				emailHandler.handleClient()
 			}

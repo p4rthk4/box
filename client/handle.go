@@ -1,7 +1,6 @@
 package clientapp
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/rellitelink/box/config"
@@ -11,8 +10,9 @@ import (
 )
 
 type EmailHandler struct {
-	em        *EmailYAML
-	emailYaml []byte
+	em         *EmailYAML
+	emailYaml  []byte
+	amqpStatus *AmqpStatusPublish
 
 	wid    int
 	logger *logx.Log
@@ -36,13 +36,13 @@ func (eh *EmailHandler) handleClient() {
 	eh.logger.Info("Worker %d received a message: %s", eh.wid, eh.em.Id)
 
 	res := eh.sendMail()
-	errStr, err := yaml.Marshal(res)
+	errYaml, err := yaml.Marshal(res)
 	if err != nil {
 		eh.logger.Error("error on make status yaml, worker-%d: %s", eh.wid, err.Error())
 		return
 	}
 
-	fmt.Println(string(errStr))
+	eh.amqpStatus.publish(errYaml)
 }
 
 func (eh *EmailHandler) sendMail() smtpClient.ClientResponse {

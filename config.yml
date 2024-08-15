@@ -1,26 +1,41 @@
 name: Box - SMTP
-hostname: test.rellitel.ink
+hostname: localhost
+max_clients: 5
 
-port: 8080
+port: 25
 
 tls: 
-  starttls: false
-  key: /home/parthka/u2smtp/temp/server.key
-  cert: /home/parthka/u2smtp/temp/server.crt
+  starttls: true
+  key: key.pem
+  cert: cert.pem
 
-spf_check: false
-
+spf_check: true
+message_size: 1024000
 max_recipients: -1
 check_mailbox: false
-max_clients: 6
 
 amqp_conf:
-  host: rellit.email
-  username: rellite
-  password: Rellite@Parth
+  host: localhost
+  port: 5672
+  username:
+  password:
+  queue: box-receiver-1
+  status_queue: box-status-1
 
 client:
-  try_tls: true
+  hostname: localhost
+  worker: 2
+  log_dir: ./log
+  log_file: email.log
 
-log_dir: "./temp/logs"
-dev: true
+  amqp_conf:
+    host: localhost
+    port: 5672
+    username:
+    password:
+    queue: box-sender-1
+    status_queue: box-status-1
+
+log_dir: ./log
+log_file: email.log
+dev: false

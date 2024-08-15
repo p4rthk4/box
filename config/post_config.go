@@ -29,6 +29,9 @@ func postConfigAction() {
 	if ConfOpts.Amqp.Queue == "" {
 		ConfOpts.Amqp.Queue = ConfOpts.HostName
 	}
+	if ConfOpts.Amqp.StatusQueue == "" {
+		ConfOpts.Amqp.StatusQueue = ConfOpts.HostName + "-status"
+	}
 
 	// set default config for clinet
 	if ConfOpts.Client.HostName == "" {
@@ -61,6 +64,10 @@ func postConfigAction() {
 
 	if ConfOpts.Client.Amqp.Queue == "" {
 		ConfOpts.Client.Amqp.Queue = ConfOpts.Amqp.Queue
+	}
+
+	if ConfOpts.Client.Amqp.StatusQueue == "" {
+		ConfOpts.Client.Amqp.StatusQueue = ConfOpts.Amqp.StatusQueue
 	}
 
 }

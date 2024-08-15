@@ -29,11 +29,12 @@ type TlsConfig struct {
 }
 
 type AmqpConfig struct {
-	Host     string `yaml:"host"`
-	Port     int    `yaml:"port"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
-	Queue    string `yaml:"queue"`
+	Host        string `yaml:"host"`
+	Port        int    `yaml:"port"`
+	Username    string `yaml:"username"`
+	Password    string `yaml:"password"`
+	Queue       string `yaml:"queue"`
+	StatusQueue string `yaml:"status_queue"`
 }
 
 type ClientConfig struct {

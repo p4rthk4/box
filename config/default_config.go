@@ -24,11 +24,12 @@ func defaultConfig() ConfigsOptions {
 		Dev:         false,
 
 		Amqp: AmqpConfig{
-			Host:     "localhost",
-			Port:     5672,
-			Username: "",
-			Password: "",
-			Queue:    "",
+			Host:        "localhost",
+			Port:        5672,
+			Username:    "",
+			Password:    "",
+			Queue:       "",
+			StatusQueue: "",
 		},
 
 		Client: ClientConfig{
@@ -38,11 +39,12 @@ func defaultConfig() ConfigsOptions {
 			LogFilePath: "",
 
 			Amqp: AmqpConfig{
-				Host:     "",
-				Port:     0,
-				Username: "",
-				Password: "",
-				Queue:    "",
+				Host:        "",
+				Port:        0,
+				Username:    "",
+				Password:    "",
+				Queue:       "",
+				StatusQueue: "",
 			},
 		},
 	}

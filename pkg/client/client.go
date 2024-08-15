@@ -9,13 +9,6 @@ import (
 	"github.com/rellitelink/box/pkg/logx"
 )
 
-type DSNReturnType string
-
-const (
-	DSNReturnFull    DSNReturnType = "FULL"
-	DSNReturnHeaders DSNReturnType = "HDRS"
-)
-
 type SMTPClinet struct {
 	hostname string
 

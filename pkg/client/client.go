@@ -93,13 +93,14 @@ func (client *SMTPClinet) SetTimeout(t time.Duration) {
 }
 
 type ClientServerError struct {
-	domainName  string
-	errorString string
+	Domain      string
+	Error       string
 	Code        int // if smtp code avalible
 	ServerError bool
 }
 
 type ClientResponse struct {
+	Time           string
 	Errors         []ClientServerError
 	Success        bool
 	TempError      bool // temp error (4yz)
@@ -109,6 +110,7 @@ type ClientResponse struct {
 
 func (client *SMTPClinet) SendMail() {
 	client.Size = len(client.data) + 5 // add 5 for <crlf>.<crlf>
+	client.Response.Time = time.Now().UTC().String()
 
 	mxRecords := []*net.MX{}
 	if client.RcptHost != "" {
@@ -120,8 +122,8 @@ func (client *SMTPClinet) SendMail() {
 		domainName, err := getDomainFromEmail(client.Rcpt)
 		if err != nil {
 			client.Response.Errors = append(client.Response.Errors, ClientServerError{
-				domainName:  domainName,
-				errorString: fmt.Sprintf("invalid doamin (%s) by client", client.Rcpt),
+				Domain: domainName,
+				Error:  fmt.Sprintf("invalid doamin (%s) by client", client.Rcpt),
 			})
 			client.Logger.Error("invalid doamin (%s) by client", client.Rcpt)
 			return
@@ -130,8 +132,8 @@ func (client *SMTPClinet) SendMail() {
 		mxs, err := net.LookupMX(domainName)
 		if err != nil {
 			client.Response.Errors = append(client.Response.Errors, ClientServerError{
-				domainName:  domainName,
-				errorString: fmt.Sprintf("no any MX records found of %s domain", domainName),
+				Domain: domainName,
+				Error:  fmt.Sprintf("no any MX records found of %s domain", domainName),
 			})
 			client.Logger.Error("no any MX records found of %s domain", domainName)
 			return
@@ -139,8 +141,8 @@ func (client *SMTPClinet) SendMail() {
 		mxRecords = mxs
 	} else {
 		client.Response.Errors = append(client.Response.Errors, ClientServerError{
-			domainName:  "unknown",
-			errorString: "no any host and rcpt found",
+			Domain: "unknown",
+			Error:  "no any host and rcpt found",
 		})
 		client.Logger.Error("no any host and rcpt found")
 		return
@@ -161,8 +163,8 @@ func (client *SMTPClinet) SendMail() {
 		ips, err := getIPFromString(m.Host)
 		if err != nil {
 			client.Response.Errors = append(client.Response.Errors, ClientServerError{
-				domainName:  m.Host,
-				errorString: err.Error(),
+				Domain: m.Host,
+				Error:  err.Error(),
 			})
 			client.Logger.Warn(err.Error())
 			continue
@@ -181,8 +183,8 @@ func (client *SMTPClinet) SendMail() {
 			if err != nil {
 				// fail log
 				client.Response.Errors = append(client.Response.Errors, ClientServerError{
-					domainName:  m.Host,
-					errorString: err.Error(),
+					Domain: m.Host,
+					Error:  err.Error(),
 				})
 				client.Response.TempError = true
 				continue
@@ -198,25 +200,25 @@ func (client *SMTPClinet) SendMail() {
 						client.Response.TempError = true
 					}
 					client.Response.Errors = append(client.Response.Errors, ClientServerError{
-						domainName:  m.Host,
-						errorString: err.Error(),
-						Code:        e.Code,
+						Domain: m.Host,
+						Error:  err.Error(),
+						Code:   e.Code,
 					})
 					client.Logger.Warn("Email %s", err)
 					continue
 				case net.Error:
 					if e.Timeout() {
 						client.Response.Errors = append(client.Response.Errors, ClientServerError{
-							domainName:  m.Host,
-							errorString: fmt.Sprintf("connection timeout with %s by server", address),
+							Domain: m.Host,
+							Error:  fmt.Sprintf("connection timeout with %s by server", address),
 						})
 						client.Logger.Warn("timeout on connect client to %s server", address)
 						client.Response.TempError = true
 						continue
 					} else {
 						client.Response.Errors = append(client.Response.Errors, ClientServerError{
-							domainName:  m.Host,
-							errorString: err.Error(),
+							Domain:      m.Host,
+							Error:       err.Error(),
 							ServerError: true,
 						})
 						client.Logger.Error("Server Error: %s", err)
@@ -225,8 +227,8 @@ func (client *SMTPClinet) SendMail() {
 					}
 				default:
 					client.Response.Errors = append(client.Response.Errors, ClientServerError{
-						domainName:  m.Host,
-						errorString: err.Error(),
+						Domain:      m.Host,
+						Error:       err.Error(),
 						ServerError: true,
 					})
 					client.Logger.Error("Server Error: %s", err)

@@ -12,7 +12,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go server application
-RUN go build -o server cmd/box.go
+RUN go build -o server_app cmd/box.go
 
 # Command to run the server application
-CMD ["./server"]
+CMD ["./server_app"]

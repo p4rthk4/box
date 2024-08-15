@@ -15,7 +15,7 @@ RUN go mod download
 COPY . .
 
 # Build the Go client application
-RUN go build -o client cmd/box.go
+RUN go build -o client_app cmd/box.go
 
 # Command to run the client application in client mode
-CMD ["./client"]
+CMD ["./client_app"]

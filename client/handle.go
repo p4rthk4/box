@@ -26,13 +26,13 @@ type EmailYAML struct {
 }
 
 type EmailStatus struct {
-	Uid            string
 	Time           string
-	Errors         []smtpClient.ClientServerError
+	Uid            string
 	Success        bool
+	Status         string
+	Errors         []smtpClient.ClientServerError
 	TempError      bool
 	AnyClientError bool
-	Status         string
 }
 
 func (eh *EmailHandler) handleClient() {

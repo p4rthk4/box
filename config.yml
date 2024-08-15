@@ -20,7 +20,6 @@ amqp_conf:
   username:
   password:
   queue: box-receiver-1
-  status_queue: box-status-1
 
 client:
   hostname: localhost

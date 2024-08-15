@@ -115,7 +115,7 @@ data: |+
 ### Send mail
 for send, mail yaml format publish in `sender` queue, config sender queue using config file
 ```yaml
-id: 1723707191VlKoL1I2
+uid: 1723707191VlKoL1I2
 from: hello@box.tld
 recipient: hello@idk.btw
 data: |+
@@ -150,27 +150,42 @@ data: |+
 ## Mail Status
 when client send mail than client put status yaml format in `status` queue, config status queue using config file, it is contine success(bool), status, errors, etc...
 ```yaml
-time: 2024-08-15 06:48:41.50727124 +0000 UTC
-errors: []
+time: 2024-08-15 08:50:35.63294605 +0000 UTC
+uid: 1723707191VlKoL1I2
 success: true
+status: SUCCESS
+errors: []
 temperror: false
 anyclienterror: false
-status: SUCCESS
 ```
-when error
+When error
 ```yaml
-time: 2024-08-15 06:47:54.804535183 +0000 UTC
+time: 2024-08-15 08:49:55.52453477 +0000 UTC
+uid: 1723707191VlKoL1I2
+success: false
+status: FAIL
 errors:
     - domain: mx.myworkspacel.ink.
-      error: connection refused when client connect with [2a01:4f9:c012:5d00::1]:25
-      code: 0
+      error: |-
+        Delivery Error: 550 - email doesn't delivered because sender
+        domain [cockatielone.bi] does not
+        designate 2a01:4f9:c012:5d00::1 as
+        permitted sender.
+      code: 550
       servererror: false
     - domain: mx.myworkspacel.ink.
-      error: connection timeout with 65.21.57.194:25 by server
-      code: 0
+      error: |-
+        Delivery Error: 550 - email doesn't delivered because sender
+        domain [cockatielone.bi] does not
+        designate 65.21.57.194 as
+        permitted sender.
+      code: 550
       servererror: false
-success: false
-temperror: true
+temperror: false
 anyclienterror: false
-status: TRYAGAIN
 ```
+
+Status:
+- `SUCCESS` - deliver successful
+- `TRYAGAIN` - any temp error like 4yz, timeout, etc... - send mail after few minute (if same TRYAGAIN status return many time send email than stop send and redirect to fail)
+- `FAIL` - fail to deliver mail, dont send send mail again

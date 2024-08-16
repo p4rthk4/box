@@ -193,8 +193,6 @@ func (conn *ClientConn) data() error {
 	return err
 }
 
-var chunk int = 0
-
 func (conn *ClientConn) bdat() error {
 	if conn.bataBuffer == nil {
 		conn.bataBuffer = bytes.NewBuffer(conn.smtpClient.data)
@@ -212,13 +210,10 @@ func (conn *ClientConn) bdat() error {
 		n = conn.bataBuffer.Len()
 	}
 
-	fmt.Println("Send Dump!", chunk)
 	_, _, err := conn.rw.bdat(conn.bataBuffer, n, last)
 	if err != nil {
 		return err
 	}
-	fmt.Println("Res Dump!", chunk)
-	chunk += 1
 
 	return conn.bdat()
 }

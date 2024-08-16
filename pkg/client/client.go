@@ -50,7 +50,7 @@ func NewClinet() SMTPClinet {
 
 		Timeout: time.Minute * 2,
 
-		ChunkSize: 1024 * 2,
+		ChunkSize: 1024 * 1000,
 	}
 }
 
@@ -203,9 +203,9 @@ func (client *SMTPClinet) SendMail() {
 					if e.Timeout() {
 						client.Response.Errors = append(client.Response.Errors, ClientServerError{
 							Domain: m.Host,
-							Error:  fmt.Sprintf("connection timeout with %s by server", address),
+							Error:  fmt.Sprintf("client timeout to %s server", address),
 						})
-						client.Logger.Warn("timeout on connect client to %s server", address)
+						client.Logger.Warn("client timeout to %s server", address)
 						client.Response.TempError = true
 						continue
 					} else {

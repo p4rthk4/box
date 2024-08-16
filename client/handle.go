@@ -70,6 +70,7 @@ func (eh *EmailHandler) sendMail() smtpClient.ClientResponse {
 	client := smtpClient.NewClinet()
 	client.Logger = eh.logger.GetNewWithPrefix(eh.em.Uid)
 	client.Timeout = time.Second * 120
+	client.ChunkSize = 1024 * 1000 * 2
 
 	client.SetHostname(config.ConfOpts.Client.HostName)
 	client.SetFrom(eh.em.From)

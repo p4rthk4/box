@@ -205,7 +205,7 @@ func (client *SMTPClinet) SendMail() {
 							Domain: m.Host,
 							Error:  fmt.Sprintf("client timeout to %s server", address),
 						})
-						client.Logger.Warn("client timeout to %s server", address)
+						client.Logger.Warn("client timeout to %s server, err: %s", address, err)
 						client.Response.TempError = true
 						continue
 					} else {

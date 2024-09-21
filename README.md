@@ -1,5 +1,11 @@
 # Box SMTP
-Box SMTP - Simple Mail Transfer Protocol Server and Client
+Box is scalable SMTP server! 💻✨
+It handles sending & receiving emails effortlessly and integrates RabbitMQ for smooth, asynchronous processing. Ideal for handling bulk emails in modern applications.
+
+## 🔧 Features:
+- SMTP server/client
+- RabbitMQ support
+- Built for scalability
 
 ## Concept
 Box SMTP mainly work in SMTP Server Wrapper, It make one server or more than one server (two, three, etc...), Any server recive email and it will be store into database or add into queqe and send/forward to main centrel server.
